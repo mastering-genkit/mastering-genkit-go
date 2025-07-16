@@ -1,3 +1,11 @@
+## [1.0.1](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.0.0...v1.0.1) (2025-07-16)
+
+
+### Bug Fixes
+
+* generated html ([cd7fabd](https://github.com/mastering-genkit/mastering-genkit-go/commit/cd7fabda65833329f0926b9288d01c57984dd103))
+* lint ([08e43c5](https://github.com/mastering-genkit/mastering-genkit-go/commit/08e43c5d72dba59ed3ca3c8d9917e262b06e1ed1))
+
 # 1.0.0 (2025-07-16)
 
 
