@@ -1,0 +1,54 @@
+title: "Mastering Genkit Go Edition"
+subtitle: "A walking guide to mastering Genkit in Go"
+# New multiple authors support
+authors:
+  - name: "Xavier Portilla Edo"
+    bio: "Xavier is a software engineer with expertise in Go and cloud technologies."
+    email: "xavier@example.com"
+    twitter: "@xavier_portilla"
+    website: "https://xavierportilla.dev"
+  - name: "Nozomi Koborinai"
+    bio: "Nozomi is a developer advocate and technical writer specializing in AI and ML."
+    email: "nozomi@example.com"
+    twitter: "@nozomi_koborinai"
+    website: "https://nozomi.dev"
+description: |
+  A detailed description of your book that will appear in various
+  publishing platforms and metadata.
+language: en
+date: "2025"
+version: "1.0"
+
+# Publishing information
+isbn: ""
+publisher: ""
+copyright: "© 2025 Your Name. All rights reserved."
+
+# Leanpub specific
+leanpub:
+  pricing:
+    minimum: 9.99
+    suggested: 19.99
+  categories:
+    - Technology
+    - Programming
+
+# Kindle/EPUB specific
+kindle:
+  cover_image: "../images/cover.jpg"  # Uncomment when you add cover.jpg
+  genres:
+    - Computers & Technology
+    - Programming
+
+# Web specific
+web:
+  base_url: "https://yourusername.github.io/your-repo"
+  theme: "default"
+  google_analytics: ""
+  disqus_shortname: ""
+
+# Social media
+social:
+  twitter: "@yourusername"
+  github: "yourusername"
+  website: "https://yourwebsite.com"

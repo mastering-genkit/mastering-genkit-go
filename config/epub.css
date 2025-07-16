@@ -1,0 +1,296 @@
+/* EPUB Styles */
+
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Times New Roman", Times, serif;
+    font-size: 12pt;
+    line-height: 1.6;
+    color: #000;
+    text-align: justify;
+    hyphens: auto;
+    -webkit-hyphens: auto;
+    -moz-hyphens: auto;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+    font-family: "Arial", "Helvetica", sans-serif;
+    color: #000;
+    page-break-after: avoid;
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+    line-height: 1.2;
+}
+
+h1 {
+    font-size: 1.8em;
+    text-align: center;
+    page-break-before: always;
+    margin-bottom: 1em;
+}
+
+h2 {
+    font-size: 1.4em;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 0.3em;
+}
+
+h3 {
+    font-size: 1.2em;
+}
+
+h4 {
+    font-size: 1.1em;
+}
+
+h5, h6 {
+    font-size: 1em;
+    font-weight: bold;
+}
+
+/* Paragraphs */
+p {
+    margin-bottom: 1em;
+    text-indent: 1.5em;
+}
+
+p.no-indent,
+h1 + p,
+h2 + p,
+h3 + p,
+h4 + p,
+h5 + p,
+h6 + p,
+blockquote p {
+    text-indent: 0;
+}
+
+/* Lists */
+ul, ol {
+    margin: 1em 0;
+    padding-left: 2em;
+}
+
+li {
+    margin-bottom: 0.5em;
+}
+
+/* Code */
+code {
+    font-family: "Courier New", Courier, monospace;
+    font-size: 0.9em;
+    background-color: #f5f5f5;
+    padding: 0.1em 0.3em;
+    border-radius: 3px;
+}
+
+pre {
+    font-family: "Courier New", Courier, monospace;
+    font-size: 0.8em;
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    padding: 1em;
+    margin: 1em 0;
+    overflow-x: auto;
+    page-break-inside: avoid;
+}
+
+pre code {
+    background: none;
+    padding: 0;
+}
+
+/* Blockquotes */
+blockquote {
+    margin: 1em 2em;
+    padding: 0.5em 1em;
+    border-left: 3px solid #ddd;
+    font-style: italic;
+    background-color: #f9f9f9;
+}
+
+/* Tables */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1em 0;
+    page-break-inside: avoid;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 0.5em;
+    text-align: left;
+}
+
+th {
+    background-color: #f5f5f5;
+    font-weight: bold;
+}
+
+/* Images */
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 1em auto;
+    page-break-inside: avoid;
+}
+
+/* Links */
+a {
+    color: #0066cc;
+    text-decoration: underline;
+}
+
+a:visited {
+    color: #800080;
+}
+
+/* Page breaks */
+.page-break {
+    page-break-before: always;
+}
+
+.no-break {
+    page-break-inside: avoid;
+}
+
+/* Title page */
+.title-page {
+    text-align: center;
+    page-break-after: always;
+    margin-top: 3em;
+}
+
+.title-page h1 {
+    font-size: 2.5em;
+    margin-bottom: 0.5em;
+}
+
+.title-page .subtitle {
+    font-size: 1.5em;
+    font-style: italic;
+    margin-bottom: 2em;
+}
+
+.title-page .author {
+    font-size: 1.3em;
+    margin-bottom: 1em;
+}
+
+.title-page .date {
+    font-size: 1em;
+    color: #666;
+}
+
+/* Table of contents */
+.toc, nav#TOC, .table-of-contents {
+    page-break-before: always;
+    page-break-after: always;
+    margin: 2em 0;
+}
+
+.toc h1, nav#TOC h1, .table-of-contents h1 {
+    text-align: center;
+    margin-bottom: 1.5em;
+    border-bottom: 2px solid #333;
+    padding-bottom: 0.5em;
+}
+
+/* Unified TOC page styling - target only TOC content */
+.table-of-contents p strong a {
+    font-size: 1.2em;
+    color: #333;
+    text-decoration: none;
+    border-bottom: 1px dotted #666;
+    font-weight: bold;
+    display: inline-block;
+    margin-bottom: 0.5em;
+}
+
+/* TOC chapter and section spacing */
+.table-of-contents p {
+    margin-bottom: 0.3em;
+    line-height: 1.6;
+    text-indent: 0; /* Override global text-indent for TOC */
+}
+
+/* TOC links styling */
+.toc a, nav#TOC a, .table-of-contents a {
+    text-decoration: none;
+    color: #333;
+    border-bottom: 1px dotted #999;
+    padding: 0.1em 0;
+}
+
+.toc a:hover, nav#TOC a:hover, .table-of-contents a:hover {
+    border-bottom: 1px solid #333;
+}
+
+.toc ul, nav#TOC ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.toc li, nav#TOC li {
+    margin-bottom: 0.8em;
+    font-size: 1.1em;
+    line-height: 1.4;
+}
+
+.toc li ol, nav#TOC li ol,
+.toc li ul, nav#TOC li ul {
+    margin-top: 0.5em;
+    padding-left: 1.5em;
+}
+
+.toc li li, nav#TOC li li {
+    font-size: 1em;
+    margin-bottom: 0.4em;
+}
+
+/* Footnotes */
+.footnote {
+    font-size: 0.9em;
+    vertical-align: super;
+}
+
+.footnotes {
+    border-top: 1px solid #ccc;
+    margin-top: 2em;
+    padding-top: 1em;
+    font-size: 0.9em;
+}
+
+/* Responsive design for different screen sizes */
+@media screen and (max-width: 600px) {
+    body {
+        font-size: 14pt;
+        margin: 0 1em;
+    }
+    
+    h1 {
+        font-size: 1.6em;
+    }
+    
+    h2 {
+        font-size: 1.3em;
+    }
+    
+    blockquote {
+        margin: 1em 0;
+    }
+    
+    pre {
+        font-size: 0.7em;
+    }
+}

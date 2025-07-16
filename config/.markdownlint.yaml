@@ -1,0 +1,38 @@
+# Markdown Linting Configuration
+
+# Rule configurations
+default: true
+
+# Line length (disabled for flexibility)
+MD013: false
+
+# Multiple consecutive blank lines
+MD012:
+  maximum: 2
+
+# Multiple top-level headers in the same document
+MD025:
+  front_matter_title: "^title"
+
+# Ordered list item prefix
+MD029:
+  style: "ordered"
+
+# Fenced code blocks should be surrounded by blank lines
+MD031: true
+
+# Lists should be surrounded by blank lines
+MD032: true
+
+# Inline HTML (allow for special formatting)
+MD033:
+  allowed_elements: ["br", "sub", "sup", "kbd", "mark"]
+
+# Bare URL used (allow for reference links)
+MD034: false
+
+# First line in file should be a top level header
+MD041: false
+
+# Required structure for reference definitions
+MD050: false

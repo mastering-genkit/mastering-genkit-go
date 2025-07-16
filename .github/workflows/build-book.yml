@@ -1,0 +1,46 @@
+name: Build and Deploy Book
+
+on:
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Setup all dependencies
+      run: |
+        chmod +x scripts/setup-all.sh
+        ./scripts/setup-all.sh
+        
+    - name: Validate book structure
+      run: npm run validate
+      
+    - name: Build all formats
+      run: npm run build
+      
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: book-artifacts
+        path: |
+          docs/
+          dist/
+          build/
