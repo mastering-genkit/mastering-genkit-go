@@ -6,20 +6,20 @@
     <title>{{title}}</title>
     <meta name="description" content="{{book.description}}">
     <meta name="author" content="{{book.author}}">
-    <link rel="stylesheet" href="/assets/style.css">
+    <link rel="stylesheet" href="{{#if chapter}}../assets/style.css{{else}}assets/style.css{{/if}}">
 </head>
 <body>
     <div class="reading-progress"></div>
     <header>
         <div class="container">
-            <h1><a href="/" style="color: white; text-decoration: none;">{{book.title}}</a></h1>
+            <h1><a href="{{#if chapter}}../{{else}}./{{/if}}" style="color: white; text-decoration: none;">{{book.title}}</a></h1>
             {{#if book.subtitle}}<p>{{book.subtitle}}</p>{{/if}}
         </div>
     </header>
     
     <nav>
         <div class="container">
-            <a href="/" class="nav-brand">{{book.title}}</a>
+            <a href="{{#if chapter}}../{{else}}./{{/if}}" class="nav-brand">{{book.title}}</a>
             
             <!-- Mobile menu button -->
             <button class="mobile-menu-toggle" onclick="toggleMobileMenu()" aria-label="Toggle navigation menu">
@@ -50,7 +50,7 @@
                         
                         <div class="chapters-grid" id="chapters-grid">
                             {{#each chapters}}
-                            <a href="/chapters/{{filename}}" class="chapter-dropdown-item {{#if (eq ../currentChapter filename)}}active{{/if}}" data-chapter-title="{{title}}">
+                            <a href="{{#if ../chapter}}{{filename}}{{else}}chapters/{{filename}}{{/if}}" class="chapter-dropdown-item {{#if (eq ../currentChapter filename)}}active{{/if}}" data-chapter-title="{{title}}">
                                 <span class="chapter-number">{{add @index 1}}</span>
                                 <span class="chapter-title">{{title}}</span>
                             </a>
@@ -91,6 +91,6 @@
         </div>
     </footer>
     
-    <script src="/assets/features.js"></script>
+    <script src="{{#if chapter}}../assets/features.js{{else}}assets/features.js{{/if}}"></script>
 </body>
 </html>

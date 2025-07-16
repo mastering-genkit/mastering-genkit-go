@@ -12,7 +12,7 @@
     "setup:pdf": "./scripts/setup-pdf.sh",
     "dev": "node scripts/dev-server.js",
     "clean": "rm -rf build/ docs/ manuscript/*.md dist/ temp/",
-    "lint": "markdownlint src/chapters/*.md",
+    "lint": "markdownlint src/chapters/*.md --config config/.markdownlint.yaml",
     "word-count": "node scripts/word-count.js",
     "validate": "node scripts/validate.js"
   },

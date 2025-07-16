@@ -3,7 +3,7 @@
     
     <div class="chapter-nav">
         {{#if prevChapter}}
-        <a href="/chapters/{{prevChapter.filename}}" class="chapter-nav-item chapter-nav-prev">
+        <a href="{{prevChapter.filename}}" class="chapter-nav-item chapter-nav-prev">
             <span>&larr; Previous</span>
             <strong>{{prevChapter.title}}</strong>
         </a>
@@ -16,7 +16,7 @@
         </div>
         
         {{#if nextChapter}}
-        <a href="/chapters/{{nextChapter.filename}}" class="chapter-nav-item chapter-nav-next">
+        <a href="{{nextChapter.filename}}" class="chapter-nav-item chapter-nav-next">
             <span>Next &rarr;</span>
             <strong>{{nextChapter.title}}</strong>
         </a>
