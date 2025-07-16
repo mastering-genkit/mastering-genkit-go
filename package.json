@@ -14,7 +14,7 @@
     "clean": "rm -rf build/ docs/ manuscript/*.md dist/ temp/",
     "lint": "markdownlint src/chapters/*.md",
     "word-count": "node scripts/word-count.js",
-    "validate": "node scripts/validate.js",
+    "validate": "node scripts/validate.js"
   },
   "devDependencies": {
     "@semantic-release/changelog": "^6.0.3",
