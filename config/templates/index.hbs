@@ -1,0 +1,41 @@
+<div class="home-content">
+    <h1>Welcome to {{book.title}}</h1>
+    
+    {{#if book.description}}
+    <div class="book-description">
+        <p>{{book.description}}</p>
+    </div>
+    {{/if}}
+    
+    <h2>Table of Contents</h2>
+    <ol class="chapter-list">
+        {{#each chapters}}
+        <li><a href="/chapters/{{filename}}">{{title}}</a></li>
+        {{/each}}
+    </ol>
+    
+    <div class="book-info">
+        {{#if book.authorObjects}}
+            {{#if (eq book.authorObjects.length 1)}}
+                <p><strong>Author:</strong> {{book.author}}</p>
+            {{else}}
+                <p><strong>Authors:</strong> {{book.author}}</p>
+            {{/if}}
+            
+            {{#if (gt book.authorObjects.length 1)}}
+                <div class="authors-detail">
+                    {{#each book.authorObjects}}
+                        <div class="author-info">
+                            <h4>{{name}}</h4>
+                            {{#if bio}}<p class="author-bio">{{bio}}</p>{{/if}}
+                            {{#if website}}<p><a href="{{website}}" target="_blank">Website</a></p>{{/if}}
+                        </div>
+                    {{/each}}
+                </div>
+            {{/if}}
+        {{else}}
+            <p><strong>Author:</strong> {{book.author}}</p>
+        {{/if}}
+        <p><strong>Last Updated:</strong> {{book.date}}</p>
+    </div>
+</div>

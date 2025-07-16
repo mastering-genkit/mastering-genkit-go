@@ -1,0 +1,152 @@
+name: Semantic Release
+
+on:
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "release"
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    outputs:
+      released: ${{ steps.semantic.outputs.new_release_published }}
+      version: ${{ steps.semantic.outputs.new_release_version }}
+      tag: ${{ steps.semantic.outputs.new_release_git_tag }}
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Setup all dependencies
+      run: |
+        chmod +x scripts/setup-all.sh
+        ./scripts/setup-all.sh
+        
+    - name: Validate book structure
+      run: npm run validate
+      
+    - name: Build all formats
+      run: npm run build
+      
+    - name: Semantic Release
+      id: semantic
+      uses: cycjimmy/semantic-release-action@v4
+      with:
+        semantic_version: 19
+        extra_plugins: |
+          @semantic-release/changelog@6.0.3
+          @semantic-release/git@10.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  deploy-pages:
+    if: needs.release.outputs.released == 'true'
+    needs: release
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ needs.release.outputs.tag }}
+        
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Setup all dependencies
+      run: |
+        chmod +x scripts/setup-all.sh
+        ./scripts/setup-all.sh
+        
+    - name: Build all formats
+      run: npm run build
+      
+    - name: Upload Pages artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: docs/
+        
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4
+
+  upload-release-assets:
+    if: needs.release.outputs.released == 'true'
+    needs: release
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ needs.release.outputs.tag }}
+        
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Setup all dependencies
+      run: |
+        chmod +x scripts/setup-all.sh
+        ./scripts/setup-all.sh
+        
+    - name: Build all formats
+      run: npm run build
+      
+    - name: Upload release assets
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: ${{ needs.release.outputs.tag }}
+        files: |
+          dist/mastering-genkit-go-edition.pdf
+          build/kindle/book.epub
+          build/kindle/book.mobi
+        name: Release ${{ needs.release.outputs.version }}
+        body: |
+          ## Book Release ${{ needs.release.outputs.version }}
+          
+          This release includes:
+          - 📖 PDF version (dist/mastering-genkit-go-edition.pdf)
+          - 📱 EPUB version (build/kindle/book.epub)
+          - 📱 MOBI version (build/kindle/book.mobi)
+          - 🌐 Web version deployed to GitHub Pages
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

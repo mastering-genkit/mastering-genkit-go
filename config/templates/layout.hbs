@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
+    <meta name="description" content="{{book.description}}">
+    <meta name="author" content="{{book.author}}">
+    <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+    <div class="reading-progress"></div>
+    <header>
+        <div class="container">
+            <h1><a href="/" style="color: white; text-decoration: none;">{{book.title}}</a></h1>
+            {{#if book.subtitle}}<p>{{book.subtitle}}</p>{{/if}}
+        </div>
+    </header>
+    
+    <nav>
+        <div class="container">
+            <a href="/" class="nav-brand">{{book.title}}</a>
+            
+            <!-- Mobile menu button -->
+            <button class="mobile-menu-toggle" onclick="toggleMobileMenu()" aria-label="Toggle navigation menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <!-- Main navigation -->
+            <div class="nav-menu" id="nav-menu">
+                <!-- Chapters dropdown for many chapters -->
+                <div class="nav-dropdown">
+                    <button class="nav-dropdown-toggle" onclick="toggleChaptersDropdown()" aria-label="Chapters menu">
+                        <span>Chapters</span>
+                        <svg class="dropdown-arrow" width="16" height="16" viewBox="0 0 16 16">
+                            <path d="M8 12L3 7h10z" fill="currentColor"/>
+                        </svg>
+                    </button>
+                    <div class="nav-dropdown-menu" id="chapters-dropdown">
+                        <div class="dropdown-header">Table of Contents</div>
+                        
+                        <!-- Optional search for many chapters -->
+                        {{#if (gt chapters.length 10)}}
+                        <div class="chapters-search">
+                            <input type="text" placeholder="Search chapters..." id="chapter-search" onkeyup="filterChapters(this.value)">
+                        </div>
+                        {{/if}}
+                        
+                        <div class="chapters-grid" id="chapters-grid">
+                            {{#each chapters}}
+                            <a href="/chapters/{{filename}}" class="chapter-dropdown-item {{#if (eq ../currentChapter filename)}}active{{/if}}" data-chapter-title="{{title}}">
+                                <span class="chapter-number">{{add @index 1}}</span>
+                                <span class="chapter-title">{{title}}</span>
+                            </a>
+                            {{/each}}
+                        </div>
+                        
+                        <!-- Quick navigation shortcuts -->
+                        <div class="nav-shortcuts">
+                            {{#if currentChapter}}
+                            <a href="#" class="nav-shortcut" onclick="window.print()">🖨️ Print</a>
+                            {{/if}}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Quick navigation for current section -->
+                {{#if currentChapter}}
+                <div class="nav-current-section">
+                    <span class="current-chapter-indicator">{{currentChapter}}</span>
+                </div>
+                {{/if}}
+                
+                <!-- Theme toggle -->
+                <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme"></button>
+            </div>
+        </div>
+    </nav>
+    
+    <main>
+        <div class="container">
+            {{{content}}}
+        </div>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <p>&copy; {{book.date}} {{book.author}}. All rights reserved.</p>
+        </div>
+    </footer>
+    
+    <script src="/assets/features.js"></script>
+</body>
+</html>

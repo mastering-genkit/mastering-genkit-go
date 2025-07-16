@@ -1,0 +1,27 @@
+<div class="chapter-content">
+    {{{chapter.content}}}
+    
+    <div class="chapter-nav">
+        {{#if prevChapter}}
+        <a href="/chapters/{{prevChapter.filename}}" class="chapter-nav-item chapter-nav-prev">
+            <span>&larr; Previous</span>
+            <strong>{{prevChapter.title}}</strong>
+        </a>
+        {{else}}
+        <div class="chapter-nav-item"></div>
+        {{/if}}
+        
+        <div class="chapter-nav-center">
+            <div class="chapter-indicator{{#if (eq ../currentChapter filename)}} active{{/if}}"></div>
+        </div>
+        
+        {{#if nextChapter}}
+        <a href="/chapters/{{nextChapter.filename}}" class="chapter-nav-item chapter-nav-next">
+            <span>Next &rarr;</span>
+            <strong>{{nextChapter.title}}</strong>
+        </a>
+        {{else}}
+        <div class="chapter-nav-item"></div>
+        {{/if}}
+    </div>
+</div>
