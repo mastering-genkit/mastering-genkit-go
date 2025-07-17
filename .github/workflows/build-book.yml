@@ -47,3 +47,4 @@ jobs:
           docs/
           dist/
           build/
+          manuscript/
