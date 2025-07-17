@@ -1,3 +1,15 @@
+# [1.1.0](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.0.1...v1.1.0) (2025-07-17)
+
+
+### Bug Fixes
+
+* docs and addded lint ([c012487](https://github.com/mastering-genkit/mastering-genkit-go/commit/c01248714ab1184afa4471dae078418adcd4adda))
+
+
+### Features
+
+* improve build ([32580f3](https://github.com/mastering-genkit/mastering-genkit-go/commit/32580f3bf5756c7de7c8a38be002154d9cf26e53))
+
 ## [1.0.1](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.0.0...v1.0.1) (2025-07-16)
 
 
