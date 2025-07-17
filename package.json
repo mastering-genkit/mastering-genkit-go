@@ -9,7 +9,6 @@
     "build:kindle": "node scripts/build-kindle.js",
     "build:web": "node scripts/build-web.js",
     "build:pdf": "node scripts/build-pdf.js",
-    "setup:pdf": "./scripts/setup-pdf.sh",
     "dev": "node scripts/dev-server.js",
     "clean": "rm -rf build/ docs/ manuscript/*.md dist/ temp/",
     "lint": "markdownlint src/chapters/*.md --config config/.markdownlint.yaml",

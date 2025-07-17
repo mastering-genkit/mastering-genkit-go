@@ -70,7 +70,7 @@ async function buildPDF() {
         // await createLatexTemplate(bookMetadata);
         
         // Build PDF using Pandoc - try different engines
-        const outputPath = `dist/${bookMetadata.title.replace(/\s+/g, '-').toLowerCase()}.pdf`;
+        const outputPath = `dist/book.pdf`;
         
         console.log('🔄 Converting to PDF...');
         console.log('⏳ This may take a moment...');

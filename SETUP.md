@@ -1,10 +1,10 @@
-# Setup Instructions
+# Detailed Setup Instructions
 
-This repository includes a comprehensive setup script that installs all dependencies needed to build the book in multiple formats.
+This document provides comprehensive setup instructions for all dependencies needed to build the book in multiple formats. For a quick overview, see the [README.md](README.md).
 
-## Quick Setup
+## Automated Setup (Recommended)
 
-Run the automated setup script:
+Run the automated setup script that detects your operating system:
 
 ```bash
 npm run setup
@@ -12,120 +12,23 @@ npm run setup
 ./scripts/setup-all.sh
 ```
 
-This script will automatically detect your operating system and install:
-
+This script automatically installs:
 - ✅ Node.js and npm dependencies
 - ✅ Python 3 and pip
 - ✅ Pandoc (for PDF and Kindle generation)
 - ✅ WeasyPrint (for high-quality PDF generation)
-- ✅ wkhtmltopdf (PDF fallback)
+- ✅ Puppeteer (PDF generation via Chrome headless)
 - ✅ Calibre (for MOBI generation)
 - ✅ markdownlint-cli (for linting)
 
-## Manual Setup
-
-If you prefer to install dependencies manually:
-
-### macOS (with Homebrew)
-```bash
-# Install Node.js and npm
-brew install node
-
-# Install Python 3
-brew install python3
-
-# Install Pandoc
-brew install pandoc
-
-# Install PDF generation tools
-brew install cairo pango gdk-pixbuf libffi
-
-# Try WeasyPrint via Homebrew first
-brew install weasyprint
-
-# If Homebrew fails due to externally-managed-environment, use pipx
-if ! command -v weasyprint &> /dev/null; then
-    brew install pipx
-    pipx install weasyprint
-fi
-
-# Alternative: Virtual environment method
-# python3 -m venv ~/.weasyprint-venv
-# source ~/.weasyprint-venv/bin/activate
-# pip install weasyprint
-# deactivate
-
-# Note: wkhtmltopdf has been discontinued on Homebrew as of 2024-12-16
-# Alternative: Install Puppeteer for PDF generation
-npm install --save-dev puppeteer
-
-# Install Calibre (for MOBI)
-brew install calibre
-
-# Install project dependencies
-npm install
-
-# Install markdownlint globally
-npm install -g markdownlint-cli
-```
-
-### Ubuntu/Debian
-```bash
-# Update package list
-sudo apt-get update
-
-# Install Node.js and npm
-sudo apt-get install nodejs npm
-
-# Install Python 3 and pip
-sudo apt-get install python3 python3-pip
-
-# Install Pandoc
-sudo apt-get install pandoc
-
-# Install WeasyPrint dependencies
-sudo apt-get install build-essential python3-dev python3-setuptools python3-wheel python3-cffi libcairo2 libpango-1.0-0 libpangocairo-1.0-0 libgdk-pixbuf2.0-0 libffi-dev shared-mime-info
-pip3 install weasyprint
-
-# Install wkhtmltopdf
-sudo apt-get install wkhtmltopdf
-
-# Install Calibre
-sudo apt-get install calibre
-
-# Install project dependencies
-npm install
-
-# Install markdownlint globally
-npm install -g markdownlint-cli
-```
-
-## Available Build Commands
-
-After setup, you can use these commands:
-
-```bash
-npm run build          # Build all formats
-npm run build:leanpub  # Build Leanpub format
-npm run build:kindle   # Build Kindle format (EPUB + MOBI)
-npm run build:web      # Build web format
-npm run build:pdf      # Build PDF format
-npm run dev            # Start development server
-npm run lint           # Lint markdown files
-npm run word-count     # Count words in all chapters
-npm run validate       # Validate project structure
-npm run clean          # Clean build artifacts
-```
-
-## Troubleshooting
+## Common Troubleshooting Issues
 
 ### PDF Generation Issues
 If PDF generation fails:
-1. Try `npm run setup` again to reinstall dependencies
-2. **Note**: wkhtmltopdf has been discontinued on macOS Homebrew (as of 2024-12-16)
-3. Use Puppeteer as an alternative: `npm install puppeteer`
-4. Use browser print-to-PDF with the generated HTML files in the `docs/` folder
-5. Check the individual setup script: `./scripts/setup-pdf.sh`
+1. **Missing WeasyPrint**: Try `npm run setup` again to reinstall dependencies
+2. **Alternative options**: Use Puppeteer: `npm install puppeteer`
+3. **Browser fallback**: Use browser print-to-PDF with generated HTML files in `docs/` folder
+4. **Individual setup**: Check the setup script: `./scripts/setup-pdf.sh`
 
 ### Python "externally-managed-environment" Error
 If you get an externally-managed-environment error when installing WeasyPrint:
@@ -161,7 +64,7 @@ npm install puppeteer
 ```
 
 ### MOBI Generation Issues
-MOBI generation requires Calibre. If it fails:
+MOBI generation requires Calibre:
 1. Install Calibre manually from https://calibre-ebook.com/
 2. Ensure `ebook-convert` is in your PATH
 3. EPUB files will still be generated even if MOBI fails
@@ -172,18 +75,35 @@ If you get permission errors:
 chmod +x scripts/*.sh
 ```
 
-## Dependencies Overview
+### Node.js Version Issues
+Ensure you're using a supported Node.js version:
+```bash
+node --version  # Should be v16 or higher
+```
 
-| Tool | Purpose | Required |
-|------|---------|----------|
-| Node.js | JavaScript runtime for build scripts | ✅ Yes |
-| npm | Package manager | ✅ Yes |
-| Python 3 | Runtime for WeasyPrint | ✅ Yes |
-| Pandoc | Document converter | ✅ Yes |
-| WeasyPrint | High-quality PDF generation | Recommended |
-| Puppeteer | PDF generation via Chrome headless | Recommended |
-| wkhtmltopdf | PDF generation (discontinued on macOS) | Optional |
-| Calibre | MOBI generation for Kindle | Optional |
-| markdownlint-cli | Markdown linting | Optional |
+## Dependencies Reference
 
-The setup script will attempt to install all dependencies and provide fallbacks where possible.
+| Tool | Purpose | Installation | Required |
+|------|---------|-------------|----------|
+| Node.js | JavaScript runtime for build scripts | [nodejs.org](https://nodejs.org/) | ✅ Yes |
+| npm | Package manager | Included with Node.js | ✅ Yes |
+| Python 3 | Runtime for WeasyPrint | [python.org](https://python.org/) | ✅ Yes |
+| Pandoc | Document converter | [pandoc.org](https://pandoc.org/) | ✅ Yes |
+| WeasyPrint | High-quality PDF generation | `pip install weasyprint` | Recommended |
+| Puppeteer | PDF generation via Chrome headless | `npm install puppeteer` | Recommended |
+| Calibre | MOBI generation for Kindle | [calibre-ebook.com](https://calibre-ebook.com/) | Optional |
+| markdownlint-cli | Markdown linting | `npm install -g markdownlint-cli` | Optional |
+
+The setup script attempts to install all dependencies and provides fallbacks where possible.
+
+## Getting Help
+
+If you continue having setup issues:
+
+1. Check the [README.md](README.md) troubleshooting section
+2. Run `npm run validate` to check your project structure
+3. Ensure all required tools are in your PATH
+4. Try the manual installation steps for your platform
+5. Check individual build scripts in the `scripts/` directory
+
+For more information, see the main [README.md](README.md) documentation.
