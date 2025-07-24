@@ -192,11 +192,17 @@ Rather than following a single project theme, this book takes a different approa
 
 ### Learning Through Diverse Examples
 
-Our philosophy is simple: the best way to understand a feature is through its ideal use case. Here's what you can expect:
+Our philosophy is simple: the best way to understand a feature is through its ideal use case. This book is structured in five comprehensive parts:
 
-- **Early chapters (4-7)**: Focus on core Genkit Go capabilities with straightforward applications
-- **Middle chapters (8-11)**: Explore advanced features through specialized tools
-- **Later chapters (12-15)**: Tackle production challenges with real-world scenarios
+**Part 1: Foundation** establishes your understanding of Genkit Go's architecture and the AI development landscape. You'll learn why Genkit Go matters and how to set up your development environment.
+
+**Part 2: Core Features** dives into the essential capabilities - from basic generation and structured outputs to building flows and streaming responses. These chapters form the backbone of your Genkit Go knowledge.
+
+**Part 3: Advanced Features** explores sophisticated patterns like tool calling, Model Context Protocol (MCP), RAG systems, evaluation frameworks, and building AI agents. Here you'll learn to create more intelligent and capable applications.
+
+**Part 4: Production Excellence** focuses on real-world deployment concerns - observability, monitoring, deployment strategies, and cost optimization. These chapters ensure your applications are production-ready.
+
+**Part 5: Integration Patterns** rounds out your knowledge with client integration strategies, showing how to connect Genkit Go applications with various frontend frameworks and architectural patterns.
 
 ### Progressive Complexity
 
