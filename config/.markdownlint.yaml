@@ -34,5 +34,8 @@ MD034: false
 # First line in file should be a top level header
 MD041: false
 
+# Images should have alternate text (alt text)
+MD045: false
+
 # Required structure for reference definitions
 MD050: false
