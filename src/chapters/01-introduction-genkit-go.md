@@ -123,6 +123,10 @@ recipe, resp, err := genkit.GenerateData[Recipe](ctx, g,
 
 ## Why It Matters for Go Developers
 
+### Limited Production-Ready Options for Go
+
+Unlike Python or JavaScript ecosystems that offer numerous AI frameworks, Go developers have historically had limited choices for production-ready AI development. Most AI frameworks focus on Python first, leaving Go developers to either write bindings, use REST APIs, or switch languages entirely. Genkit Go changes this landscape by providing a native, production-ready framework specifically designed for Go - and with Google's backing, it's here to stay.
+
 ### Integration with Existing Infrastructure
 
 Many companies already operate high-performance backend systems built with Go. Genkit Go can natively integrate AI capabilities into these systems.
