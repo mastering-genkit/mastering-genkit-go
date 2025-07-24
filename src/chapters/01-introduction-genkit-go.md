@@ -182,7 +182,7 @@ And Go offers a new option for teams that need native integration with high-perf
 
 ## What We'll Build Throughout This Book
 
-Rather than following a single project theme, this book takes a different approach. Each chapter introduces Genkit Go's features through the most appropriate practical example - from technical documentation generators to DevOps assistants, from code analyzers to knowledge base systems.
+Rather than following a single project theme, this book takes a different approach. Each chapter introduces Genkit Go's features through carefully chosen practical examples that best demonstrate the concepts at hand.
 
 ### Learning Through Diverse Examples
 
