@@ -1,6 +1,6 @@
 # New Choices in AI Development - Introduction to Genkit for Go Developers
 
-![Genkit logo](../images/cover.jpg)
+![](../images/cover.jpg)
 
 ## Introduction
 
