@@ -92,7 +92,7 @@ The distinctive concepts of Genkit include:
 
 **Plugin Architecture**: Various extensions such as vector databases, evaluation tools, and deployment targets can be added as plugins.
 
-Genkit was initially developed in TypeScript/JavaScript, but its design philosophy was language-agnostic. And in 2025, the Go language version has finally arrived.
+Genkit was initially developed in TypeScript/JavaScript, but its design philosophy was language-agnostic. And in 2025, the Go and Python language version has finally arrived.
 
 ## A New Choice for Go Developers: Genkit Go
 
