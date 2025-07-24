@@ -40,6 +40,12 @@ async function buildPDF() {
         const tempDir = 'temp';
         await fs.ensureDir(tempDir);
         
+        // Copy images to temp directory for pandoc
+        if (await fs.pathExists('src/images')) {
+            await fs.copy('src/images', path.join(tempDir, 'images'));
+            console.log('📷 Images copied to temp directory');
+        }
+        
         // Combine all chapters into one file
         let combinedContent = '';
         
@@ -53,6 +59,9 @@ async function buildPDF() {
         for (const file of markdownFiles) {
             const filePath = path.join(chaptersDir, file);
             let content = await fs.readFile(filePath, 'utf8');
+            
+            // Process image paths to work with temp directory structure
+            content = processImagePaths(content);
             
             // Add page break before each new chapter (except the first)
             if (combinedContent.includes('# ')) {
@@ -95,7 +104,8 @@ async function buildPDF() {
                         '--toc-depth=3',
                         '--number-sections',
                         '--highlight-style=tango',
-                        '--css=../config/pdf-style.css'
+                        '--css=../config/pdf-style.css',
+                        '--resource-path=temp:src'
                     ].join(' ');
                     
                     execSync(htmlCommand, { stdio: 'inherit' });
@@ -120,7 +130,8 @@ async function buildPDF() {
                         '--toc-depth=3',
                         '--number-sections',
                         '--highlight-style=tango',
-                        '--css=config/pdf-style.css'
+                        '--css=config/pdf-style.css',
+                        '--resource-path=temp:src'
                     ].join(' ');
                     
                     execSync(htmlCommand, { stdio: 'inherit' });
@@ -176,7 +187,8 @@ async function buildPDF() {
                         '--highlight-style=tango',
                         '--variable=geometry:margin=1in',
                         '--variable=fontsize:11pt',
-                        '--variable=linestretch:1.2'
+                        '--variable=linestretch:1.2',
+                        '--resource-path=temp:src'
                     ].join(' ');
                     
                     execSync(pandocCommand, { stdio: 'inherit' });
@@ -199,6 +211,11 @@ async function buildPDF() {
             await createPDFCSS();
             await fs.copy('config/pdf-style.css', 'dist/pdf-style.css');
             
+            // Copy images to dist directory as well
+            if (await fs.pathExists('src/images')) {
+                await fs.copy('src/images', 'dist/images');
+            }
+            
             const htmlCommand = [
                 'pandoc',
                 combinedFilePath,
@@ -208,7 +225,8 @@ async function buildPDF() {
                 '--toc-depth=3',
                 '--number-sections',
                 '--highlight-style=tango',
-                '--css=pdf-style.css'
+                '--css=pdf-style.css',
+                '--resource-path=temp:src'
             ].join(' ');
             
             await createPDFCSS();
@@ -542,6 +560,15 @@ $body$
 \\end{document}`;
 
     await fs.writeFile('temp/template.latex', template);
+}
+
+function processImagePaths(content) {
+    // Convert relative image paths to work with the temp directory structure
+    // This handles paths like: ![alt](../images/image.jpg) or ![alt](images/image.jpg)
+    return content.replace(
+        /!\[([^\]]*)\]\((?:\.\.\/)?(?:src\/)?images\/([^)]+)\)/g,
+        '![$1](images/$2)'
+    );
 }
 
 // Run the script

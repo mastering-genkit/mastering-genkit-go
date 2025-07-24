@@ -48,7 +48,10 @@ async function buildKindle() {
         // First pass: Read all chapters and extract structure for TOC
         for (const filePath of markdownFiles) {
             const content = await fs.readFile(filePath, 'utf8');
-            chapterContents.push(content);
+            
+            // Process image paths for the build directory structure
+            const processedContent = processImagePaths(content);
+            chapterContents.push(processedContent);
             
             // Extract the main title (first # heading)
             const titleMatch = content.match(/^#\s+(.+)$/m);
@@ -123,6 +126,7 @@ async function buildKindle() {
             '--epub-cover-image=src/images/cover.jpg',
             '--css=config/epub.css',
             '--standalone',
+            '--resource-path=build/kindle:src',
             '-o build/kindle/book.epub',
             'build/kindle/book.md'
         ].join(' ');
@@ -202,6 +206,15 @@ function createPandocMetadata(metadata) {
     }
     
     return yaml.stringify(pandocMeta);
+}
+
+function processImagePaths(content) {
+    // Convert relative image paths to work with the build directory structure
+    // This handles paths like: ![alt](../images/image.jpg) or ![alt](images/image.jpg)
+    return content.replace(
+        /!\[([^\]]*)\]\((?:\.\.\/)?(?:src\/)?images\/([^)]+)\)/g,
+        '![$1](images/$2)'
+    );
 }
 
 // Run the script
