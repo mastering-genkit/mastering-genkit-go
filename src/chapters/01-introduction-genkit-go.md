@@ -98,7 +98,9 @@ Genkit was initially developed in TypeScript/JavaScript, but its design philosop
 
 In this context, Google announced Genkit Go. This is the full-fledged framework that allows Go developers to build AI applications in a native Go environment.
 
-Genkit Go's design philosophy reflects Go's core values.
+Genkit Go's design philosophy reflects Go's core values. If you've written Go code before, you'll immediately recognize the patterns. The framework embraces simplicity by offering clear, readable APIs that avoid unnecessary abstractions. Just like standard Go libraries, every operation returns errors that must be explicitly handled - there's no hidden magic or exceptions.
+
+Type safety is paramount, with compile-time guarantees for structured inputs and outputs, preventing runtime surprises. The architecture favors composition over inheritance, building complex functionality from small, composable functions rather than deep class hierarchies. And true to Go's nature, it maintains minimal overhead with predictable performance characteristics.
 
 ```go
 // Simple and readable API
