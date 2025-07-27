@@ -1,0 +1,44 @@
+package main
+
+import (
+	"context"
+	"log"
+	"mastering-genkit-go/example/chapter-08/internal/flows"
+	"mastering-genkit-go/example/chapter-08/internal/tools"
+	"net/http"
+	"os"
+
+	"github.com/firebase/genkit/go/ai"
+	"github.com/firebase/genkit/go/genkit"
+	"github.com/firebase/genkit/go/plugins/googlegenai"
+	"github.com/firebase/genkit/go/plugins/server"
+)
+
+func main() {
+	ctx := context.Background()
+
+	// Initialize Genkit with the Google AI plugin and Gemini 2.0 Flash.
+	g, err := genkit.Init(ctx,
+		genkit.WithPlugins(&googlegenai.GoogleAI{}),
+		genkit.WithDefaultModel("googleai/gemini-2.5-flash"),
+	)
+	if err != nil {
+		log.Fatalf("could not initialize Genkit: %v", err)
+	}
+
+	operatingSystemFlow := flows.NewOperatingSystemFlow(g, []ai.ToolRef{
+		tools.NewListDirectories(g),
+		tools.NewGetCurrentDate(g),
+	})
+
+	mux := http.NewServeMux()
+	mux.HandleFunc("POST /directoriesFlow", genkit.Handler(operatingSystemFlow))
+
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+
+	log.Printf("Starting server on 127.0.0.1:%s", port)
+	log.Fatal(server.Start(ctx, "127.0.0.1:"+port, mux))
+}
