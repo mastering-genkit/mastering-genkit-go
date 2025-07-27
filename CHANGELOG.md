@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.1.0...v1.1.1) (2025-07-24)
+
+
+### Bug Fixes
+
+* reference images in the pdf and epubs ([a08f84b](https://github.com/mastering-genkit/mastering-genkit-go/commit/a08f84b37cb837891203df0d78a21c87adab755f))
+
 # [1.1.0](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.0.1...v1.1.0) (2025-07-17)
 
 
