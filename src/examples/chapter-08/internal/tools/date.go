@@ -1,7 +1,6 @@
 package tools
 
 import (
-	"encoding/json"
 	"fmt"
 	"log"
 	"time"
@@ -21,27 +20,20 @@ func NewGetCurrentDate(genkitClient *genkit.Genkit) ai.Tool {
 	return genkit.DefineTool(
 		genkitClient,
 		"getCurrentDate",
-		"Gets the current date and time in a specified format. Accepts a JSON object with an optional 'format' field. Common formats: 'RFC3339' (default), 'Kitchen', 'Stamp', 'DateTime', or custom Go time format like '2006-01-02 15:04:05'.",
-		func(ctx *ai.ToolContext, input string) (string, error) {
+		"Gets the current date and time in a specified format. Accepts a string with an optional 'format' field. Common formats: 'RFC3339' (default), 'Kitchen', 'Stamp', 'DateTime', or custom Go time format like '2006-01-02 15:04:05'.",
+		func(ctx *ai.ToolContext, input DateRequest) (string, error) {
 			log.Printf("Tool 'getCurrentDate' called with input: %s", input)
 
-			var req DateRequest
-			// Try to parse as JSON first
-			if err := json.Unmarshal([]byte(input), &req); err != nil {
-				// If JSON parsing fails, treat the input as a format string directly
-				req.Format = input
-			}
-
 			// Set default format if none provided
-			if req.Format == "" {
-				req.Format = time.RFC3339
+			if input.Format == "" {
+				input.Format = time.RFC3339
 			}
 
 			now := time.Now()
 			var formattedDate string
 
 			// Handle common named formats
-			switch req.Format {
+			switch input.Format {
 			case "RFC3339":
 				formattedDate = now.Format(time.RFC3339)
 			case "Kitchen":
@@ -60,10 +52,10 @@ func NewGetCurrentDate(genkitClient *genkit.Genkit) ai.Tool {
 				formattedDate = now.Format(time.RFC1123)
 			default:
 				// Treat as custom format
-				formattedDate = now.Format(req.Format)
+				formattedDate = now.Format(input.Format)
 			}
 
-			result := fmt.Sprintf("Current date and time: %s (format: %s)", formattedDate, req.Format)
+			result := fmt.Sprintf("Current date and time: %s (format: %s)", formattedDate, input.Format)
 			log.Printf("Returning formatted date: %s", result)
 
 			return result, nil

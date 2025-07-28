@@ -1,6 +1,7 @@
 package tools
 
 import (
+	"fmt"
 	"log"
 	"os"
 
@@ -8,27 +9,24 @@ import (
 	"github.com/firebase/genkit/go/genkit"
 )
 
+type ListDirectoryInput struct {
+	Directory string `json:"directory" jsonschema_description:"Directory to list contents of"`
+}
+
 // NewListDirectories creates a tool that lists directories in the current working directory.
 func NewListDirectories(genkitClient *genkit.Genkit) ai.Tool {
 	return genkit.DefineTool(
 		genkitClient,
 		"listDirectories",
 		"Lists all directories in the current working directory.",
-		func(ctx *ai.ToolContext, input string) (string, error) {
+		func(ctx *ai.ToolContext, input ListDirectoryInput) ([]string, error) {
 			log.Printf("Tool 'listDirectories' called with input: %s", input)
 
-			// Get current working directory
-			pwd, err := os.Getwd()
-			if err != nil {
-				log.Printf("Error getting working directory: %v", err)
-				return "Error: Could not get current directory", nil
-			}
-
 			// Read directory entries
-			entries, err := os.ReadDir(pwd)
+			entries, err := os.ReadDir(input.Directory)
 			if err != nil {
 				log.Printf("Error reading directory: %v", err)
-				return "Error: Could not read directory contents", nil
+				return nil, fmt.Errorf("Error reading directory '%s': %v", input.Directory, err)
 			}
 
 			// Filter for directories only
@@ -40,14 +38,38 @@ func NewListDirectories(genkitClient *genkit.Genkit) ai.Tool {
 			}
 
 			if len(directories) == 0 {
-				return "No directories found in current working directory", nil
+				return nil, fmt.Errorf("No directories found in current working directory")
 			}
 
-			result := "Directories found:\n"
-			for _, dir := range directories {
-				result += "- " + dir + "\n"
+			return directories, nil
+		})
+}
+
+type CreateDirectoryInput struct {
+	Directory string `json:"directory" jsonschema_description:"Directory to create"`
+}
+
+// NewCreateDirectory creates a tool that creates a new directory.
+func NewCreateDirectory(genkitClient *genkit.Genkit) ai.Tool {
+	return genkit.DefineTool(
+		genkitClient,
+		"createDirectory",
+		"Creates a new directory with the specified name. Input should be the directory name or path.",
+		func(ctx *ai.ToolContext, input CreateDirectoryInput) (string, error) {
+			log.Printf("Tool 'createDirectory' called with input: %s", input)
+
+			if input.Directory == "" {
+				return "Error: Directory name cannot be empty", nil
 			}
 
-			return result, nil
+			// Create the directory
+			err := os.MkdirAll(input.Directory, 0755)
+			if err != nil {
+				log.Printf("Error creating directory '%s': %v", input.Directory, err)
+				return "Error: Could not create directory '" + input.Directory + "': " + err.Error(), nil
+			}
+
+			log.Printf("Successfully created directory: %s", input.Directory)
+			return "Successfully created directory: " + input.Directory, nil
 		})
 }

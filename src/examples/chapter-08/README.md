@@ -1,25 +1,40 @@
-# Chapter 8 Example: Directory Listing and Date Tools with AI
+# Chapter 8 Example: Directory Management and Date Tools with AI
 
-This example demonstrates how to create a Genkit Go application that uses AI tools to generate content while providing useful utilities like directory listing and current date/time information.
+This example demonstrates how to create a Genkit Go application that uses AI tools to generate content while providing useful utilities like directory management (listing and creating directories) and current date/time information.
 
 ## Features
 
 - Uses Google AI (Gemini 2.5 Flash) for content generation
-- Implements a custom tool that lists directories in the current working directory
+- Implements custom tools for directory management operations
 - Implements a date tool that provides current date/time in various formats
 - Demonstrates proper Go project structure and conventions
 - Includes error handling and logging
+- Provides two specialized flows for different use cases
 
 ## Tools Available
 
 ### 1. List Directories Tool
 Lists all directories in the current working directory.
 
-### 2. Current Date Tool
+### 2. Create Directory Tool
+Creates new directories with specified names or paths. Features:
+- Supports creating nested directory structures
+- Uses safe permissions (0755)
+- Comprehensive error handling
+- Input validation
+
+### 3. Current Date Tool
 Provides the current date and time in a specified format. Supports:
 - Named formats: `RFC3339` (default), `Kitchen`, `Stamp`, `DateTime`, `DateOnly`, `TimeOnly`, `RFC822`, `RFC1123`
 - Custom Go time formats (e.g., `2006-01-02 15:04:05`)
 - JSON input: `{"format": "Kitchen"}` or simple string input
+
+## API Endpoints
+
+### 1. Operating System Flow
+**Endpoint:** `POST /directoriesFlow`
+
+General-purpose flow that includes all available tools (directory listing, directory creation, and date/time). Use this for general OS operations.
 
 ## Running the Example
 
@@ -38,11 +53,30 @@ Provides the current date and time in a specified format. Supports:
    go run main.go
    ```
 
-4. The server will start and you can make POST requests to `/operatingSystemFlow` with a topic to generate content using the available tools.
+4. The server will start and you can make POST requests to the available endpoints:
+   - `POST /directoriesFlow` - General OS operations (all tools available)
+
+## Example Usage
+
+### Creating Directories
+Send a POST request to either endpoint with requests like:
+- `"Create a directory called 'test'"`
+- `"Make a new folder named 'projects'"`
+- `"Create the directory structure 'app/src/components'"`
+
+### Listing Directories
+Send requests like:
+- `"List all directories in the current folder"`
+- `"Show me what directories are here"`
+
+### Getting Current Date/Time
+Send requests like:
+- `"What's the current date and time?"`
+- `"Give me the date in RFC3339 format"`
 
 ## Project Structure
 
-- `main.go` - Entry point and server setup
-- `internal/flows/os.go` - Flow definition for content generation
-- `internal/tools/directories.go` - Tool implementation for directory listing
+- `main.go` - Entry point and server setup with both flows
+- `internal/flows/os.go` - General operating system flow definition
+- `internal/tools/directories.go` - Tools for directory listing and creation
 - `internal/tools/date.go` - Tool implementation for date/time formatting

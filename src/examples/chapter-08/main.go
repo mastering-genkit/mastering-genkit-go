@@ -10,7 +10,7 @@ import (
 
 	"github.com/firebase/genkit/go/ai"
 	"github.com/firebase/genkit/go/genkit"
-	"github.com/firebase/genkit/go/plugins/googlegenai"
+	"github.com/firebase/genkit/go/plugins/compat_oai/openai"
 	"github.com/firebase/genkit/go/plugins/server"
 )
 
@@ -19,8 +19,10 @@ func main() {
 
 	// Initialize Genkit with the Google AI plugin and Gemini 2.0 Flash.
 	g, err := genkit.Init(ctx,
-		genkit.WithPlugins(&googlegenai.GoogleAI{}),
-		genkit.WithDefaultModel("googleai/gemini-2.5-flash"),
+		genkit.WithPlugins(&openai.OpenAI{
+			APIKey: os.Getenv("OPENAI_API_KEY"),
+		}),
+		genkit.WithDefaultModel("openai/gpt-4o"),
 	)
 	if err != nil {
 		log.Fatalf("could not initialize Genkit: %v", err)
@@ -28,6 +30,7 @@ func main() {
 
 	operatingSystemFlow := flows.NewOperatingSystemFlow(g, []ai.ToolRef{
 		tools.NewListDirectories(g),
+		tools.NewCreateDirectory(g),
 		tools.NewGetCurrentDate(g),
 	})
 
