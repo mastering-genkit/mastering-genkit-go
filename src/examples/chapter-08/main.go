@@ -35,13 +35,13 @@ func main() {
 	})
 
 	mux := http.NewServeMux()
-	mux.HandleFunc("POST /directoriesFlow", genkit.Handler(operatingSystemFlow))
+	mux.HandleFunc("POST /operatingSystemFlow", genkit.Handler(operatingSystemFlow))
 
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "8080"
+		port = "9090"
 	}
 
 	log.Printf("Starting server on 127.0.0.1:%s", port)
-	log.Fatal(server.Start(ctx, "127.0.0.1:"+port, mux))
+	log.Fatal(server.Start(ctx, "0.0.0.0:"+port, mux))
 }

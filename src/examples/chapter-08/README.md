@@ -32,7 +32,7 @@ Provides the current date and time in a specified format. Supports:
 ## API Endpoints
 
 ### 1. Operating System Flow
-**Endpoint:** `POST /directoriesFlow`
+**Endpoint:** `POST /operatingSystemFlow`
 
 General-purpose flow that includes all available tools (directory listing, directory creation, and date/time). Use this for general OS operations.
 
@@ -43,7 +43,7 @@ General-purpose flow that includes all available tools (directory listing, direc
    export GOOGLE_AI_API_KEY="your-api-key-here"
    ```
 
-2. Optionally set a custom port (defaults to 8080):
+2. Optionally set a custom port (defaults to 9090):
    ```bash
    export PORT="3000"
    ```
@@ -54,7 +54,7 @@ General-purpose flow that includes all available tools (directory listing, direc
    ```
 
 4. The server will start and you can make POST requests to the available endpoints:
-   - `POST /directoriesFlow` - General OS operations (all tools available)
+   - `POST /operatingSystemFlow` - General OS operations (all tools available)
 
 ## Example Usage
 
@@ -73,6 +73,37 @@ Send requests like:
 Send requests like:
 - `"What's the current date and time?"`
 - `"Give me the date in RFC3339 format"`
+
+## cURL Examples
+
+Here are practical examples of calling the flow using cURL commands:
+
+### Create a Directory
+```bash
+curl -X POST http://127.0.0.1:9090/operatingSystemFlow \
+  -H "Content-Type: application/json" \
+  -d '{"data":"Create a directory called test-folder"}'
+```
+
+### List Directories
+```bash
+curl -X POST http://127.0.0.1:9090/operatingSystemFlow \
+  -H "Content-Type: application/json" \
+  -d '{"data":"List all directories in folder /"}'
+```
+
+### Get Current Date
+```bash
+curl -X POST http://127.0.0.1:9090/operatingSystemFlow \
+  -H "Content-Type: application/json" \
+  -d '{"data":"What is the current date and time?"}'
+```
+
+## Running with Genkit CLI
+To run this example using the Genkit CLI, follow these steps:
+```bash
+genkit flow:run operatingSystemFlow '"List all directories in folder /"'
+```
 
 ## Project Structure
 
