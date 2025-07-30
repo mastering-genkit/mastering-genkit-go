@@ -27,4 +27,7 @@ func main() {
 	}
 
 	log.Println(resp.Text())
+
+	// Blocks end of program execution to use the developer UI.
+	select {}
 }
