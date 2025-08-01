@@ -29,7 +29,7 @@ The AI model can intelligently decide when and how to use these tools based on t
 
 ## How Tool Calling Works
 
-[](../images/chapter-08/tools.png)
+![](../images/chapter-08/tools.png)
 
 The tool calling process follows this workflow:
 
