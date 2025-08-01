@@ -4,7 +4,7 @@ This example demonstrates how to create a Genkit Go application that uses AI too
 
 ## Features
 
-- Uses Google AI (Gemini 2.5 Flash) for content generation
+- Uses OpenAI for content generation
 - Implements custom tools for directory management operations
 - Implements a date tool that provides current date/time in various formats
 - Demonstrates proper Go project structure and conventions

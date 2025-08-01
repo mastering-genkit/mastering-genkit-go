@@ -11,7 +11,7 @@ import (
 
 // DateRequest represents the input structure for the date tool
 type DateRequest struct {
-	Format string `json:"format,omitempty"` // Optional format string
+	Format string `json:"format" jsonschema_description:"Date format to use"` // Optional format string
 }
 
 // NewGetCurrentDate creates a tool that returns the current date in a specified format.

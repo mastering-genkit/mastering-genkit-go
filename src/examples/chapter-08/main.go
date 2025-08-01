@@ -32,6 +32,7 @@ func main() {
 		tools.NewListDirectories(g),
 		tools.NewCreateDirectory(g),
 		tools.NewGetCurrentDate(g),
+		tools.NewSystemInfo(g),
 	})
 
 	mux := http.NewServeMux()
