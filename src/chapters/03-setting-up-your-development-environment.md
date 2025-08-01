@@ -35,7 +35,7 @@ The CLI installation provides several key commands:
 
 ## Understanding the Genkit Developer UI
 
-![](../images/developer-ui.png)
+![](../images/chapter-03/developer-ui.png)
 
 AI application development presents unique challenges that traditional debugging tools weren't designed to handle. When working with LLMs, you face:
 
@@ -79,7 +79,7 @@ genkit start -- go run .
 genkit start -- go run ./cmd/server
 ```
 
-This approach ensures proper connection between the Developer UI and your application's reflection server. The Developer UI automatically discovers available flows, monitors executions, and provides real-time feedback.
+This approach ensures proper connection between the Developer UI (available at <http://localhost:4000>) and your application's reflection server. The Developer UI automatically discovers available flows, monitors executions, and provides real-time feedback.
 
 ## Project Structure Best Practices
 
@@ -108,9 +108,9 @@ This structure balances Go's preference for flat hierarchies with the organizati
 
 For our first application in this chapter, we'll start with a much simpler structure - just a single `main.go` file. This allows us to focus on verifying that our environment is correctly set up before diving into more complex architectural patterns in later chapters.
 
-## First Genkit Go Application
+## First Genkit Go Application with Server and Flows
 
-Let's build a simple "Hello Genkit Go" application to verify our environment is properly configured. We'll create a minimal example that demonstrates Genkit's core functionality without overwhelming complexity.
+Let's build a Genkit Go application with a proper server and Flow definition to fully utilize the Developer UI. This approach demonstrates Genkit's real-world usage pattern from the start.
 
 ### Step 1: Initialize the Project
 
@@ -128,7 +128,7 @@ go get github.com/firebase/genkit/go
 go mod tidy
 ```
 
-### Step 2: Create a Simple Application
+### Step 2: Create a Server Application with Flows
 
 Create a `main.go` file with the following content:
 
@@ -139,17 +139,21 @@ package main
 
 import (
     "context"
+    "fmt"
     "log"
+    "net/http"
+    "os"
 
     "github.com/firebase/genkit/go/ai"
     "github.com/firebase/genkit/go/genkit"
     "github.com/firebase/genkit/go/plugins/googlegenai"
+    "github.com/firebase/genkit/go/plugins/server"
 )
 
 func main() {
     ctx := context.Background()
 
-    // Initialize Genkit with the Google AI plugin and Gemini 2.0 Flash.
+    // Initialize Genkit with the Google AI plugin and Gemini 2.5 Flash.
     g, err := genkit.Init(ctx,
         genkit.WithPlugins(&googlegenai.GoogleAI{}),
         genkit.WithDefaultModel("googleai/gemini-2.5-flash"),
@@ -158,39 +162,62 @@ func main() {
         log.Fatalf("could not initialize Genkit: %v", err)
     }
 
-    resp, err := genkit.Generate(ctx, g, ai.WithPrompt("Hello Genkit Go!"))
-    if err != nil {
-        log.Fatalf("could not generate model response: %v", err)
+    // Define a greeting flow that accepts a user's name and generates a personalized greeting
+    greetingFlow := genkit.DefineFlow(g, "greetingFlow", func(ctx context.Context, userRequest string) (string, error) {
+        resp, err := genkit.Generate(ctx, g,
+            ai.WithSystem("You are a friendly assistant that creates warm, personalized greetings. When given a name, respond with a welcoming message that makes the person feel valued."),
+            ai.WithPrompt(fmt.Sprintf("Create a greeting for %s", userRequest)),
+        )
+        if err != nil {
+            return "", fmt.Errorf("failed to generate response: %w", err)
+        }
+
+        return resp.Text(), nil
+    })
+
+    mux := http.NewServeMux()
+    mux.HandleFunc("POST /greetingFlow", genkit.Handler(greetingFlow))
+
+    port := os.Getenv("PORT")
+    if port == "" {
+        port = "9090"
     }
 
-    log.Println(resp.Text())
+    log.Printf("Starting server on 127.0.0.1:%s", port)
+    log.Fatal(server.Start(ctx, "0.0.0.0:"+port, mux))
 }
 ```
 
-This minimal example demonstrates the simplest way to use Genkit Go:
+This production-ready example demonstrates:
 
-- Initializes Genkit with the Google AI plugin
-- Makes a single generation request
-- Prints the response
+- Initializing Genkit with proper plugin configuration
+- Defining a Flow that can be called and tested
+- Setting up an HTTP server to handle Flow requests
+- Proper error handling and logging
+- Integration with the Developer UI
 
-Note that Genkit automatically reads the `GEMINI_API_KEY` from your environment variables, so you don't need to explicitly pass it in your code.
+Note that Genkit automatically reads either `GEMINI_API_KEY` or `GOOGLE_API_KEY` from your environment variables, so you don't need to explicitly pass it in your code.
 
-### Step 3: Running the Application
+### Step 3: Running the Application with Developer UI
 
-Configure your Gemini API key by setting the `GEMINI_API_KEY` environment variable:
+Configure your Gemini API key by setting the environment variable:
 
 ```bash
+# Either of these environment variables will work
 export GEMINI_API_KEY=<your API key>
+# OR
+export GOOGLE_API_KEY=<your API key>
 ```
 
 If you don't already have one, create a key in [Google AI Studio](https://aistudio.google.com/app/apikey). Google AI provides a generous free-of-charge tier and does not require a credit card to get started.
 
 > **Security Warning**: Never commit your API key to version control or expose it publicly. Leaked API keys can be exploited, resulting in unexpected charges or security breaches.
 
-Run the app to see the model response:
+Now, launch your application with the Developer UI:
 
 ```bash
-go run .
+# Start the application with Developer UI integration
+genkit start -- go run .
 ```
 
 If your API key is not properly set, you'll see an error like:
@@ -204,45 +231,113 @@ exit status 1
 
 >Note that Genkit accepts either `GEMINI_API_KEY` or `GOOGLE_API_KEY` as the environment variable name. Throughout this book, we'll use `GEMINI_API_KEY` for consistency.
 
-Once your API key is properly configured, you should see output similar to:
+Once your API key is properly configured, you should see output like:
 
 ```text
-Hello there! Welcome to the world of **Genkit with Go!**
-
-You've reached the Go implementation of Genkit, Google's open-source framework designed to help you build robust, production-ready AI applications. With Genkit Go, you can:
-
-*   **Orchestrate** complex AI flows.
-*   **Define custom actions** and integrate with external tools.
-*   **Connect** to various large language models (LLMs) like Gemini, OpenAI, and more.
-*   **Develop, test, and observe** your GenAI applications with ease.
-*   Leverage the **performance and concurrency** strengths of Go.
-
-How can I help you get started or dive deeper into Genkit Go today? Are you looking to:
-
-*   **Set up your first project?**
-*   **Understand core concepts** like flows, actions, or models?
-*   **Explore specific integrations** or use cases?
-*   **Troubleshoot** something you're working on?
-
-Let me know what's on your mind!
+Genkit Developer UI: http://localhost:4000
+2025/08/01 21:34:43 Starting server on 127.0.0.1:9090
 ```
 
-### Why Can't We Use the Developer UI Yet?
+You can now access the Developer UI by navigating to `http://localhost:4000` in your web browser. We'll explore its features in detail in the next section.
 
-You might be eager to explore the Genkit Developer UI - and for good reason! It's one of Genkit's most powerful features. However, our simple example above runs once and exits immediately, which isn't compatible with the Developer UI.
+## Exploring the Developer UI
 
-To use the Developer UI effectively, your application needs to define at least one **Flow** - a reusable AI workflow that can be called and tested through the UI.
+Once your application is running with `genkit start -- go run .`, the Developer UI provides a comprehensive interface for developing and testing your AI workflows.
 
-Our current example is just a one-shot script without any Flows defined. If you try `genkit start -- go run .`, it will execute the Generate call and exit immediately - this is expected behavior.
+### Main Dashboard
 
-Don't worry though! In Chapter 6 "Building Flows", you'll learn how to create applications that work seamlessly with the Developer UI. Once you have Flows defined, the Developer UI unlocks powerful capabilities:
+![Developer UI Overview](../images/chapter-03/developer-ui.png)
 
-- Visual inspection of every AI interaction
-- Interactive testing with different inputs
-- Real-time monitoring of token usage and costs
-- Step-by-step debugging of complex AI workflows
+The main dashboard displays:
 
-For now, let's focus on confirming your environment is properly set up. The fact that you got a response from Gemini means you're ready to move forward!
+- **Models**: All available AI models from registered plugins (googleai/gemini-1.5-flash, googleai/gemini-2.5-flash, etc.)
+- **Flows**: Your defined flows (in our case, `greetingFlow`)
+- **Embedders**: Available text embedding models for semantic search and similarity
+- **Trace History**: Recent flow executions with detailed telemetry
+
+### Testing Flows in the UI
+
+Click on `greetingFlow` in the Flows section to open the flow testing interface:
+
+![](../images/chapter-03/greeting-flow.png)
+
+To test your flow:
+
+1. Enter a name in the input field (e.g., "Alice")
+2. Click "Run" to execute the flow
+3. View the generated greeting response
+4. Observe token usage and execution time
+
+### Trace Inspection
+
+After running a flow, click on the trace in the Trace History section to see detailed execution information:
+
+![](../images/chapter-03/trace-greeting-flow.png)
+
+The trace view provides:
+
+- **Execution Timeline**: Visual representation of each step in the flow
+- **Token Usage**: Exact input/output token counts.
+- **Full Request/Response**: Complete prompt sent to the model and generated text
+- **Timing Information**: Latency for each operation
+
+### Model Explorer
+
+Click on "Models" in the left navigation to explore available models:
+
+![](../images/chapter-03/models.png)
+
+The Models section shows:
+
+- Model names and versions
+- Configuration options and limits
+- Direct testing interface for each model
+
+### Real-time Development Workflow
+
+The Developer UI fundamentally changes how you develop AI applications. Without it, testing AI workflows typically requires deploying to the cloud, then testing via curl commands or building a frontend just to see if your prompts work correctly. This cycle can take minutes or even hours for each iteration.
+
+With the Developer UI, you can modify your code locally and immediately test changes through a purpose-built interface. When you adjust prompts, tweak parameters, or update flow logic, you see results in seconds, not minutes. The trace inspection reveals exactly what the LLM received and generated, eliminating the guesswork of debugging through logs or print statements. This local development experience means you can perfect your AI workflows before deploying, saving both development time and cloud costs.
+
+## Testing Flows from the Command Line
+
+While the Developer UI is excellent for interactive development, you can also test flows directly from the command line using the Genkit CLI.
+
+### Using genkit flow:run
+
+With your application running via `genkit start -- go run .`, open another terminal and use the `genkit flow:run` command:
+
+```bash
+# Run the flow with a string input
+genkit flow:run greetingFlow '"Nozomi"'
+```
+
+Expected output:
+
+```text
+Telemetry API running on http://localhost:4034
+Running '/flow/greetingFlow' (stream=false)...
+Result:
+"Hello Nozomi! It's so wonderful to connect with you. Wishing you a day filled with warmth and good cheer!"
+```
+
+### Using curl for Direct HTTP Requests
+
+You can also test your flow endpoint directly using curl:
+
+```bash
+curl -X POST http://localhost:9090/greetingFlow \
+  -H "Content-Type: application/json" \
+  -d '{"data": "Nozomi"}'
+```
+
+Expected output:
+
+```json
+{
+  "result": "Hello Nozomi! 👋 It's so wonderful to connect with you. We're absolutely delighted to have you here! Your presence is truly valued."
+}
+```
 
 ## Instructing Your AI Copilot
 
@@ -342,9 +437,10 @@ By creating these simple instruction files, your AI coding assistant will know t
 
 - **Go 1.24+ and Node.js 20+** are required for Genkit Go development
 - **Genkit CLI is essential** for development, providing the Developer UI and testing utilities
-- **Simple setup process**: Initialize project, install dependencies, create main.go, and run
-- **Environment variables matter** - use `GEMINI_API_KEY` and never commit it to version control
-- **Developer UI requires Flows** - our simple example doesn't support it yet (covered in Chapter 6)
+- **Production-ready from the start**: Server with HTTP endpoints and testable Flows
+- **Developer UI integration**: Real-time testing without deploying to cloud or building frontends
+- **Environment variables matter** - use `GEMINI_API_KEY` or `GOOGLE_API_KEY` and never commit to version control
+- **Multiple testing approaches**: Developer UI, CLI with `genkit flow:run`, and direct HTTP requests via curl
 - **AI copilot instructions** help generate accurate Genkit code by referencing official documentation
 
 ## Next Steps
