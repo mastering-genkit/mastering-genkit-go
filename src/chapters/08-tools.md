@@ -306,7 +306,7 @@ The UI provides a simple interface to interact with your tools, allowing you to 
 Tools can be chained together to accomplish complex tasks. The AI model can call multiple tools in sequence:
 
 ```bash
-User: "Create a backup directory and tell me what time the backup was created"
+User: "Create a backup directory with the current date"
 1. AI calls createDirectory("backup")
 2. AI calls getCurrentDate() 
 3. AI combines results in response
