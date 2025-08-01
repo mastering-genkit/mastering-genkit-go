@@ -312,7 +312,7 @@ User: "Create a backup directory and tell me what time the backup was created"
 3. AI combines results in response
 ```
 
-Here you can see an example wwith this prompt:
+Here you can see an example with this prompt:
 
 ```bash
 Create a directory with the name my_folder_{current_date} where {current_date} is the current date in RFC3339 format
