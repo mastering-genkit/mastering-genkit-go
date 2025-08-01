@@ -54,11 +54,12 @@ DefineTool(
 ```
 
 When defining a tool, you need to specify:
+
 1. **Input Structure**: Define a struct that represents the tool's input parameters
-3. **Name**: A unique identifier for the tool
-4. **Description**: Clear documentation that helps the AI understand when and how to use the tool
-5. **Implementation**: The actual function that performs the tool's work
-6. **Tool Function**: Use `genkit.DefineTool()` to create the tool
+2. **Name**: A unique identifier for the tool
+3. **Description**: Clear documentation that helps the AI understand when and how to use the tool
+4. **Implementation**: The actual function that performs the tool's work
+5. **Tool Function**: Use `genkit.DefineTool()` to create the tool
 
 The description should be concise and provide enough context for the AI model to understand when to use the tool. The implementation function should handle the input, perform the necessary operations, and return the result. Same as the input and output structures, the implementation function should be well-defined to ensure clarity and maintainability. Why? because it helps the AI model understand the tool's purpose and how to use it effectively.
 
@@ -73,7 +74,8 @@ When implementing tools, consider the following best practices to ensure they ar
 5. **Descriptions**: Provide clear descriptions that help the AI understand the tool's purpose
 
 ## Examples of Tool Definitions
-### Creating Your First Tool
+
+### Creating Your First Tool: Getting the Current Date
 
 Let's start with a simple example, a tool that gets the current date and time. In our example project, we have implemented this in `internal/tools/date.go`:
 
