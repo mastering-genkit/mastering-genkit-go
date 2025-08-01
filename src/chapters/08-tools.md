@@ -191,34 +191,35 @@ import (
 )
 
 type CreateDirectoryInput struct {
-	Directory string `json:"directory" jsonschema_description:"Directory to create"`
+    Directory string `json:"directory" jsonschema_description:"Directory to create"`
 }
 
 // NewCreateDirectory creates a tool that creates a new directory.
 func NewCreateDirectory(genkitClient *genkit.Genkit) ai.Tool {
-	return genkit.DefineTool(
-		genkitClient,
-		"createDirectory",
-		"Creates a new directory with the specified name. Input should be the directory name or path.",
-		func(ctx *ai.ToolContext, input CreateDirectoryInput) (string, error) {
-			log.Printf("Tool 'createDirectory' called with input: %s", input)
+    return genkit.DefineTool(
+        genkitClient,
+        "createDirectory",
+        "Creates a new directory with the specified name. Input should be the directory name or path.",
+        func(ctx *ai.ToolContext, input CreateDirectoryInput) (string, error) {
+            log.Printf("Tool 'createDirectory' called with input: %s", input)
 
-			if input.Directory == "" {
-				return "Error: Directory name cannot be empty", nil
-			}
+            if input.Directory == "" {
+                return "Error: Directory name cannot be empty", nil
+            }
 
-			// Create the directory
-			err := os.MkdirAll(input.Directory, 0755)
-			if err != nil {
-				log.Printf("Error creating directory '%s': %v", input.Directory, err)
-				return "Error: Could not create directory '" + input.Directory + "': " + err.Error(), nil
-			}
+            // Create the directory
+            err := os.MkdirAll(input.Directory, 0755)
+            if err != nil {
+                log.Printf("Error creating directory '%s': %v", input.Directory, err)
+                return "Error: Could not create directory '" + input.Directory + "': " + err.Error(), nil
+            }
 
-			log.Printf("Successfully created directory: %s", input.Directory)
-			return "Successfully created directory: " + input.Directory, nil
-		})
+            log.Printf("Successfully created directory: %s", input.Directory)
+            return "Successfully created directory: " + input.Directory, nil
+        })
 }
 ```
+
 This `createDirectory` tool accepts a `directory` field in its input structure, which specifies the name of the directory to create. It uses `os.MkdirAll()` to create the directory and returns a success message or an error if the operation fails.
 
 ## Best Practices for Tool Implementation
@@ -272,17 +273,17 @@ In your main application, you'll initialize tools and register them with flows. 
 package main
 
 import (
-	"context"
-	"log"
-	"mastering-genkit-go/example/chapter-08/internal/flows"
-	"mastering-genkit-go/example/chapter-08/internal/tools"
-	"net/http"
-	"os"
+    "context"
+    "log"
+    "mastering-genkit-go/example/chapter-08/internal/flows"
+    "mastering-genkit-go/example/chapter-08/internal/tools"
+    "net/http"
+    "os"
 
-	"github.com/firebase/genkit/go/ai"
-	"github.com/firebase/genkit/go/genkit"
-	"github.com/firebase/genkit/go/plugins/compat_oai/openai"
-	"github.com/firebase/genkit/go/plugins/server"
+    "github.com/firebase/genkit/go/ai"
+    "github.com/firebase/genkit/go/genkit"
+    "github.com/firebase/genkit/go/plugins/compat_oai/openai"
+    "github.com/firebase/genkit/go/plugins/server"
 )
 
 func main() {
@@ -525,6 +526,7 @@ AI calls: systemInfo({
   "include_empty": false
 })
 ```
+
 Here is another example:
 
 ```bash
