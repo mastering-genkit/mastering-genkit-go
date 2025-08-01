@@ -40,7 +40,40 @@ The tool calling process follows this workflow:
 5. **Tool Execution**: If needed, the model calls the appropriate tool with parameters
 6. **Response Integration**: Tool results are integrated into the final response
 
-## Creating Your First Tool
+## Key Components of a Tool
+
+A tool in Genkit Go is defined by several key components. the method `genkit.DefineTool()` is used to create a tool, which takes the following parameters:
+
+```go
+DefineTool(
+    genkitClient *genkit.Genkit,
+    name string,
+    description string,
+    implementation func(ctx *ai.ToolContext, input InputType) (OutputType, error),
+)
+```
+
+When defining a tool, you need to specify:
+1. **Input Structure**: Define a struct that represents the tool's input parameters
+3. **Name**: A unique identifier for the tool
+4. **Description**: Clear documentation that helps the AI understand when and how to use the tool
+5. **Implementation**: The actual function that performs the tool's work
+6. **Tool Function**: Use `genkit.DefineTool()` to create the tool
+
+The description should be concise and provide enough context for the AI model to understand when to use the tool. The implementation function should handle the input, perform the necessary operations, and return the result. Same as the input and output structures, the implementation function should be well-defined to ensure clarity and maintainability. Why? because it helps the AI model understand the tool's purpose and how to use it effectively.
+
+## Best Practices for Tool Implementation
+
+When implementing tools, consider the following best practices to ensure they are effective and easy to use:
+
+1. **Clear Input Structures**: Use descriptive field names and JSON schema annotations
+2. **Comprehensive Error Handling**: Return meaningful error messages
+3. **Logging**: Add logging for debugging and monitoring
+4. **Validation**: Validate input parameters before processing
+5. **Descriptions**: Provide clear descriptions that help the AI understand the tool's purpose
+
+## Examples of Tool Definitions
+### Creating Your First Tool
 
 Let's start with a simple example, a tool that gets the current date and time. In our example project, we have implemented this in `internal/tools/date.go`:
 
@@ -111,17 +144,9 @@ func NewGetCurrentDate(genkitClient *genkit.Genkit) ai.Tool {
 
 In the example above, we define a tool called `getCurrentDate` that accepts an optional format string. If no format is provided, it defaults to `RFC3339`. The tool formats the current date and time according to the specified format and returns it as a string. It has a simple input structure but it showcases how to define a tool using a structured input and a clear implementation function. It is also important to note the property `jsonschema_description` in the input structure, which provides a description for the AI model to understand how to use the tool effectively.
 
-### Key Components of a Tool
+One important thing that it is worth noting is how easy it is to create tools using Genkit Go. It is as simple as defining a struct for the input parameters, implementing the tool function using `genkit.DefineTool()`, and providing a clear description. The code that you will write it is simple and straightforward and follows a consistent pattern, making it easy to maintain and extend.
 
-1. **Input Structure**: Define a struct that represents the tool's input parameters
-2. **Tool Function**: Use `genkit.DefineTool()` to create the tool
-3. **Name**: A unique identifier for the tool
-4. **Description**: Clear documentation that helps the AI understand when and how to use the tool
-5. **Implementation**: The actual function that performs the tool's work
-
-The description should be concise and provide enough context for the AI model to understand when to use the tool. The implementation function should handle the input, perform the necessary operations, and return the result. Same as the input and output structures, the implementation function should be well-defined to ensure clarity and maintainability. Why? because it helps the AI model understand the tool's purpose and how to use it effectively.
-
-## Building Directory Management Tools
+### Building Directory Management Tools
 
 Let's examine more complex tools that interact with the file system. Our example includes tools for listing and creating directories. Lets tackle first the `listDirectories` tool that lists all directories in the current working directory. This tool is defined in `internal/tools/directories.go`:
 
@@ -221,14 +246,6 @@ func NewCreateDirectory(genkitClient *genkit.Genkit) ai.Tool {
 ```
 
 This `createDirectory` tool accepts a `directory` field in its input structure, which specifies the name of the directory to create. It uses `os.MkdirAll()` to create the directory and returns a success message or an error if the operation fails.
-
-## Best Practices for Tool Implementation
-
-1. **Clear Input Structures**: Use descriptive field names and JSON schema annotations
-2. **Comprehensive Error Handling**: Return meaningful error messages
-3. **Logging**: Add logging for debugging and monitoring
-4. **Validation**: Validate input parameters before processing
-5. **Descriptions**: Provide clear descriptions that help the AI understand the tool's purpose
 
 ## Creating Flows with Tools
 
