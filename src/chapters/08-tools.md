@@ -123,7 +123,7 @@ The description should be concise and provide enough context for the AI model to
 
 ## Building Directory Management Tools
 
-Let's examine more complex tools that interact with the file system. Our example includes tools for listing and creating directories:
+Let's examine more complex tools that interact with the file system. Our example includes tools for listing and creating directories. Lets tackle first the `listDirectories` tool that lists all directories in the current working directory. This tool is defined in `internal/tools/directories.go`:
 
 ```go
 package tools
@@ -174,13 +174,60 @@ func NewListDirectories(genkitClient *genkit.Genkit) ai.Tool {
 }
 ```
 
-### Best Practices for Tool Implementation
+In this example, you saw how easy is to create a tool that lists directories in the current working directory. The `listDirectories` tool accepts an input structure with a `directory` field, which specifies the directory to list. It reads the directory entries using `os.ReadDir()`, filters for directories, and returns a slice of directory names.
+
+Let's also create a tool that creates a directory. This tool is defined in `internal/tools/directories.go` as well:
+
+```go
+package tools
+
+import (
+    "fmt"
+    "log"
+    "os"
+
+    "github.com/firebase/genkit/go/ai"
+    "github.com/firebase/genkit/go/genkit"
+)
+
+type CreateDirectoryInput struct {
+	Directory string `json:"directory" jsonschema_description:"Directory to create"`
+}
+
+// NewCreateDirectory creates a tool that creates a new directory.
+func NewCreateDirectory(genkitClient *genkit.Genkit) ai.Tool {
+	return genkit.DefineTool(
+		genkitClient,
+		"createDirectory",
+		"Creates a new directory with the specified name. Input should be the directory name or path.",
+		func(ctx *ai.ToolContext, input CreateDirectoryInput) (string, error) {
+			log.Printf("Tool 'createDirectory' called with input: %s", input)
+
+			if input.Directory == "" {
+				return "Error: Directory name cannot be empty", nil
+			}
+
+			// Create the directory
+			err := os.MkdirAll(input.Directory, 0755)
+			if err != nil {
+				log.Printf("Error creating directory '%s': %v", input.Directory, err)
+				return "Error: Could not create directory '" + input.Directory + "': " + err.Error(), nil
+			}
+
+			log.Printf("Successfully created directory: %s", input.Directory)
+			return "Successfully created directory: " + input.Directory, nil
+		})
+}
+```
+This `createDirectory` tool accepts a `directory` field in its input structure, which specifies the name of the directory to create. It uses `os.MkdirAll()` to create the directory and returns a success message or an error if the operation fails.
+
+## Best Practices for Tool Implementation
 
 1. **Clear Input Structures**: Use descriptive field names and JSON schema annotations
 2. **Comprehensive Error Handling**: Return meaningful error messages
 3. **Logging**: Add logging for debugging and monitoring
 4. **Validation**: Validate input parameters before processing
-5. **Documentation**: Provide clear descriptions that help the AI understand the tool's purpose
+5. **Descriptions**: Provide clear descriptions that help the AI understand the tool's purpose
 
 ## Creating Flows with Tools
 
@@ -219,9 +266,25 @@ This flow, `operatingSystemFlow`, uses the tools we defined earlier to handle us
 
 ## Integrating Tools in Your Application
 
-In your main application, you'll initialize tools and register them with flows:
+In your main application, you'll initialize tools and register them with flows. The following code snippet shows how to set up the Genkit application with the tools we created and puts everything together:
 
 ```go
+package main
+
+import (
+	"context"
+	"log"
+	"mastering-genkit-go/example/chapter-08/internal/flows"
+	"mastering-genkit-go/example/chapter-08/internal/tools"
+	"net/http"
+	"os"
+
+	"github.com/firebase/genkit/go/ai"
+	"github.com/firebase/genkit/go/genkit"
+	"github.com/firebase/genkit/go/plugins/compat_oai/openai"
+	"github.com/firebase/genkit/go/plugins/server"
+)
+
 func main() {
     ctx := context.Background()
 
@@ -241,7 +304,6 @@ func main() {
         tools.NewListDirectories(g),
         tools.NewCreateDirectory(g),
         tools.NewGetCurrentDate(g),
-        tools.NewSystemInfo(g),
     })
 
     // Set up HTTP handlers
@@ -307,8 +369,8 @@ Tools can be chained together to accomplish complex tasks. The AI model can call
 
 ```bash
 User: "Create a backup directory with the current date"
-1. AI calls createDirectory("backup")
-2. AI calls getCurrentDate() 
+1. AI calls getCurrentDate() 
+2. AI calls createDirectory("backup")
 3. AI combines results in response
 ```
 
@@ -462,7 +524,10 @@ AI calls: systemInfo({
   "format": "json",
   "include_empty": false
 })
+```
+Here is another example:
 
+```bash
 User: "Get the HOME and PATH environment variables, limit each to 50 characters"
 AI calls: systemInfo({
   "info_types": ["env"],
@@ -475,7 +540,8 @@ AI calls: systemInfo({
 
 This pattern is particularly useful when you need tools that can adapt their behavior based on detailed user requirements, providing flexibility while maintaining type safety and clear documentation through JSON schema descriptions.
 
-Here is an example of how the tool can be used in the UI, in the trace you can see the tool being called with complex parameters being filled in by the AI model thanks to the JSON schema description:
+Here is an example of how the tool can be used in the UI, in the trace you can see the tool being called with complex parameters being filled in by the AI model thanks to the JSON schema description, the prompt was `give me information about the current user in json format`:
+
 ![](../images/chapter-08/complex-input.png)
 
 
