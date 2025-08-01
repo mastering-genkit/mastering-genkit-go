@@ -48,64 +48,64 @@ Let's start with a simple example, a tool that gets the current date and time. I
 package tools
 
 import (
-	"fmt"
-	"log"
-	"time"
+    "fmt"
+    "log"
+    "time"
 
-	"github.com/firebase/genkit/go/ai"
-	"github.com/firebase/genkit/go/genkit"
+    "github.com/firebase/genkit/go/ai"
+    "github.com/firebase/genkit/go/genkit"
 )
 
 // DateRequest represents the input structure for the date tool
 type DateRequest struct {
-	Format string `json:"format" jsonschema_description:"Date format to use"` // Optional format string
+    Format string `json:"format" jsonschema_description:"Date format to use"` // Optional format string
 }
 
 // NewGetCurrentDate creates a tool that returns the current date in a specified format
 func NewGetCurrentDate(genkitClient *genkit.Genkit) ai.Tool {
-	return genkit.DefineTool(
-		genkitClient,
-		"getCurrentDate",
-		"Gets the current date and time in a specified format. Accepts a string with an optional 'format' field. Common formats: 'RFC3339' (default), 'Kitchen', 'Stamp', 'DateTime', or custom Go time format like '2006-01-02 15:04:05'.",
-		func(ctx *ai.ToolContext, input DateRequest) (string, error) {
-			log.Printf("Tool 'getCurrentDate' called with input: %s", input)
+    return genkit.DefineTool(
+        genkitClient,
+        "getCurrentDate",
+        "Gets the current date and time in a specified format. Accepts a string with an optional 'format' field. Common formats: 'RFC3339' (default), 'Kitchen', 'Stamp', 'DateTime', or custom Go time format like '2006-01-02 15:04:05'.",
+        func(ctx *ai.ToolContext, input DateRequest) (string, error) {
+            log.Printf("Tool 'getCurrentDate' called with input: %s", input)
 
-			// Set default format if none provided
-			if input.Format == "" {
-				input.Format = time.RFC3339
-			}
+            // Set default format if none provided
+            if input.Format == "" {
+                input.Format = time.RFC3339
+            }
 
-			now := time.Now()
-			var formattedDate string
+            now := time.Now()
+            var formattedDate string
 
-			// Handle common named formats
-			switch input.Format {
-			case "RFC3339":
-				formattedDate = now.Format(time.RFC3339)
-			case "Kitchen":
-				formattedDate = now.Format(time.Kitchen)
-			case "Stamp":
-				formattedDate = now.Format(time.Stamp)
-			case "DateTime":
-				formattedDate = now.Format(time.DateTime)
-			case "DateOnly":
-				formattedDate = now.Format(time.DateOnly)
-			case "TimeOnly":
-				formattedDate = now.Format(time.TimeOnly)
-			case "RFC822":
-				formattedDate = now.Format(time.RFC822)
-			case "RFC1123":
-				formattedDate = now.Format(time.RFC1123)
-			default:
-				// Treat as custom format
-				formattedDate = now.Format(input.Format)
-			}
+            // Handle common named formats
+            switch input.Format {
+            case "RFC3339":
+                formattedDate = now.Format(time.RFC3339)
+            case "Kitchen":
+                formattedDate = now.Format(time.Kitchen)
+            case "Stamp":
+                formattedDate = now.Format(time.Stamp)
+            case "DateTime":
+                formattedDate = now.Format(time.DateTime)
+            case "DateOnly":
+                formattedDate = now.Format(time.DateOnly)
+            case "TimeOnly":
+                formattedDate = now.Format(time.TimeOnly)
+            case "RFC822":
+                formattedDate = now.Format(time.RFC822)
+            case "RFC1123":
+                formattedDate = now.Format(time.RFC1123)
+            default:
+                // Treat as custom format
+                formattedDate = now.Format(input.Format)
+            }
 
-			result := fmt.Sprintf("Current date and time: %s (format: %s)", formattedDate, input.Format)
-			log.Printf("Returning formatted date: %s", result)
+            result := fmt.Sprintf("Current date and time: %s (format: %s)", formattedDate, input.Format)
+            log.Printf("Returning formatted date: %s", result)
 
-			return result, nil
-		})
+            return result, nil
+        })
 }
 ```
 
@@ -129,48 +129,48 @@ Let's examine more complex tools that interact with the file system. Our example
 package tools
 
 import (
-	"fmt"
-	"log"
-	"os"
+    "fmt"
+    "log"
+    "os"
 
-	"github.com/firebase/genkit/go/ai"
-	"github.com/firebase/genkit/go/genkit"
+    "github.com/firebase/genkit/go/ai"
+    "github.com/firebase/genkit/go/genkit"
 )
 
 type ListDirectoryInput struct {
-	Directory string `json:"directory" jsonschema_description:"Directory to list contents of"`
+    Directory string `json:"directory" jsonschema_description:"Directory to list contents of"`
 }
 
 // NewListDirectories creates a tool that lists directories
 func NewListDirectories(genkitClient *genkit.Genkit) ai.Tool {
-	return genkit.DefineTool(
-		genkitClient,
-		"listDirectories",
-		"Lists all directories in the current working directory.",
-		func(ctx *ai.ToolContext, input ListDirectoryInput) ([]string, error) {
-			log.Printf("Tool 'listDirectories' called with input: %s", input)
+    return genkit.DefineTool(
+        genkitClient,
+        "listDirectories",
+        "Lists all directories in the current working directory.",
+        func(ctx *ai.ToolContext, input ListDirectoryInput) ([]string, error) {
+            log.Printf("Tool 'listDirectories' called with input: %s", input)
 
-			// Read directory entries
-			entries, err := os.ReadDir(input.Directory)
-			if err != nil {
-				log.Printf("Error reading directory: %v", err)
-				return nil, fmt.Errorf("Error reading directory '%s': %v", input.Directory, err)
-			}
+            // Read directory entries
+            entries, err := os.ReadDir(input.Directory)
+            if err != nil {
+                log.Printf("Error reading directory: %v", err)
+                return nil, fmt.Errorf("Error reading directory '%s': %v", input.Directory, err)
+            }
 
-			// Filter for directories only
-			var directories []string
-			for _, entry := range entries {
-				if entry.IsDir() {
-					directories = append(directories, entry.Name())
-				}
-			}
+            // Filter for directories only
+            var directories []string
+            for _, entry := range entries {
+                if entry.IsDir() {
+                    directories = append(directories, entry.Name())
+                }
+            }
 
-			if len(directories) == 0 {
-				return nil, fmt.Errorf("No directories found in current working directory")
-			}
+            if len(directories) == 0 {
+                return nil, fmt.Errorf("No directories found in current working directory")
+            }
 
-			return directories, nil
-		})
+            return directories, nil
+        })
 }
 ```
 
@@ -190,30 +190,31 @@ Tools become powerful when integrated into flows. Here's how our example creates
 package flows
 
 import (
-	"context"
-	"fmt"
+    "context"
+    "fmt"
 
-	"github.com/firebase/genkit/go/ai"
-	"github.com/firebase/genkit/go/core"
-	"github.com/firebase/genkit/go/genkit"
+    "github.com/firebase/genkit/go/ai"
+    "github.com/firebase/genkit/go/core"
+    "github.com/firebase/genkit/go/genkit"
 )
 
 // NewOperatingSystemFlow creates a flow that interacts with the operating system
 func NewOperatingSystemFlow(g *genkit.Genkit, tools []ai.ToolRef) *core.Flow[string, string, struct{}] {
-	return genkit.DefineFlow(g, "operatingSystemFlow", func(ctx context.Context, userRequest string) (string, error) {
-		resp, err := genkit.Generate(ctx, g,
-			ai.WithSystem("You are an AI assistant that can interact with the operating system. Use the available tools to perform tasks."),
-			ai.WithPrompt(`The user wants to: %s`, userRequest),
-			ai.WithTools(tools...),
-		)
-		if err != nil {
-			return "", fmt.Errorf("failed to generate response: %w", err)
-		}
+    return genkit.DefineFlow(g, "operatingSystemFlow", func(ctx context.Context, userRequest string) (string, error) {
+        resp, err := genkit.Generate(ctx, g,
+            ai.WithSystem("You are an AI assistant that can interact with the operating system. Use the available tools to perform tasks."),
+            ai.WithPrompt(`The user wants to: %s`, userRequest),
+            ai.WithTools(tools...),
+        )
+        if err != nil {
+            return "", fmt.Errorf("failed to generate response: %w", err)
+        }
 
-		return resp.Text(), nil
-	})
+        return resp.Text(), nil
+    })
 }
 ```
+
 This flow, `operatingSystemFlow`, uses the tools we defined earlier to handle user requests related to operating system operations. It provides a structured way to interact with the AI model and execute tools based on user input.
 
 ## Integrating Tools in Your Application
@@ -222,43 +223,44 @@ In your main application, you'll initialize tools and register them with flows:
 
 ```go
 func main() {
-	ctx := context.Background()
+    ctx := context.Background()
 
-	// Initialize Genkit with OpenAI plugin
-	g, err := genkit.Init(ctx,
-		genkit.WithPlugins(&openai.OpenAI{
-			APIKey: os.Getenv("OPENAI_API_KEY"),
-		}),
-		genkit.WithDefaultModel("openai/gpt-4o"),
-	)
-	if err != nil {
-		log.Fatalf("could not initialize Genkit: %v", err)
-	}
+    // Initialize Genkit with OpenAI plugin
+    g, err := genkit.Init(ctx,
+        genkit.WithPlugins(&openai.OpenAI{
+            APIKey: os.Getenv("OPENAI_API_KEY"),
+        }),
+        genkit.WithDefaultModel("openai/gpt-4o"),
+    )
+    if err != nil {
+        log.Fatalf("could not initialize Genkit: %v", err)
+    }
 
-	// Create tools
-	operatingSystemFlow := flows.NewOperatingSystemFlow(g, []ai.ToolRef{
-		tools.NewListDirectories(g),
-		tools.NewCreateDirectory(g),
-		tools.NewGetCurrentDate(g),
-		tools.NewSystemInfo(g),
-	})
+    // Create tools
+    operatingSystemFlow := flows.NewOperatingSystemFlow(g, []ai.ToolRef{
+        tools.NewListDirectories(g),
+        tools.NewCreateDirectory(g),
+        tools.NewGetCurrentDate(g),
+        tools.NewSystemInfo(g),
+    })
 
-	// Set up HTTP handlers
-	mux := http.NewServeMux()
-	mux.HandleFunc("POST /operatingSystemFlow", genkit.Handler(operatingSystemFlow))
+    // Set up HTTP handlers
+    mux := http.NewServeMux()
+    mux.HandleFunc("POST /operatingSystemFlow", genkit.Handler(operatingSystemFlow))
 
-	// Start server
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "9090"
-	}
+    // Start server
+    port := os.Getenv("PORT")
+    if port == "" {
+        port = "9090"
+    }
 
-	log.Printf("Starting server on 127.0.0.1:%s", port)
-	log.Fatal(server.Start(ctx, "0.0.0.0:"+port, mux))
+    log.Printf("Starting server on 127.0.0.1:%s", port)
+    log.Fatal(server.Start(ctx, "0.0.0.0:"+port, mux))
 }
 ```
 
 As you can see, we define a flow that uses the tools we created. The flow is registered with an HTTP handler available at `/operatingSystemFlow`, allowing users to interact with it via API requests:
+
 1. **Initialize Genkit**: Set up the Genkit instance with the OpenAI plugin
 2. **Create Tools**: Instantiate the tools we defined earlier
 3. **Define Flow**: Create a flow that uses the tools to handle user requests
@@ -286,7 +288,7 @@ The AI model will automatically decide which tools to call based on your request
 
 ## Testing Your Tools in the UI
 
-As you develop tools, it's important to test them thoroughly. When you are running the Genkit UI using the Genkit CLI locally, you can test your tools directly in the UI. 
+As you develop tools, it's important to test them thoroughly. When you are running the Genkit UI using the Genkit CLI locally, you can test your tools directly in the UI.
 
 ![](../images/chapter-08/tools-list.png)
 
@@ -329,121 +331,122 @@ Tools can accept complex input structures with multiple parameters, validation r
 ```go
 // NewSystemInfo creates a tool that gathers system information based on complex criteria.
 func NewSystemInfo(genkitClient *genkit.Genkit) ai.Tool {
-	return genkit.DefineTool(
-		genkitClient,
-		"systemInfo",
-		"Gathers system information based on specified criteria and formatting options",
-		func(ctx *ai.ToolContext, input struct {
-			InfoTypes    []string `json:"info_types" jsonschema_description:"Types of info to gather: 'env', 'workdir', 'hostname', 'user'"`
-			EnvVars      []string `json:"env_vars" jsonschema_description:"Specific environment variables to retrieve"`
-			Format       string   `json:"format" jsonschema_description:"Output format: 'json', 'text', or 'summary'"`
-			IncludeEmpty bool     `json:"include_empty" jsonschema_description:"Whether to include empty/unset values"`
-			MaxLength    int      `json:"max_length" jsonschema_description:"Maximum length for each value (0 for no limit)"`
-		}) (string, error) {
-			log.Printf("Tool 'systemInfo' called with types: %v, format: %s", input.InfoTypes, input.Format)
+    return genkit.DefineTool(
+        genkitClient,
+        "systemInfo",
+        "Gathers system information based on specified criteria and formatting options",
+        func(ctx *ai.ToolContext, input struct {
+            InfoTypes    []string `json:"info_types" jsonschema_description:"Types of info to gather: 'env', 'workdir', 'hostname', 'user'"`
+            EnvVars      []string `json:"env_vars" jsonschema_description:"Specific environment variables to retrieve"`
+            Format       string   `json:"format" jsonschema_description:"Output format: 'json', 'text', or 'summary'"`
+            IncludeEmpty bool     `json:"include_empty" jsonschema_description:"Whether to include empty/unset values"`
+            MaxLength    int      `json:"max_length" jsonschema_description:"Maximum length for each value (0 for no limit)"`
+        }) (string, error) {
+            log.Printf("Tool 'systemInfo' called with types: %v, format: %s", input.InfoTypes, input.Format)
 
-			if len(input.InfoTypes) == 0 {
-				return "Error: At least one info type must be specified", nil
-			}
+            if len(input.InfoTypes) == 0 {
+                return "Error: At least one info type must be specified", nil
+            }
 
-			var results []string
+            var results []string
 
-			for _, infoType := range input.InfoTypes {
-				switch infoType {
-				case "env":
-					envInfo := "Environment Variables:\n"
-					if len(input.EnvVars) > 0 {
-						// Get specific environment variables
-						for _, envVar := range input.EnvVars {
-							value := os.Getenv(envVar)
-							if !input.IncludeEmpty && value == "" {
-								continue
-							}
-							if input.MaxLength > 0 && len(value) > input.MaxLength {
-								value = value[:input.MaxLength] + "..."
-							}
-							envInfo += fmt.Sprintf("  %s=%s\n", envVar, value)
-						}
-					} else {
-						// Get common environment variables
-						commonVars := []string{"HOME", "USER", "PATH", "SHELL", "PWD"}
-						for _, envVar := range commonVars {
-							value := os.Getenv(envVar)
-							if !input.IncludeEmpty && value == "" {
-								continue
-							}
-							if input.MaxLength > 0 && len(value) > input.MaxLength {
-								value = value[:input.MaxLength] + "..."
-							}
-							envInfo += fmt.Sprintf("  %s=%s\n", envVar, value)
-						}
-					}
-					results = append(results, envInfo)
+            for _, infoType := range input.InfoTypes {
+                switch infoType {
+                case "env":
+                    envInfo := "Environment Variables:\n"
+                    if len(input.EnvVars) > 0 {
+                        // Get specific environment variables
+                        for _, envVar := range input.EnvVars {
+                            value := os.Getenv(envVar)
+                            if !input.IncludeEmpty && value == "" {
+                                continue
+                            }
+                            if input.MaxLength > 0 && len(value) > input.MaxLength {
+                                value = value[:input.MaxLength] + "..."
+                            }
+                            envInfo += fmt.Sprintf("  %s=%s\n", envVar, value)
+                        }
+                    } else {
+                        // Get common environment variables
+                        commonVars := []string{"HOME", "USER", "PATH", "SHELL", "PWD"}
+                        for _, envVar := range commonVars {
+                            value := os.Getenv(envVar)
+                            if !input.IncludeEmpty && value == "" {
+                                continue
+                            }
+                            if input.MaxLength > 0 && len(value) > input.MaxLength {
+                                value = value[:input.MaxLength] + "..."
+                            }
+                            envInfo += fmt.Sprintf("  %s=%s\n", envVar, value)
+                        }
+                    }
+                    results = append(results, envInfo)
 
-				case "workdir":
-					workdir, err := os.Getwd()
-					if err != nil {
-						results = append(results, fmt.Sprintf("Working Directory: Error - %v\n", err))
-					} else {
-						if input.MaxLength > 0 && len(workdir) > input.MaxLength {
-							workdir = workdir[:input.MaxLength] + "..."
-						}
-						results = append(results, fmt.Sprintf("Working Directory: %s\n", workdir))
-					}
+                case "workdir":
+                    workdir, err := os.Getwd()
+                    if err != nil {
+                        results = append(results, fmt.Sprintf("Working Directory: Error - %v\n", err))
+                    } else {
+                        if input.MaxLength > 0 && len(workdir) > input.MaxLength {
+                            workdir = workdir[:input.MaxLength] + "..."
+                        }
+                        results = append(results, fmt.Sprintf("Working Directory: %s\n", workdir))
+                    }
 
-				case "hostname":
-					hostname, err := os.Hostname()
-					if err != nil {
-						results = append(results, fmt.Sprintf("Hostname: Error - %v\n", err))
-					} else {
-						results = append(results, fmt.Sprintf("Hostname: %s\n", hostname))
-					}
+                case "hostname":
+                    hostname, err := os.Hostname()
+                    if err != nil {
+                        results = append(results, fmt.Sprintf("Hostname: Error - %v\n", err))
+                    } else {
+                        results = append(results, fmt.Sprintf("Hostname: %s\n", hostname))
+                    }
 
-				case "user":
-					user := os.Getenv("USER")
-					if user == "" {
-						user = os.Getenv("USERNAME") // Windows fallback
-					}
-					if !input.IncludeEmpty && user == "" {
-						continue
-					}
-					results = append(results, fmt.Sprintf("Current User: %s\n", user))
+                case "user":
+                    user := os.Getenv("USER")
+                    if user == "" {
+                        user = os.Getenv("USERNAME") // Windows fallback
+                    }
+                    if !input.IncludeEmpty && user == "" {
+                        continue
+                    }
+                    results = append(results, fmt.Sprintf("Current User: %s\n", user))
 
-				default:
-					results = append(results, fmt.Sprintf("Unknown info type: %s\n", infoType))
-				}
-			}
+                default:
+                    results = append(results, fmt.Sprintf("Unknown info type: %s\n", infoType))
+                }
+            }
 
-			// Format output based on requested format
-			output := ""
-			switch input.Format {
-			case "json":
-				output = "{\n"
-				for i, result := range results {
-					output += fmt.Sprintf("  \"result_%d\": %q", i+1, result)
-					if i < len(results)-1 {
-						output += ","
-					}
-					output += "\n"
-				}
-				output += "}"
-			case "summary":
-				output = fmt.Sprintf("System Information Summary (%d items):\n", len(results))
-				for _, result := range results {
-					output += result
-				}
-			default: // "text" or any other value
-				for _, result := range results {
-					output += result
-				}
-			}
+            // Format output based on requested format
+            output := ""
+            switch input.Format {
+            case "json":
+                output = "{\n"
+                for i, result := range results {
+                    output += fmt.Sprintf("  \"result_%d\": %q", i+1, result)
+                    if i < len(results)-1 {
+                        output += ","
+                    }
+                    output += "\n"
+                }
+                output += "}"
+            case "summary":
+                output = fmt.Sprintf("System Information Summary (%d items):\n", len(results))
+                for _, result := range results {
+                    output += result
+                }
+            default: // "text" or any other value
+                for _, result := range results {
+                    output += result
+                }
+            }
 
-			return output, nil
-		})
+            return output, nil
+        })
 }
 ```
 
 In the example above, the `systemInfo` tool accepts a complex input structure that allows users to specify:
+
 - `info_types`: Types of information to gather (e.g., environment variables, working directory, hostname, user). It is an array of strings, allowing multiple types to be requested at once.
 - `env_vars`: Specific environment variables to retrieve.
 - `format`: Output format (e.g., JSON, text, summary).
@@ -481,23 +484,28 @@ Here is an example of how the tool can be used in the UI, in the trace you can s
 To run the Chapter 08 example:
 
 1. **Set up environment**:
+
    ```bash
    export OPENAI_API_KEY="your-api-key"
    ```
 
 2. **Run the application**:
+
    ```bash
    cd src/examples/chapter-08
    go run main.go
    ```
 
 3. **Test with curl**:
+
    ```bash
    curl -X POST http://localhost:9090/operatingSystemFlow \
      -H "Content-Type: application/json" \
      -d '{"data": "What time is it right now?"}'
    ```
+
 4. **Invoke with Genkit CLI**
+
     ```bash
     cd src/examples/chapter-08
     genkit flow:run operatingSystemFlow '"List all directories in folder /"'
