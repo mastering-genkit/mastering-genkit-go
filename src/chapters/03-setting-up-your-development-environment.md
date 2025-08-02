@@ -252,6 +252,8 @@ You can now access the Developer UI by navigating to `http://localhost:4000` in 
 
 Once your application is running with `genkit start -- go run .`, the Developer UI provides a comprehensive interface for developing and testing your AI workflows.
 
+>As you use the Developer UI, Genkit creates a `.genkit` directory in your project root as a local file trace store, containing telemetry data, flow execution traces, and other development artifacts. Consider adding `.genkit` to your `.gitignore` file if you don't need to share these development traces with your team.
+
 ### Main Dashboard
 
 ![Developer UI Overview](../images/chapter-03/developer-ui.png)
