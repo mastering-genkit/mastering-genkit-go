@@ -140,7 +140,7 @@ go mod tidy
 
 Create a `main.go` file with the following content:
 
-> **Note**: If you encounter import errors when writing the code, run `go mod tidy` to ensure all dependencies are properly downloaded.
+> If you encounter import errors when writing the code, run `go mod tidy` to ensure all dependencies are properly downloaded.
 
 ```go
 package main
@@ -236,8 +236,6 @@ GoogleAI.Init: Google AI requires setting GEMINI_API_KEY or GOOGLE_API_KEY in th
 You can get an API key at https://ai.google.dev
 exit status 1
 ```
-
->Note that Genkit accepts either `GEMINI_API_KEY` or `GOOGLE_API_KEY` as the environment variable name. Throughout this book, we'll use `GEMINI_API_KEY` for consistency.
 
 Once your API key is properly configured, you should see output like:
 
