@@ -110,7 +110,15 @@ For our first application in this chapter, we'll start with a much simpler struc
 
 ## First Genkit Go Application with Server and Flows
 
-Let's build a Genkit Go application with a proper server and Flow definition to fully utilize the Developer UI. This approach demonstrates Genkit's real-world usage pattern from the start.
+Let's build a Genkit Go application with a proper server and Flow definition to fully utilize the Developer UI.
+
+A Flow is a reusable, configurable function that encapsulates your AI logic with well-defined input and output types - think of it as a structured API endpoint specifically designed for AI operations.
+
+In our example, we'll create a `greetingFlow` that accepts a user's name and returns a personalized greeting. Here's how this Flow architecture works within our HTTP server:
+
+![](../images/chapter-03/flow-concept.png)
+
+As shown in the diagram, the Flow sits inside your Go server and handles the complete request lifecycle: validating input, calling the LLM with your AI logic, and returning the response. Let's implement this pattern.
 
 ### Step 1: Initialize the Project
 
