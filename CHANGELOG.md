@@ -1,3 +1,33 @@
+# [1.3.0](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.2.0...v1.3.0) (2025-08-03)
+
+
+### Bug Fixes
+
+* added xavi metadata ([a386ea4](https://github.com/mastering-genkit/mastering-genkit-go/commit/a386ea46889f284f7741137a483b920aeb1c97e9))
+* comment ([bfe0a89](https://github.com/mastering-genkit/mastering-genkit-go/commit/bfe0a89cb6d29893942331f0caff250d1f02ab4f))
+* explained the flow invokation ([642372a](https://github.com/mastering-genkit/mastering-genkit-go/commit/642372ab928d6dff2912090f712fa755c2f095f7))
+* flow ([d66a8a9](https://github.com/mastering-genkit/mastering-genkit-go/commit/d66a8a90fc1d9ff6f342060ed88939ae649bcd6d))
+* improve docs and order ([2d04744](https://github.com/mastering-genkit/mastering-genkit-go/commit/2d047446d7f01b8449061dac25b29fb7b5c3e7fa))
+* improve example ([fa55272](https://github.com/mastering-genkit/mastering-genkit-go/commit/fa55272cbbaa08a8a100164e4abf0e87aa2c99fe))
+* improve styling ([ea05aa8](https://github.com/mastering-genkit/mastering-genkit-go/commit/ea05aa8d0be8145863768e75e8b6a96a3424e8ba))
+* improved ([583a2a6](https://github.com/mastering-genkit/mastering-genkit-go/commit/583a2a621a1389b191a9662db51853ebffaf7802))
+* invocation and added screenshots ([743244f](https://github.com/mastering-genkit/mastering-genkit-go/commit/743244ff19d475c6175c98a19cacf74c88b4b624))
+* lint ([0e6e51a](https://github.com/mastering-genkit/mastering-genkit-go/commit/0e6e51a21e851c316a82beac21b0a6ddcc537884))
+* lint ([b04aada](https://github.com/mastering-genkit/mastering-genkit-go/commit/b04aada65ac99279b422f23ef985659669ec83e8))
+* linting ([bd4c377](https://github.com/mastering-genkit/mastering-genkit-go/commit/bd4c37749b072d5f032a4d4a6a4bc006c4fb2790))
+* linting ([09aecf7](https://github.com/mastering-genkit/mastering-genkit-go/commit/09aecf7f202b0e88fe507e805092767637872046))
+* lniting issues ([7b368f4](https://github.com/mastering-genkit/mastering-genkit-go/commit/7b368f4475a9787d2ccb09416f814dcf27517df8))
+* remove placeholder chapters ([44f713b](https://github.com/mastering-genkit/mastering-genkit-go/commit/44f713b4f4695f8bd8cb316ae0b24dde1bf6c281))
+* typo ([105a294](https://github.com/mastering-genkit/mastering-genkit-go/commit/105a294068eda3a91273180e82594727564332f3))
+
+
+### Features
+
+* chapter 08 ([4af67d6](https://github.com/mastering-genkit/mastering-genkit-go/commit/4af67d68166b7beabab65f10542be7c06a2d89a7))
+* chapter-08 ([f092603](https://github.com/mastering-genkit/mastering-genkit-go/commit/f092603d984339e8c11209a9f0f1f16fd795fc2a))
+* code for chapter-08 ([5864a66](https://github.com/mastering-genkit/mastering-genkit-go/commit/5864a660795743dd765be91b933717f16ee44aad))
+* diagrams ([6ba77ea](https://github.com/mastering-genkit/mastering-genkit-go/commit/6ba77eac5a96d14454ff1aa81efd7e90c3d861bf))
+
 # [1.2.0](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.1.1...v1.2.0) (2025-08-02)
 
 
