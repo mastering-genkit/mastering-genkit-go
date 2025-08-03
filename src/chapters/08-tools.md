@@ -593,6 +593,8 @@ To run the Chapter 08 example:
 
 4. **Invoke with Genkit CLI**
 
+To invoke the flow using the Genkit CLI, you have to make sure that you are running the command from the correct directory. and you have running your server using `genkit start -- go run .`. Once the server is running, you can use the following command to invoke the flow in a separate terminal:
+
     ```bash
     cd src/examples/chapter-08
     genkit flow:run operatingSystemFlow '"List all directories in folder /"'
