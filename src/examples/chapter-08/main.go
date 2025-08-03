@@ -17,7 +17,7 @@ import (
 func main() {
 	ctx := context.Background()
 
-	// Initialize Genkit with the Google AI plugin and Gemini 2.0 Flash.
+	// Initialize Genkit with OpenAI plugin and default model using GPT-4o.
 	g, err := genkit.Init(ctx,
 		genkit.WithPlugins(&openai.OpenAI{
 			APIKey: os.Getenv("OPENAI_API_KEY"),
