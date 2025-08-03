@@ -39,6 +39,3 @@ MD045: false
 
 # Required structure for reference definitions
 MD050: false
-
-# No Alt text for images
-MD045: false

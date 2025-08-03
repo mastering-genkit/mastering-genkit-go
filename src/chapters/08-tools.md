@@ -572,33 +572,33 @@ To run the Chapter 08 example:
 
 1. **Set up environment**:
 
-   ```bash
-   export OPENAI_API_KEY="your-api-key"
-   ```
+    ```bash
+    export OPENAI_API_KEY="your-api-key"
+    ```
 
 2. **Run the application**:
 
-   ```bash
-   cd src/examples/chapter-08
-   go run main.go
-   ```
+    ```bash
+    cd src/examples/chapter-08
+    go run main.go
+    ```
 
 3. **Test with curl**:
 
-   ```bash
-   curl -X POST http://localhost:9090/operatingSystemFlow \
-     -H "Content-Type: application/json" \
-     -d '{"data": "What time is it right now?"}'
-   ```
+    ```bash
+    curl -X POST http://localhost:9090/operatingSystemFlow \
+        -H "Content-Type: application/json" \
+        -d '{"data": "What time is it right now?"}'
+    ```
 
-4. **Invoke with Genkit CLI**
+4. **Invoke with Genkit CLI**:
 
 To invoke the flow using the Genkit CLI, you have to make sure that you are running the command from the correct directory. and you have running your server using `genkit start -- go run .`. Once the server is running, you can use the following command to invoke the flow in a separate terminal:
 
-    ```bash
-    cd src/examples/chapter-08
-    genkit flow:run operatingSystemFlow '"List all directories in folder /"'
-    ```
+```bash
+cd src/examples/chapter-08
+genkit flow:run operatingSystemFlow '"List all directories in folder /"'
+```
 
 ## Key takeaways
 
