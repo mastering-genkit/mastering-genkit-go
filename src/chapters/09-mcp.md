@@ -244,6 +244,13 @@ curl -X POST http://127.0.0.1:9090/operatingSystemFlow \
   -d '{"data":"List all directories in the current folder"}'
 ```
 
+Or just using the Genkit CLI, to run the flow directly make sure you are running your AI Application in another terminal with `genkit start -- go run .`:
+
+```bash
+cd src/examples/chapter-09/mcp-client
+genkit run operatingSystemFlow --data "List all directories in the current folder"
+```
+
 Here is a full example of how we can intereact the flow and invoking the tools from the MCP server from the UI:
 
 ![](../images/chapter-09/use-tool-from-server.png)
