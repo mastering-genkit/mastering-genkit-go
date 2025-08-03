@@ -14,200 +14,144 @@ Before diving into this chapter, you should have:
 - Basic understanding of Go's type system and error handling
 - Familiarity with JSON schemas and data validation concepts
 
-## The Generation Architecture
+## Understanding Genkit's Generation System
 
-Genkit Go's generation system is elegantly designed around a few key abstractions that work together seamlessly. Understanding this architecture helps you make better decisions when building AI applications.
+Genkit Go provides a powerful generation system that balances simplicity with flexibility. Let's explore how this system helps you build better AI applications.
 
-![](../images/genkit-core-architecture.png)
+![](../images/chapter-04/genkit-core-architecture.png)
 
-The architecture follows a clear flow:
+### The Core Concepts
 
-### 1. Your Application Layer
+At its heart, Genkit's generation system revolves around three key principles:
 
-Your application initiates generation requests through Genkit's high-level APIs:
+1. **Unified Interface**: All AI models - whether from Google, OpenAI, Anthropic, or custom implementations - share the same interface
+2. **Type Safety**: Leverage Go's type system for compile-time guarantees and better developer experience
+3. **Composability**: Build complex functionality from simple, well-defined components
+
+### How Models Work in Genkit
+
+When you use Genkit, models are identified by their unique names. While many follow a provider/name pattern, the exact format can vary by provider:
 
 ```go
-// genkit.go:672-674
-func (g *G) Generate(ctx context.Context, opts ...ai.GenerateOption) (*ai.ModelResponse, error) {
-    return ai.Generate(ctx, opts...)
-}
+"googleai/gemini-2.5-flash"
+"openai/gpt-4o"
+"vertexai/claude-3-5-sonnet"
+"anthropic.claude-3-haiku-20240307-v1:0"
 ```
 
-These thin wrappers provide a clean interface while delegating to the core `ai.Generate()` functions.
+Despite the varying formats, this naming system provides several benefits:
 
-### 2. Registry: The Central Nervous System
+- **Clear Organization**: Know immediately which provider powers each model
+- **Easy Switching**: Change models by updating a string - no code changes needed
+- **Dynamic Loading**: Models can be resolved at runtime, enabling flexible configurations
+- **Ecosystem Flexibility**: Beyond official plugins, the Genkit ecosystem includes community contributions like the [AWS Bedrock plugin](https://github.com/xavidop/genkit-aws-bedrock-go), expanding your deployment options
 
-The Registry manages all components with thread-safe operations:
+### The Power of Provider Independence
 
-```go
-// internal/registry/registry.go:44-55
-type Registry struct {
-    tstate  *tracing.State
-    mu      sync.Mutex
-    frozen  bool           // when true, no more additions
-    parent  *Registry      // parent registry for hierarchical lookups
-    actions map[string]any // Values follow interface core.Action
-    plugins map[string]any // Values follow interface genkit.Plugin
-    values  map[string]any // Values can truly be anything
-    
-    ActionResolver ActionResolver // Function for resolving actions dynamically
-    Dotprompt      *dotprompt.Dotprompt
-}
-```
-
-Key features include:
-
-- **Thread-safe storage** for models, tools, flows, and plugins
-- **Hierarchical lookups** through parent-child relationships ([see implementation](https://github.com/firebase/genkit/blob/main/go/internal/registry/registry.go#L168-L181))
-- **Dynamic resolution** of models at runtime via `ActionResolver`
-
-### 3. Model Interface Lookup
-
-The system parses model names and retrieves implementations dynamically:
+One of Genkit's greatest strengths is provider independence. While each provider requires its own plugin and configuration, the core generation interface remains consistent:
 
 ```go
-// ai/generate.go:177-197
-func LookupModelByName(r *registry.Registry, modelName string) (Model, error) {
-    if modelName == "" {
-        return nil, core.NewError(core.INVALID_ARGUMENT, "ai.LookupModelByName: model not specified")
-    }
-
-    provider, name, found := strings.Cut(modelName, "/")
-    if !found {
-        name = provider
-        provider = ""
-    }
-
-    model := LookupModel(r, provider, name)
-    if model == nil {
-        if provider == "" {
-            return nil, core.NewError(core.NOT_FOUND, "ai.LookupModelByName: model %q not found", name)
-        }
-        return nil, core.NewError(core.NOT_FOUND, "ai.LookupModelByName: model %q by provider %q not found", name, provider)
-    }
-
-    return model, nil
-}
-```
-
-### 4. Middleware Chain
-
-Genkit Go uses a middleware pattern at two levels:
-
-**Built-in middlewares** are automatically applied when a model is registered:
-
-```go
-// ai/generate.go:153-158
-mws := []ModelMiddleware{
-    simulateSystemPrompt(info, nil),
-    augmentWithContext(info, nil),
-    validateSupport(name, info),
-}
-fn = core.ChainMiddleware(mws...)(fn)
-```
-
-**User middlewares** can be added at generation time via `WithMiddleware`:
-
-```go
-// ai/option.go:236-239
-// WithMiddleware sets middleware to apply to the model request.
-func WithMiddleware(middleware ...ModelMiddleware) CommonGenOption {
-    return &commonGenOptions{Middleware: middleware}
-}
-```
-
-This two-level middleware system ensures compatibility across all models while providing the extensibility mentioned in the Design Advantages.
-
-### 5. Provider Implementations
-
-All providers implement the common Model interface:
-
-```go
-// ai/generate.go:36-41
-type Model interface {
-    // Name returns the registry name of the model.
-    Name() string
-    // Generate applies the Model to provided request, handling tool requests and handles streaming.
-    Generate(ctx context.Context, req *ModelRequest, cb ModelStreamCallback) (*ModelResponse, error)
-}
-```
-
-### 6. Response Processing Pipeline
-
-The pipeline handles various output formats and validation:
-
-```go
-// ai/generate.go:279-295
-// Native constrained output is enabled only when the user has
-// requested it, the model supports it, and there's a JSON schema.
-outputCfg.Constrained = opts.Output.JsonSchema != nil &&
-    opts.Output.Constrained && model.SupportsConstrained(len(toolDefs) > 0)
-
-// Add schema instructions to prompt when not using native constraints.
-// This is a no-op for unstructured output requests.
-if !outputCfg.Constrained {
-    instructions := ""
-    if opts.Output.Instructions != nil {
-        instructions = *opts.Output.Instructions
-    } else {
-        instructions = formatHandler.Instructions()
-    }
-    if instructions != "" {
-        opts.Messages = injectInstructions(opts.Messages, instructions)
-    }
-}
-```
-
-Error handling wraps all errors in structured types:
-
-```go
-// ai/generate.go:322-325
-if err != nil {
-    logger.FromContext(ctx).Debug("model failed to generate output matching expected schema", "error", err.Error())
-    return nil, core.NewError(core.INTERNAL, "model failed to generate output matching expected schema: %v", err)
-}
-```
-
-### Design Advantages
-
-This architecture provides several key benefits:
-
-#### Provider Independence
-
-Switch between models with a simple string change - no code refactoring needed:
-
-```go
-// Using Gemini 2.5 Flash
+// Using Gemini
 resp1, _ := genkit.Generate(ctx, g, 
     ai.WithModelName("googleai/gemini-2.5-flash"),
     ai.WithPrompt("Explain quantum computing"))
 
-// Switch to GPT-4 - same code, different model
+// Switch to GPT-4 - same generation interface
 resp2, _ := genkit.Generate(ctx, g,
     ai.WithModelName("openai/gpt-4"),
     ai.WithPrompt("Explain quantum computing"))
 
-// Or use Claude - the interface remains identical
+// Use Claude via Vertex AI
 resp3, _ := genkit.Generate(ctx, g,
     ai.WithModelName("vertexai/claude-3-5-sonnet"),
     ai.WithPrompt("Explain quantum computing"))
+
+// Or use Claude via AWS Bedrock with a community plugin
+// The Genkit ecosystem extends beyond official providers
+resp4, _ := genkit.Generate(ctx, g,
+    ai.WithModel(
+        bedrockPlugin.DefineModel(g, bedrock.ModelDefinition{
+            Name: "anthropic.claude-3-haiku-20240307-v1:0",
+            Type: "text",
+        }, nil)
+    ),
+    ai.WithPrompt("Explain quantum computing"))
 ```
 
-The Registry pattern ensures all models share the same interface, making migration seamless.
+This design enables you to:
 
-#### Type Safety
+- **A/B Test Models**: Compare different models' performance without rewriting code
+- **Fallback Strategies**: If one provider fails, seamlessly switch to another
+- **Cost Optimization**: Use expensive models only when needed, cheaper ones for routine tasks
 
-Go's compile-time type checking prevents runtime errors. When you use `GenerateData` with a struct, Genkit automatically generates JSON schemas and validates responses against them. This means malformed AI responses are caught before they can cause issues in your application, and you get IDE autocompletion for all generated data.
+### Type Safety with Go
 
-#### Extensibility Through Middleware
+Genkit Go leverages Go's type system to provide compile-time safety and better developer experience:
 
-The middleware chain allows you to inject custom logic - authentication, logging, rate limiting, or request modification - without touching core code. Each middleware wraps the next, creating a composable pipeline that's easy to test and maintain. You can add observability, implement caching, or transform requests, all while keeping concerns separated.
+```go
+// Define your expected output structure
+type Recipe struct {
+    Name        string   `json:"name"`
+    PrepTime    int      `json:"prep_time_minutes"`
+    Ingredients []string `json:"ingredients"`
+    Steps       []string `json:"steps"`
+}
 
-#### Error Resilience
+// Genkit automatically:
+// 1. Generates JSON schema from your struct
+// 2. Instructs the model to follow this schema
+// 3. Validates the response
+// 4. Unmarshals into your type
+recipe, _, err := genkit.GenerateData[Recipe](ctx, g,
+    ai.WithPrompt("Create a healthy breakfast recipe"))
 
-Structured errors with standardized status codes (INVALID_ARGUMENT, NOT_FOUND, RESOURCE_EXHAUSTED, INTERNAL) enable precise error handling. Instead of parsing error strings, you can programmatically respond to specific failure modes: retry on rate limits, fallback on model unavailability, or alert on internal errors. This approach makes production systems more reliable and easier to monitor.
+// Use the result with full type safety
+fmt.Printf("Recipe: %s (Prep time: %d minutes)\n", 
+    recipe.Name, recipe.PrepTime)
+```
 
-The elegance lies in how these components compose - each has a single responsibility, communicating through well-defined interfaces. This design makes Genkit Go applications maintainable, testable, and production-ready.
+This approach prevents common issues:
+
+- **No Runtime Surprises**: Malformed responses are caught immediately
+- **Clear Contracts**: The expected structure is explicit in your code
+- **Refactoring Safety**: Change your struct, and the compiler tells you what to update
+
+### Middleware: Extending Without Modifying
+
+Genkit's middleware system lets you add functionality without changing core code:
+
+```go
+// Define logging middleware
+loggingMiddleware := func(fn ai.ModelFunc) ai.ModelFunc {
+    return func(ctx context.Context, req *ai.ModelRequest, cb ai.ModelStreamCallback) (*ai.ModelResponse, error) {
+        start := time.Now()
+        resp, err := fn(ctx, req, cb)
+        if err != nil {
+            log.Printf("Error after %v", time.Since(start))
+            return nil, err
+        }
+        log.Printf("Success in %v", time.Since(start))
+        return resp, nil
+    }
+}
+
+// Use middleware in your generation
+resp, err := genkit.Generate(ctx, g,
+    ai.WithPrompt("Explain how to make perfect rice"),
+    ai.WithMiddleware(loggingMiddleware))
+```
+
+```bash
+# Example of operation
+2025/08/03 13:25:37 Success in 15.355457625s
+```
+
+Common middleware use cases:
+
+- **Observability**: Log requests, responses, and performance metrics
+- **Security**: Add authentication or filter sensitive data
+- **Resilience**: Implement retry logic or circuit breakers
+- **Cost Control**: Track token usage and enforce limits
 
 ### Generate vs GenerateData: Choosing the Right Tool
 
@@ -224,19 +168,12 @@ resp, err := genkit.Generate(ctx, g,
 
 // Access the response
 fmt.Println(resp.Text())
-// Output: "Here are some healthy Japanese breakfast ideas: 1. Ochazuke..."
 
 // Check token usage
 if resp.Usage != nil {
     log.Printf("Tokens used: %d", resp.Usage.TotalTokens)
 }
 ```
-
-Choose `Generate` when:
-
-- You want free-form text responses (recipes, cooking tips, menu suggestions)
-- The output format varies based on the query
-- You need to process the raw response yourself
 
 #### GenerateData: Type-Safe Structured Output
 
@@ -263,11 +200,18 @@ fmt.Printf("%s (Prep: %d min, Calories: %d)\n",
     recipe.Name, recipe.PrepTime, recipe.Nutrition.Calories)
 ```
 
-Choose `GenerateData` when:
+### Comparison Guide
 
-- You need consistent output structure (recipes, ingredient lists, nutritional data)
-- Your application expects specific fields to be present
-- You want compile-time type safety and IDE autocomplete
+Both approaches have their strengths. Choose based on your specific requirements rather than assuming one is universally better.
+
+| Consideration | Generate | GenerateData |
+|--------------|----------|--------------|
+| **Output Type** | Free-form text | Structured data (JSON) |
+| **Use Case Examples** | Creative writing, explanations, summaries | API responses, data extraction, form filling |
+| **Response Format** | Variable, depends on prompt | Consistent, follows schema |
+| **Type Safety** | Runtime string handling | Compile-time type checking |
+| **Processing** | Manual parsing if needed | Automatic unmarshaling |
+| **Flexibility** | Maximum flexibility | Schema-constrained |
 
 ## Error Handling: Building Resilient AI Applications
 
@@ -464,71 +408,130 @@ prompt := genkit.LookupPrompt(g, "analyzer." + variant)
 
 > **Note**: For production A/B testing, you can integrate with [Firebase Remote Config](https://firebase.google.com/docs/remote-config) or [Firestore](https://firebase.google.com/docs/firestore) to dynamically control variant selection and enable gradual rollouts.
 
-### Developer UI Integration
+## Running the Example
 
-![](../images/test-dotprompt.png)
+To run the Chapter 4 example and explore generation patterns:
 
-The Developer UI provides a visual interface for experimenting with prompts before committing them to code. To use it effectively, your application needs to stay running:
+### 1. Set up environment
 
-```go
-func main() {
-    ctx := context.Background()
+```bash
+export GEMINI_API_KEY="your-api-key"
+```
 
-    // Initialize Genkit with prompt directory
-    _, err := genkit.Init(ctx,
-        genkit.WithPlugins(&googlegenai.GoogleAI{}),
-        genkit.WithPromptDir("prompts"),
-    )
-    if err != nil {
-        log.Fatalf("could not initialize Genkit: %v", err)
-    }
+### 2. Run the application
 
-    // Block execution to keep the app running for Developer UI
-    // This allows genkit start to connect to your application
-    // Even without flows, the Developer UI needs the app running to test prompts
-    select {}
+```bash
+cd src/examples/chapter-04
+go run main.go
+```
+
+### 3. Test with curl
+
+Test basic generation:
+
+```bash
+curl -X POST http://localhost:9090/basicGenerationFlow \
+  -H "Content-Type: application/json" \
+  -d '{"data": "how to cook perfect rice"}'
+```
+
+Example response (abbreviated):
+
+```json
+
+{
+  "result": "Hello there, aspiring chef! Today, we're going to master the art of perfect rice...\n\n### How to Cook Perfect Fluffy White Rice (Stovetop Method)\n\n#### What You'll Need:\n- **Rice:** 1 cup\n- **Water:** 2 cups (magic ratio: 1:2)\n- **Salt:** 1/2 teaspoon\n\n#### Simple Steps:\n1. **Rinse the rice** until water runs clear\n2. **Combine** rice, water, and salt in a pot\n3. **Bring to a boil** on medium-high heat\n4. **Reduce heat & cover** - simmer for 18 minutes (DO NOT LIFT THE LID!)\n5. **Rest** for 10 minutes off heat\n6. **Fluff with a fork** and serve!\n\n[Full response truncated for brevity...]"
 }
 ```
 
-Then start the Developer UI:
+Test Dotprompt flow:
+
+```bash
+curl -X POST http://localhost:9090/dotpromptFlow \
+  -H "Content-Type: application/json" \
+  -d '{"data": "making pasta from scratch"}'
+```
+
+Example response (abbreviated):
+
+```json
+
+{
+  "result": "Alright, my aspiring chefs! Ready to unlock a super satisfying kitchen secret?...\n\n### Basic Recipe (2 servings):\n- **1 cup all-purpose flour**\n- **1 large egg**\n- **Pinch of salt**\n\n### Quick Steps:\n1. **Make a flour volcano** with a well in the center\n2. **Add egg** to the well and whisk\n3. **Knead** for 8-10 minutes until smooth\n4. **Rest** wrapped for 30 minutes\n5. **Roll thin** (you should almost see through it!)\n6. **Cut** into your desired shape\n7. **Cook** in boiling salted water for 2-4 minutes\n\n[Full response truncated for brevity...]"
+}
+```
+
+Notice in the server logs how the middleware tracks execution time:
+
+```bash
+2025/08/03 15:30:42 Success in 15.418887708s
+2025/08/03 15:32:42 Success in 24.84293225s
+```
+
+This demonstrates that our logging middleware is successfully intercepting each request, timing the generation process, and logging the results.
+
+### 4. Test with Developer UI
+
+Start the application with the Developer UI:
 
 ```bash
 genkit start -- go run .
 ```
 
-The `select {}` statement blocks the main goroutine indefinitely, keeping your application running so the Developer UI can interact with it. Navigate to <http://localhost:4000> to access the interface where you can:
+Navigate to <http://localhost:4000/flows> and you'll see the Flows section:
 
-- Test prompts with different models and configurations
-- Experiment with temperature, token limits, and other parameters
-- Export successful prompts as `.prompt` files to your project
-- View traces and debug generation requests
+![](../images/chapter-04/flows.png)
 
-![](../images/export-dotprompt.png)
+#### Testing Generation Patterns
 
-### Best Practices
+The Developer UI allows you to:
 
-1. **Version Control**: Track prompt changes in Git
-2. **Testing**: Write tests for critical prompts
-3. **Modularity**: Use partials for shared components
-4. **Documentation**: Comment complex schemas
-5. **Validation**: Test edge cases with your schemas
+1. **Test different flows** - Compare outputs between basicGenerationFlow and dotpromptFlow
+2. **Experiment with parameters** - Adjust temperature, max tokens, and other settings
+3. **View token usage** - Understand the cost implications of your prompts
+
+![](../images/chapter-04/test-dotprompt-flow-result.png)
+
+#### Working with Dotprompt Files
+
+The UI automatically discovers all `.prompt` files in your configured directory.  
+Navigate to <http://localhost:4000/prompts> and you'll see the Prompts section:
+
+![](../images/chapter-04/prompts.png)
+
+1. **Live editing** - Modify prompts and see results immediately
+2. **Schema validation** - The UI validates your input against defined schemas
+3. **Export successful configurations** - Once you find the perfect prompt settings, export them directly
+
+![](../images/chapter-04/export-dotprompt.png)
+
+### 5. Test with Genkit CLI
+
+> The Genkit CLI requires your application to be running. Make sure you have started the server with `genkit start -- go run .` in a separate terminal before running these commands.
+
+```bash
+# Basic generation flow
+genkit flow:run basicGenerationFlow '"how to make sushi"'
+
+# Dotprompt flow
+genkit flow:run dotpromptFlow '"fermentation techniques"'
+```
 
 ## Beyond Simple Generation
 
-The architecture we've explored reveals how Genkit Go approaches AI generation as a comprehensive software engineering challenge. By exposing the internal workings - from the Registry pattern to middleware chains - the framework enables developers to build sophisticated AI applications with the same rigor as traditional software.
+This chapter has taken you through the practical aspects of AI generation with Genkit Go. From basic text generation to type-safe structured output, from simple prompts to sophisticated Dotprompt management, you've seen how Genkit provides the tools needed for production AI applications.
 
-The progression from `Generate` to `GenerateData` to Dotprompt represents increasing levels of control and abstraction. Each layer addresses specific production needs: type safety for reliable data extraction, error handling for resilience, and prompt management for maintainability. This isn't accidental - it reflects deep understanding of what teams need when moving AI from prototype to production.
+The middleware pattern demonstrated with our logging example shows how Genkit enables cross-cutting concerns without modifying core logic. While we focused on logging here, the same pattern enables authentication, authorization, rate limiting, cost tracking, and retry logic - essential capabilities for production AI applications. The seamless switching between providers means you're never locked into a single vendor, giving you the flexibility to optimize for cost, performance, or capabilities as your needs evolve.
 
-Dotprompt's design particularly stands out for recognizing that prompts are living artifacts that evolve with your application. By providing version control, A/B testing capabilities, and modular composition through partials, it transforms prompt engineering from an ad-hoc process into a disciplined practice. The framework treats prompts with the same respect as database migrations or API schemas - critical components that deserve proper tooling and processes.
+Perhaps most importantly, the Developer UI represents a significant step toward practical LLMOps. It transforms the traditionally opaque process of prompt engineering into a visual, iterative workflow with full observability. Instead of deploying to production to test each prompt variation, you can refine locally, track performance metrics, export successful configurations, and maintain consistency across your team - laying the foundation for systematic prompt management and continuous improvement.
 
 ## Key Takeaways
 
-- **Architecture matters**: Understanding Genkit's Registry pattern and middleware chain helps you build better AI applications
-- **Choose the right tool**: Use `Generate` for flexible text output; use `GenerateData` for type-safe structured data
-- **Handle errors systematically**: Genkit's structured error types enable precise handling of different failure modes
-- **Dotprompt brings engineering discipline**: Treat prompts as code with version control, testing, and modular composition
-- **Provider independence**: Switch between models with a simple string change, no code refactoring needed
+- Generation in Genkit Go offers two approaches: `Generate` for text and `GenerateData` for structured output
+- Middleware enables cross-cutting concerns like logging, auth, and monitoring
+- Provider switching is as simple as changing a model name string
+- Dotprompt brings engineering discipline to prompt management
 
-## Next Steps
+## What's Next
 
-In Chapter 5, we'll build on these generation fundamentals to explore structured output in depth. You'll learn how to handle complex nested structures, implement sophisticated validation strategies, and optimize performance for production workloads. The patterns you've learned here - from error handling to schema validation - will form the foundation for building reliable, type-safe AI applications.
+This chapter introduced the fundamentals of AI generation with Genkit Go. In the next chapter, we'll explore structured output in depth, covering complex schemas, validation strategies, and techniques for reliable data extraction. You'll build on the patterns learned here to create more sophisticated AI applications that can handle real-world complexity.
