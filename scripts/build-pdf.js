@@ -322,22 +322,28 @@ p {
 
 code {
     font-family: 'Courier New', 'Monaco', monospace;
-    font-size: 9pt;
+    font-size: 8pt;
     background-color: #f8f8f8;
     padding: 0.1em 0.2em;
     border-radius: 2px;
+    word-break: break-all;
 }
 
 pre {
     font-family: 'Courier New', 'Monaco', monospace;
-    font-size: 9pt;
+    font-size: 8pt;
     background-color: #f8f8f8;
-    padding: 1em;
+    padding: 0.8em;
     border-radius: 4px;
     border-left: 4px solid #3498db;
-    overflow-x: auto;
-    page-break-inside: avoid;
+    overflow-x: visible;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    word-break: break-all;
+    page-break-inside: auto;
     margin: 1em 0;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
 blockquote {
@@ -429,7 +435,24 @@ a:hover {
         page-break-after: avoid;
     }
     
-    pre, blockquote, table {
+    pre {
+        font-size: 7pt;
+        line-height: 1.2;
+        padding: 0.6em;
+        page-break-inside: auto;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        word-break: break-all;
+        overflow: visible;
+        max-width: 100%;
+    }
+    
+    code {
+        font-size: 7pt;
+        word-break: break-all;
+    }
+    
+    blockquote, table {
         page-break-inside: avoid;
     }
     
