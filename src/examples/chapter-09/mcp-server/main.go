@@ -13,7 +13,7 @@ import (
 func main() {
 	ctx := context.Background()
 
-	// Initialize Genkit with the Google AI plugin and Gemini 2.0 Flash.
+	// Initialize Genkit with the OpenAI plugin with your OpenAI API key.
 	g, err := genkit.Init(ctx)
 	if err != nil {
 		log.Fatalf("could not initialize Genkit: %v", err)
