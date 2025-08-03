@@ -200,18 +200,33 @@ fmt.Printf("%s (Prep: %d min, Calories: %d)\n",
     recipe.Name, recipe.PrepTime, recipe.Nutrition.Calories)
 ```
 
+> `GenerateData` is a convenience wrapper that automatically applies `WithOutputType()` for you. If you need more control, you can use `Generate` with `WithOutputType()` directly:
+>
+> ```go
+> resp, err := genkit.Generate(ctx, g,
+>     ai.WithPrompt("Create a healthy breakfast recipe"),
+>     ai.WithOutputType(Recipe{}))
+> 
+> // Manual unmarshaling required
+> var recipe Recipe
+> if err := resp.Output(&recipe); err != nil {
+>     return err
+> }
+> ```
+>
+> While `GenerateData` handles the unmarshaling automatically, using `WithOutputType()` gives you access to the full response metadata and allows for custom error handling before unmarshaling.
+
 ### Comparison Guide
 
-Both approaches have their strengths. Choose based on your specific requirements rather than assuming one is universally better.
+Choose the right approach based on your needs:
 
-| Consideration | Generate | GenerateData |
-|--------------|----------|--------------|
-| **Output Type** | Free-form text | Structured data (JSON) |
-| **Use Case Examples** | Creative writing, explanations, summaries | API responses, data extraction, form filling |
-| **Response Format** | Variable, depends on prompt | Consistent, follows schema |
-| **Type Safety** | Runtime string handling | Compile-time type checking |
-| **Processing** | Manual parsing if needed | Automatic unmarshaling |
-| **Flexibility** | Maximum flexibility | Schema-constrained |
+| Use Case | Recommended Approach | Why |
+|----------|---------------------|-----|
+| **Simple text generation** | `Generate` with `WithPrompt` | No structure needed, maximum flexibility |
+| **Structured data with convenience** | `GenerateData[T]` | Automatic type handling, less boilerplate |
+| **Structured data with metadata access** | `Generate` with `WithOutputType` | Access to token usage, finish reason, etc. |
+| **API responses** | `GenerateData[T]` | Type safety and automatic validation |
+| **When you need response metadata** | `Generate` (with or without `WithOutputType`) | Full `ModelResponse` access |
 
 ## Error Handling: Building Resilient AI Applications
 
