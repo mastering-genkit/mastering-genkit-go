@@ -7,6 +7,16 @@ In this chapter, we'll explore how to use MCP with Genkit Go in two key scenario
 1. **Building MCP clients** that connect to existing MCP servers to access their tools
 2. **Creating MCP servers** that expose your custom tools to MCP-compatible clients
 
+## Prerequisites
+
+Before diving into MCP, make sure you have the following prerequisites:
+
+1. A basic understanding of Genkit Go and how to create AI applications
+2. Familiarity with Go programming language
+3. An MCP server to connect to (we'll use the filesystem MCP server in our example)
+4. OpenAI API key for AI interactions (if using OpenAI plugin)
+5. Node.js installed for MCP inspector tool and MCP filesystem server
+
 ## Understanding MCP
 
 ![](../images/chapter-09/mcp-architecture.png)
