@@ -106,7 +106,7 @@ curl -X POST http://127.0.0.1:9090/operatingSystemFlow \
   -d '{"data":"Create a file called test.txt with the content Hello from MCP!"}'
 ```
 
-## Invokig the flow using Genkit CLI
+## Invoking the flow using Genkit CLI
 You can also invoke the flow using the Genkit CLI:
 
 ```bash

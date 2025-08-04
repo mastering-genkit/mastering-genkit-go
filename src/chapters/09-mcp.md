@@ -38,7 +38,7 @@ The MCP architecture consists of three main components:
 
 ## Connecting to MCP Servers (Client side)
 
-Let's start by building a Genkit application that connects to an existing MCP server. In our example, we'll connect to the filesystem MCP server to enable AI-powered file operations. The filesystem MCP server is an npm package that implements the Model Context Protocol. It is available at `@modelcontextprotocol/server-filesystem` developesd by Anthropic.
+Let's start by building a Genkit application that connects to an existing MCP server. In our example, we'll connect to the filesystem MCP server to enable AI-powered file operations. The filesystem MCP server is an npm package that implements the Model Context Protocol. It is available at `@modelcontextprotocol/server-filesystem` developed by Anthropic.
 
 ### Setting Up the MCP Client
 
@@ -261,7 +261,7 @@ cd src/examples/chapter-09/mcp-client
 genkit flow:run operatingSystemFlow "\"give me all the directories with size in /\""
 ```
 
-Here is a full example of how we can intereact the flow and invoking the tools from the MCP server from the UI:
+Here is a full example of how we can interact the flow and invoking the tools from the MCP server from the UI:
 
 ![](../images/chapter-09/use-tool-from-server.png)
 
