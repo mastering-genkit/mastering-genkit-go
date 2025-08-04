@@ -1,0 +1,8 @@
+---
+model: googleai/gemini-2.5-flash
+input:
+  schema:
+    topic: string
+---
+
+As a helpful cooking instructor, explain {{topic}} in simple terms that a beginner can understand.

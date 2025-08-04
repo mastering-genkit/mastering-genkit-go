@@ -1,3 +1,19 @@
+# [1.4.0](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.3.0...v1.4.0) (2025-08-04)
+
+
+### Bug Fixes
+
+* clarify GenerateData vs Generate with WithOutputType() ([b1f7833](https://github.com/mastering-genkit/mastering-genkit-go/commit/b1f78338b82179379c11d7866cb6b5110e814f6b))
+* focus Chapter 4 on practical API usage instead of internals ([f3ffe7b](https://github.com/mastering-genkit/mastering-genkit-go/commit/f3ffe7b345817a61ab469215917906136ee53090))
+* replace hand drawn image with mermaid ([b5200f8](https://github.com/mastering-genkit/mastering-genkit-go/commit/b5200f8c03587df202689d84999974ba409711b1))
+
+
+### Features
+
+* add `04-mastering-ai-generation.md` ([edfb575](https://github.com/mastering-genkit/mastering-genkit-go/commit/edfb5752db348df9de0ca48eb30e796b0d257094))
+* add chapter-04 example code ([dd9b321](https://github.com/mastering-genkit/mastering-genkit-go/commit/dd9b3218ff9a5d7312e17c1f3915f0b9775da300))
+* implement basic and dotprompt generation flows with logging middleware ([cc0116f](https://github.com/mastering-genkit/mastering-genkit-go/commit/cc0116f355a88130ba7326331891cecd5f9e0e6b))
+
 # [1.3.0](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.2.0...v1.3.0) (2025-08-03)
 
 
