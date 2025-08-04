@@ -258,7 +258,7 @@ Or just using the Genkit CLI, to run the flow directly make sure you are running
 
 ```bash
 cd src/examples/chapter-09/mcp-client
-genkit run operatingSystemFlow --data "List all directories in the current folder"
+genkit flow:run operatingSystemFlow "\"give me all the directories with size in /\""
 ```
 
 Here is a full example of how we can intereact the flow and invoking the tools from the MCP server from the UI:
