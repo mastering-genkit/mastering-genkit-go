@@ -1,3 +1,21 @@
+# [1.5.0](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.4.0...v1.5.0) (2025-08-04)
+
+
+### Bug Fixes
+
+* add genkit cli invokation ([c06f653](https://github.com/mastering-genkit/mastering-genkit-go/commit/c06f6537371f33face661ea9b224c2121e42fdd8))
+* added pre-requisits ([2c0cf57](https://github.com/mastering-genkit/mastering-genkit-go/commit/2c0cf57f06a1da987452f3c7ddba87f2a7f229fb))
+* comment ([f736d4e](https://github.com/mastering-genkit/mastering-genkit-go/commit/f736d4ec19804864df7f5cf1b62a3d7987646f5e))
+* genkit flow run command fix ([0bb2950](https://github.com/mastering-genkit/mastering-genkit-go/commit/0bb2950f2aeeb238b2be886cf63a04e96f66e776))
+* removed openai intializaiton ([f8cd354](https://github.com/mastering-genkit/mastering-genkit-go/commit/f8cd3541c687db185114a039049e6c1e6712fd39))
+* typos ([9bd3b3f](https://github.com/mastering-genkit/mastering-genkit-go/commit/9bd3b3feda8fc1f9ce21a4c1ebb562519578c643))
+
+
+### Features
+
+* chapter 09 ([86d1934](https://github.com/mastering-genkit/mastering-genkit-go/commit/86d193431b50d7d0a0cb413c37b20d101bf199e8))
+* chapter09 ([9830f57](https://github.com/mastering-genkit/mastering-genkit-go/commit/9830f57ac6c49683ec0bc8fda105fc9f254f422b))
+
 # [1.4.0](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.3.0...v1.4.0) (2025-08-04)
 
 
