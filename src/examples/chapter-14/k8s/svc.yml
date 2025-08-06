@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: genkit-go-app-service
+  labels:
+    app: genkit-go-app
+spec:
+  selector:
+    app: genkit-go-app
+  ports:
+  - port: 80
+    targetPort: 9091
+    protocol: TCP
+    name: http
+  type: LoadBalancer

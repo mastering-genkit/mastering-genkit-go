@@ -1,0 +1,48 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: genkit-go-app
+  labels:
+    app: genkit-go-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: genkit-go-app
+  template:
+    metadata:
+      labels:
+        app: genkit-go-app
+    spec:
+      containers:
+      - name: genkit-go-app
+        image: YOUR_REGISTRY/genkit-go-app:latest
+        ports:
+        - containerPort: 9091
+          name: http
+        env:
+        - name: PORT
+          value: "9091"
+        - name: ENVIRONMENT
+          value: "production"
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        # Health checks for Kubernetes
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 9091
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 9091
+          initialDelaySeconds: 5
+          periodSeconds: 5
