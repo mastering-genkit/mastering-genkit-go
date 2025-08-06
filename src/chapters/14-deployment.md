@@ -403,7 +403,7 @@ aws ecr get-login-password --region us-east-1 | docker login --username AWS --pa
 # Create ECR repository
 aws ecr create-repository --repository-name genkit-go-app --region us-east-1
 
-# Build and tag image using Docker Buildx for multi-platform support (Required for App Runner)
+# Build and tag image using Docker Buildx for multi-platform support (Required for App Runner, which uses AMD64 architecture)
 docker buildx create --name genkit-builder --use
 
 # Build and push the Docker image to ECR
