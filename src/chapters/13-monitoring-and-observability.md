@@ -78,9 +78,9 @@ You can also inspect any individual flow execution, view the trace spans, and se
 ![](../images/chapter-13/genkit-cli-trace-list.png)
 
 
-## Firebase Monitoring
+## Firebase AI Monitoring
 
-Firebase offers a monitoring solution with built-in dashboards and performance tracking. While Firebase monitoring provides excellent integration with Google's ecosystem, **it is not currently supported in Genkit Go but will be available in future releases**.
+Firebase offers an AI monitoring solution with built-in dashboards and performance tracking. While Firebase monitoring provides excellent integration with Google's ecosystem, **it is not currently supported in Genkit Go but will be available in future releases**.
 
 ![](../images/chapter-13/firebase-ai-monitoring.png)
 
@@ -277,7 +277,7 @@ The [genkit-opentelemetry-go repository](https://github.com/xavidop/genkit-opent
 - **Grafana Stack**: Using Grafana, Prometheus, and Jaeger
 - **Elastic Stack**: Integration with Elasticsearch and Kibana
 
-### Datadog Integration Example
+### Datadog
 
 ```go
 import (
@@ -301,7 +301,7 @@ func setupDatadog() {
 }
 ```
 
-#### Honeycomb
+### Honeycomb
 
 ```go
 otelPlugin := opentelemetry.New(opentelemetry.Config{
@@ -314,7 +314,7 @@ otelPlugin := opentelemetry.New(opentelemetry.Config{
 })
 ```
 
-#### New Relic
+### New Relic
 
 ```go
 otelPlugin := opentelemetry.New(opentelemetry.Config{
