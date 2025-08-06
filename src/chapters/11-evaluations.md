@@ -414,7 +414,7 @@ Thanks to the `NonBilledEvaluatorService`, we can easily do:
 - **Dataset Preparation**: We get a prepared dataset specific to our evaluator's needs
 - **Evaluation Execution**: The evaluator runs against the dataset and processes results
 
-### Creating Custom Billed Evaluators 
+### Creating Custom Billed Evaluators
 
 Billed evaluators use AI models to perform sophisticated analysis, such as detecting malicious content or assessing response quality using natural language understanding.
 
