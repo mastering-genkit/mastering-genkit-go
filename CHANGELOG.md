@@ -1,3 +1,10 @@
+# [1.7.0](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.6.1...v1.7.0) (2025-08-07)
+
+
+### Features
+
+* add the ability to click on images and better readability of code blocks ([7c3dd7f](https://github.com/mastering-genkit/mastering-genkit-go/commit/7c3dd7f4ede43760e21bcaedadf6fc76ccdac0e6))
+
 ## [1.6.1](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.6.0...v1.6.1) (2025-08-07)
 
 
