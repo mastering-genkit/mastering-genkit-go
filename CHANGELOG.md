@@ -1,3 +1,10 @@
+## [1.6.1](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.6.0...v1.6.1) (2025-08-07)
+
+
+### Bug Fixes
+
+* js style ([802cb9d](https://github.com/mastering-genkit/mastering-genkit-go/commit/802cb9d90ead84386c5d8efe33200908b1322de5))
+
 # [1.6.0](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.5.0...v1.6.0) (2025-08-07)
 
 
