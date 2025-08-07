@@ -1,3 +1,10 @@
+# [1.6.0](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.5.0...v1.6.0) (2025-08-07)
+
+
+### Features
+
+* improve web and pdf generation ([f4fe19d](https://github.com/mastering-genkit/mastering-genkit-go/commit/f4fe19dc6e063ac3166df285d9e225e87bacb830))
+
 # [1.5.0](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.4.0...v1.5.0) (2025-08-04)
 
 
