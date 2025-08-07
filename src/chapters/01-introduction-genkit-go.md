@@ -2,6 +2,74 @@
 
 ![](../images/cover.jpg)
 
+## About this book
+
+### Authors
+
+#### Nozomi Koborinai
+
+![](../images/chapter-01/nozomi.jpg)
+
+#### Xavier Portilla Edo
+
+![](../images/chapter-01/xavi.jpg)
+
+Xavier obtained his degree in Computer Engineering at the Polytechnic University of Valencia (UPV) in 2014. He then completed his master’s degree in application software development in 2017 at the aforementioned university. During his academic journey, he had the chance to work on several team projects. The Hyperloop UPV −the future of transportation, is one of them.
+
+This book means a creation whose purpose is to showcase his work and allow readers to dive in his experience and knowledge. This is Xavier’s way of showing the details behind the projects and businesses in which he has successfully been part of.
+
+Xavier began his career in the AI in October 2019, after developing 4 applications for Alexa. Since then, he has been working on the development of AI applications, as well as in the creation of tools for the AI community. Recognized speaker in several events.
+
+He has +10 years of experience with a focus on Cloud, Kubernetes, DevOps, Q&A, microservices, Generative AI & Conversational AI and mentoring startups thanks to the Google & Microsoft For Startups Program. He is an organizer of GDG Madrid, DevopsDays Madrid. He has been recognized as a Microsoft MVP, GitHub Star, AWS Alexa Champion & Community Builder, and Google Developer Expert in AI and Cloud.
+
+To fulfill his passion for music and friendship, he enjoys live concerts, football (soccer), team sports and many other activities. Starting to play the guitar is on his bucket list. For Xavier, it has been always rewarding to help others learn everything about the trends in new technologies.
+
+### Acknowledgments
+
+We want to thank the vast community of developers who dedicate their time to write or talk about certain topics on their own sites or communities. Your huge contribution gave us enough motivation to start doing the same and we find great satisfaction in sharing our knowledge. You all inspire us to keep doing it.
+
+We would also like to make a special mention to the entire Genkit team. Their uplifting technical dissemination inspired us to do the same through articles, events and online sessions, which in sum gave birth to the idea of creating this book.
+
+In addition, it is only fair to dedicate a few words to all the people we stopped seeing or frequenting because of the time we spent on this book. There are friends and relatives who patiently encouraged us to devote time in this work instead of being with them. We have no words to express how enormously grateful we are to you.
+
+Finally, we thank you, dear reader, for placing your complete confidence in this work. We hope you enjoy the lessons and learning of the concepts described here as much as we have enjoyed writing them.
+
+
+### How to read this book
+
+This book is structured in 15 chapters which address specific topics about programming in Go, with the main focus on creating AI Applications using Genkit.
+
+This book deals with basic development related topics, as it has been conceived not only to be read, but also to act as a structured guide that provides a series of exercises, activities, etc. It is possible to find part of this material and other additional resources on the following blogs:
+[https://medium.com/@nozomi-koborinai](https://medium.com/@nozomi-koborinai) - [https://xavidop.me/](https://xavidop.me/)
+
+In them we will publish news, errata and complementary information related to this book. You can also find new tutorials, videos, references, etc., which are not included here.
+
+#### Code examples
+
+All the material published in this book has been produced by using the latest version of Genkit Go, which is open-source.
+The sample programs shown in the pages of this book were carried out in late September 2025 being Genkit Go in beta.
+The source code for all these examples remains hosted in the following GitHub repository:
+[https://github.com/mastering-genkit/mastering-genkit-go](https://github.com/mastering-genkit/mastering-genkit-go)
+
+We invite you to clone the directory structure to your local drive or device or to download the .zip file in order to run the examples correctly. We will try to keep the code up to date with the latest version and fix any bugs that may have slipped away.
+You can also report any bugs and give us any feedback about the book or the source code by clicking on the Issues button on GitHub.
+
+It should be mentioned that, in order to submit a new issue, you need to have a GitHub account. Just in case you haven’t got one yet.
+
+#### Interactive book
+
+This book is also available in an interactive format, which allows you to see the content directly in your browser. This format is designed to provide a more engaging reading experience, with features such as clickable code examples, and direct links to resources. Access the interactive version by visiting: [https://mastering-genkit.github.io/mastering-genkit-go](https://mastering-genkit.github.io/mastering-genkit-go)
+
+### Special thanks
+
+We owe special thanks to our dear friend **Iman Rahmati** for agreeing to serve as the technical editor of the book you’re holding today. We know it wasn’t an easy task.
+
+His trust in our work, combined with his thoughtful guidance, has been invaluable throughout this journey. Iman has contributed not only to the development of this book, but also to our growth as authors.
+
+Above all, we’re especially grateful for his patience and availability, which allowed us to learn and grow through many lively discussions. His involvement has truly enriched this project—and marked the beginning of a lasting friendship.
+
+**Thank you, Iman!**
+
 ## Introduction
 
 The landscape of AI application development has fundamentally shifted. What began as experimental projects with ChatGPT has evolved into production-grade systems that demand reliability, performance, and maintainability. For Go developers, this evolution presents both challenges and opportunities.
