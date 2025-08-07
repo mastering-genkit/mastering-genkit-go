@@ -1,8 +1,10 @@
-# New Choices in AI Development - Introduction to Genkit for Go Developers
+# Introduction
 
 ![](../images/cover.jpg)
 
 ## About this book
+
+Hey! We want to welcome you to the book **Mastering Genkit: Go Edition**. Thanks for picking it up! We hope you find it useful and enjoyable.
 
 ### Authors
 
@@ -70,7 +72,7 @@ Above all, we’re especially grateful for his patience and availability, which 
 
 **Thank you, Iman!**
 
-## Introduction
+## New Choices in AI Development - Introduction to Genkit for Go Developers
 
 The landscape of AI application development has fundamentally shifted. What began as experimental projects with ChatGPT has evolved into production-grade systems that demand reliability, performance, and maintainability. For Go developers, this evolution presents both challenges and opportunities.
 
