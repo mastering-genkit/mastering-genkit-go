@@ -392,6 +392,7 @@ a:hover {
 
 /* Table of Contents */
 #TOC {
+    page-break-before: always;
     page-break-after: always;
     margin-bottom: 2em;
 }
@@ -467,11 +468,28 @@ a:hover {
 }
 
 function createTitlePage(metadata) {
-    const authorString = getAuthorString(metadata);
+    const authorArray = getAuthorArray(metadata);
+    
+    // Get the description with proper indentation for YAML
+    const descText = metadata.pdfDescription || metadata.description || '';
+    const formattedDesc = descText
+        .split('\n')
+        .map(line => `  ${line}`)
+        .join('\n');
+    
+    // Format authors as YAML list
+    const authorList = authorArray.map(author => `- ${author}`).join('\n');
+    
     return `---
 title: "${metadata.title}"
 subtitle: "${metadata.subtitle || ''}"
-author: "${authorString}"
+author:
+${authorList}
+abstract: |
+${formattedDesc}
+abstract-title: "**About this Book**"
+description: |
+${formattedDesc}
 date: "${new Date().toLocaleDateString()}"
 documentclass: book
 classoption: [12pt, oneside]
@@ -546,6 +564,19 @@ $endif$
 $if(author)$
 \\author{$for(author)$$author$$sep$ \\and $endfor$}
 $endif$
+$if(abstract)$
+% Define abstract text with proper line breaks
+\\def\\abstracttext{
+  \\begin{minipage}{\\linewidth}
+    \\setlength{\\parindent}{0pt}
+    \\setlength{\\parskip}{0.8em}
+    $for(abstract)$
+    $abstract$
+    
+    $endfor$
+  \\end{minipage}
+}
+$endif$
 $if(date)$
 \\date{$date$}
 $endif$
@@ -566,6 +597,13 @@ $endif$
 % Title page
 $if(title)$
 \\maketitle
+$endif$
+
+% Abstract (after title page, no heading)
+$if(abstract)$
+\\vspace{1em}
+\\noindent\\abstracttext
+\\vspace{2em}
 $endif$
 
 % Table of contents

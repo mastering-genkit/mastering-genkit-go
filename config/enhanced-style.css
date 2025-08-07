@@ -1554,6 +1554,19 @@ footer h1, footer h2, footer h3, footer h4, footer h5, footer h6 {
     color: white;
 }
 
+/* Footer link styles for better readability */
+footer a {
+    color: #f0f0f0; /* Light color but still visible on gradient */
+    text-decoration: underline;
+    font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+
+footer a:hover {
+    color: white;
+    text-decoration: underline;
+}
+
 [data-theme="dark"] footer p,
 [data-theme="dark"] footer h1,
 [data-theme="dark"] footer h2,
@@ -1562,6 +1575,11 @@ footer h1, footer h2, footer h3, footer h4, footer h5, footer h6 {
 [data-theme="dark"] footer h5,
 [data-theme="dark"] footer h6 {
     color: var(--text-color);
+}
+
+/* Dark mode footer links */
+[data-theme="dark"] footer a {
+    text-shadow: none;
 }
 
 /* Animations */
@@ -1652,6 +1670,21 @@ footer h1, footer h2, footer h3, footer h4, footer h5, footer h6 {
         opacity: 1;
         visibility: visible;
         transform: translateY(0);
+    }
+    
+    /* Header social links in mobile */
+    .header-social-links {
+        justify-content: center;
+        width: 100%;
+        margin-top: 0.75rem;
+        margin-bottom: 0.5rem;
+        padding-top: 0.75rem;
+        border-top: 1px solid var(--border-color);
+        gap: 0.75rem;
+    }
+    
+    .header-social-links a.icon-only {
+        margin-left: 0;
     }
     
     /* Mobile dropdown adjustments */
@@ -2375,33 +2408,202 @@ a:focus, button:focus {
 /* Social Links */
 .social-links {
     margin-top: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+}
+
+/* Header Social Links */
+.header-social-links {
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.5rem;
 }
 
 .social-links a {
-    display: inline-block;
-    margin: 0 0.5rem;
+    display: flex;
+    align-items: center;
     padding: 0.5rem 1rem;
     background: rgba(255, 255, 255, 0.1);
-    color: var(--text-color);
+    color: white; /* Light text on dark background for better contrast */
     text-decoration: none;
     border-radius: var(--border-radius);
     transition: var(--transition);
+    font-size: 0.9rem;
+}
+
+.social-links a .icon {
+    margin-right: 0.5rem;
+    font-size: 1.2rem;
+    color: white; /* Ensure icons are also white for visibility */
 }
 
 [data-theme="dark"] .social-links a {
     background: rgba(0, 0, 0, 0.2);
-    color: var(--text-color);
+    color: var(--text-color); /* Keep the existing color in dark mode */
+}
+
+[data-theme="dark"] .social-links a .icon {
+    color: var(--text-color); /* Match the text color in dark mode */
 }
 
 .social-links a:hover {
     background: rgba(255, 255, 255, 0.2);
     transform: translateY(-2px);
-    color: var(--text-color);
+    color: white; /* Keep text white on hover in light mode */
+    box-shadow: var(--shadow-sm);
 }
 
 [data-theme="dark"] .social-links a:hover {
     background: rgba(0, 0, 0, 0.4);
     color: var(--text-color);
+}
+
+/* Navigation Social Links Specific Styling */
+nav .social-links a {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+    color: var(--text-color);
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+}
+
+/* Icon-only links in header */
+.social-links a.icon-only {
+    padding: 0;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: 2px solid var(--border-color);
+    border-radius: 50%;
+    transition: var(--transition);
+    margin-left: 0.5rem;
+}
+
+nav .social-links a .icon {
+    font-size: 1.2rem;
+    color: var(--text-color);
+    margin-right: 0;
+}
+
+nav .social-links a:hover {
+    background: var(--accent-color);
+    color: white;
+    transform: rotate(360deg);
+    border-color: var(--accent-color);
+}
+
+nav .social-links a:hover .icon {
+    color: white;
+}
+
+[data-theme="dark"] nav .social-links a {
+    border-color: var(--border-color);
+    background: none;
+}
+
+[data-theme="dark"] nav .social-links a:hover {
+    background: var(--accent-color);
+    color: var(--bg-color);
+    border-color: var(--accent-color);
+}
+
+[data-theme="dark"] nav .social-links a:hover .icon {
+    color: var(--bg-color);
+}
+
+/* Author specific styling on index page */
+.book-social-links, .author-social-links {
+    margin-top: 2rem;
+}
+
+.book-social-links h3 {
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+    color: var(--primary-color);
+}
+
+.book-links {
+    justify-content: flex-start;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background: var(--bg-secondary);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-sm);
+}
+
+.author-social-links {
+    margin-top: 2rem;
+}
+
+.author-block {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: var(--bg-secondary);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-sm);
+}
+
+.author-block h3 {
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+    color: var(--primary-color);
+}
+
+.author-links {
+    justify-content: flex-start;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.centered-links {
+    justify-content: center;
+}
+
+.author-link {
+    display: inline-flex;
+    align-items: center;
+    background: var(--bg-secondary);
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--border-radius);
+    text-decoration: none;
+    color: var(--primary-color);
+    font-size: 0.9rem;
+    transition: var(--transition);
+    border: 1px solid var(--border-color);
+}
+
+.author-link:hover {
+    background: var(--primary-color);
+    color: var(--bg-color);
+    transform: translateY(-1px);
+}
+
+.author-link .icon {
+    margin-right: 0.3rem;
+}
+
+/* Footer-specific social links */
+.footer-links {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.text-center {
+    text-align: center;
 }
 
 /* Keyboard Navigation Hints */
