@@ -12,6 +12,16 @@ Hey! We want to welcome you to the book **Mastering Genkit: Go Edition**. Thanks
 
 ![](../images/chapter-01/nozomi.jpg)
 
+Nozomi graduated from an IT technical college in March 2019, where he built his foundation in object-oriented programming with Java.
+
+This book emerged from Xavier's invitation as a collaborative effort. Driven by his passion for great products and developer communities, Nozomi feels a strong mission to spread their value worldwide. Deeply impressed by Firebase's exceptional developer experience, he explored Genkit and was captivated by its innovative approach. He now actively contributes to expanding the Genkit ecosystem, including developing the Dart client for Genkit.
+
+In his 6 years of experience, the first four were spent developing electronic medical record systems using C#, teaching at Flutter University (Japan's Flutter engineering community), and co-authoring books on Flutter design patterns. Currently, he works at a Google Cloud Partner company in Japan, specializing in Serverless Application development (Identity Platform, Firebase, Cloud Run, DevOps, IaC). His deep interest in software architecture has made him proficient in ensuring quality through DDD and clean architecture principles.
+
+He was awarded Google Cloud Partner Top Engineer (Serverless App Development) 2025, a Japan-exclusive award program, and serves as a former instructor and current 1-on-1 mentor at Flutter University. With speaking experience at Google I/O Extended Tokyo and GDG DevFest, he believes that promoting good products is essential for energizing developer communities.
+
+Beyond technology, he enjoys music (guitar and beat-making), reading, and contributing to open-source projects. Improving developer experience is at the heart of his work and brings him the greatest joy.
+
 #### Xavier Portilla Edo
 
 ![](../images/chapter-01/xavi.jpg)
