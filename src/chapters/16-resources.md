@@ -24,6 +24,10 @@ Here you can find a list of resources that has been used in this book and will h
   - Video tutorials and walkthroughs
   - Recorded webinars and community events
 
+- **Genkit GitHub Organization**: [https://github.com/genkit-ai](https://github.com/genkit-ai)
+  - Explore various Genkit projects and samples
+  - Contribute to open-source efforts and collaborations
+
 ### Go Programming Language
 
 - **Go Official Website**: [https://go.dev/](https://go.dev/)
