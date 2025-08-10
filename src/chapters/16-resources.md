@@ -10,6 +10,20 @@ Here you can find a list of resources that has been used in this book and will h
   - The primary source for all Genkit documentation, tutorials, and guides
   - Latest feature announcements and updates
 
+- **Genkit GitHub Repository**: [https://github.com/firebase/genkit](https://github.com/firebase/genkit)
+  - Source code for Genkit across all supported languages
+  - Issue tracking and feature discussions
+  - Release notes and changelog
+  - Contributing guidelines and development setup
+
+- **Genkit Discord**: [https://discord.gg/qXt5zzQKpc](https://discord.gg/qXt5zzQKpc)
+  - Connect with other Genkit users and developers
+  - Share ideas, ask questions, and get support
+
+- **Genkit YouTube Channel**: [https://www.youtube.com/@GenkitAI](https://www.youtube.com/@GenkitAI)
+  - Video tutorials and walkthroughs
+  - Recorded webinars and community events
+
 ### Go Programming Language
 
 - **Go Official Website**: [https://go.dev/](https://go.dev/)
