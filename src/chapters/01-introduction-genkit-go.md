@@ -46,7 +46,6 @@ In addition, it is only fair to dedicate a few words to all the people we stoppe
 
 Finally, we thank you, dear reader, for placing your complete confidence in this work. We hope you enjoy the lessons and learning of the concepts described here as much as we have enjoyed writing them.
 
-
 ### How to read this book
 
 This book is structured in 15 chapters which address specific topics about programming in Go, with the main focus on creating AI Applications using Genkit.
