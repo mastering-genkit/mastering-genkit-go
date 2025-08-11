@@ -1,3 +1,19 @@
+# [1.8.0](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.7.0...v1.8.0) (2025-08-11)
+
+
+### Bug Fixes
+
+* genkit org ([dedd63c](https://github.com/mastering-genkit/mastering-genkit-go/commit/dedd63ceadf5a6e584b98b0561d3433942974c7d))
+* remove unnecessary blank line ([c9e51bb](https://github.com/mastering-genkit/mastering-genkit-go/commit/c9e51bbc94786fdf3bd55c61f7cd812604dd066f))
+* renaming ([8376873](https://github.com/mastering-genkit/mastering-genkit-go/commit/837687339d984545dcfc46a1cb7c7eab56577a8a))
+
+
+### Features
+
+* add intros + resources ([cab78c3](https://github.com/mastering-genkit/mastering-genkit-go/commit/cab78c33c3af6a7284e3ef7d3bfcce64db43cf39))
+* added more resources ([048cf33](https://github.com/mastering-genkit/mastering-genkit-go/commit/048cf332c4297b2ca29f2b13cfc7324349fa1c5b))
+* enhance introduction chapter with Nozomi's background ([ad87513](https://github.com/mastering-genkit/mastering-genkit-go/commit/ad87513e60956bf3c403a75f8bc2455fdc666ea9))
+
 # [1.7.0](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.6.1...v1.7.0) (2025-08-07)
 
 
