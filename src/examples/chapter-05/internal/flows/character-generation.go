@@ -3,7 +3,7 @@ package flows
 import (
 	"context"
 	"fmt"
-	generation "mastering-genkit-go/example/chapter-05/internal/schemas/5-generation"
+	generation "mastering-genkit-go/example/chapter-05/internal/structs/character-generation"
 
 	"github.com/firebase/genkit/go/ai"
 	"github.com/firebase/genkit/go/core"

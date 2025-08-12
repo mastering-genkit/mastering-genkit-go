@@ -3,7 +3,7 @@ package flows
 import (
 	"context"
 	"fmt"
-	nested "mastering-genkit-go/example/chapter-05/internal/schemas/2-nested"
+	nested "mastering-genkit-go/example/chapter-05/internal/structs/nested-structured"
 
 	"github.com/firebase/genkit/go/ai"
 	"github.com/firebase/genkit/go/core"
@@ -14,7 +14,6 @@ import (
 // It generates recipes with nested ingredients, steps, and nutrition maps.
 func NewNestedStructuredFlow(g *genkit.Genkit) *core.Flow[nested.RecipeRequest, nested.Recipe, struct{}] {
 	return genkit.DefineFlow(g, "nestedStructuredFlow", func(ctx context.Context, input nested.RecipeRequest) (nested.Recipe, error) {
-		// Use GenerateData to get structured output with nested structures
 		result, _, err := genkit.GenerateData[nested.Recipe](ctx, g,
 			ai.WithSystem(`Create a detailed recipe with ingredients, steps, nutrition info, cooking times, and difficulty level. Consider dietary restrictions.`),
 			ai.WithPrompt(`Create a recipe for: %s

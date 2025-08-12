@@ -9,29 +9,29 @@ This chapter moves beyond simple text generation to demonstrate how Genkit Go ha
 ## Project Structure
 
 ```text
-chapter-05-new/
+chapter-05/
 ├── main.go                  # Application entry point
 ├── internal/
 │   ├── flows/              # Flow definitions
-│   │   ├── 1-simple.go     # Flow 1: Simple structured output
-│   │   ├── 2-nested.go     # Flow 2: Nested structures
-│   │   ├── 3-image.go      # Flow 3: Image analysis
-│   │   ├── 4-audio.go      # Flow 4: Audio transcription
-│   │   └── 5-generation.go # Flow 5: Image generation
-│   └── schemas/            # Data structures
-│       ├── 1-simple/       # Review analysis schemas
+│   │   ├── simple-structured.go      # Flow 1: Simple structured output
+│   │   ├── nested-structured.go      # Flow 2: Nested structures
+│   │   ├── image-analysis.go         # Flow 3: Image analysis
+│   │   ├── audio-transcription.go    # Flow 4: Audio transcription
+│   │   └── character-generation.go   # Flow 5: Image generation
+│   └── structs/            # Data structures
+│       ├── simple-structured/        # Review analysis schemas
 │       │   ├── input.go    # ReviewInput
 │       │   └── output.go   # ReviewAnalysis
-│       ├── 2-nested/       # Recipe generation schemas
+│       ├── nested-structured/        # Recipe generation schemas
 │       │   ├── input.go    # RecipeRequest
 │       │   └── output.go   # Recipe, Ingredient, CookingStep
-│       ├── 3-image/        # Product analysis schemas
+│       ├── image-analysis/           # Product analysis schemas
 │       │   ├── input.go    # ImageAnalysisRequest
 │       │   └── output.go   # ProductInfo
-│       ├── 4-audio/        # Meeting minutes schemas
+│       ├── audio-transcription/      # Meeting minutes schemas
 │       │   ├── input.go    # AudioRequest
 │       │   └── output.go   # MeetingMinutes, SpeakerSummary, ActionItem
-│       └── 5-generation/   # Character generation schemas
+│       └── character-generation/     # Character generation schemas
 │           ├── input.go    # CharacterRequest
 │           └── output.go   # CharacterResult, Character
 ├── go.mod
