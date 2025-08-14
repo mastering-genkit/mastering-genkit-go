@@ -1,3 +1,22 @@
+# [1.9.0](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.8.0...v1.9.0) (2025-08-14)
+
+
+### Bug Fixes
+
+* 05-structured-output.md ([7e0a35d](https://github.com/mastering-genkit/mastering-genkit-go/commit/7e0a35d2eb0ae49828be1158707ee927fce5ae55))
+* remove images ([8015d15](https://github.com/mastering-genkit/mastering-genkit-go/commit/8015d15a6c5295ecfee585b434da0703b2e2503d))
+
+
+### Features
+
+* add `chapter-05: Working with Structured Data` ([3bee0e4](https://github.com/mastering-genkit/mastering-genkit-go/commit/3bee0e4782b12c55262dbc6314afdb601e5f0faa))
+* add example code and structured data (I/O) flows for chapter 05 ([75a5006](https://github.com/mastering-genkit/mastering-genkit-go/commit/75a5006fbff610c5b83fe6c2fba57337efc98dff))
+* add multimodal structured flow diagram for chapter 05 ([aad7dee](https://github.com/mastering-genkit/mastering-genkit-go/commit/aad7deea4ada61f5a4ec36a2b1c96fd09731d52a))
+* add new images for chapter 05 ([fa438d5](https://github.com/mastering-genkit/mastering-genkit-go/commit/fa438d5667c1fca0dd7e7546a3e03b864ce89de5))
+* add sample code for chapter-05 ([efcc892](https://github.com/mastering-genkit/mastering-genkit-go/commit/efcc892130c9a4bca00b88a707412c1e7576f7b7))
+* enhance chapter 04 with multimedia generation capabilities and detailed examples ([d32f4d7](https://github.com/mastering-genkit/mastering-genkit-go/commit/d32f4d75d70311bc4f4234ff7095f1114e59d649))
+* refactor chapter 04 flows and add moltimedia flows ([cbbd85e](https://github.com/mastering-genkit/mastering-genkit-go/commit/cbbd85eef2ee692a566cb16690619aa468388ca7))
+
 # [1.8.0](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.7.0...v1.8.0) (2025-08-11)
 
 
