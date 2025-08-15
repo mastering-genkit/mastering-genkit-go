@@ -2,13 +2,11 @@ package main
 
 import (
 	"context"
-	"fmt"
+	"examples/chapter-04/internal/flows"
 	"log"
 	"net/http"
 	"os"
-	"time"
 
-	"github.com/firebase/genkit/go/ai"
 	"github.com/firebase/genkit/go/genkit"
 	"github.com/firebase/genkit/go/plugins/googlegenai"
 	"github.com/firebase/genkit/go/plugins/server"
@@ -27,53 +25,20 @@ func main() {
 		log.Fatalf("could not initialize Genkit: %v", err)
 	}
 
-	// Define logging middleware
-	loggingMiddleware := func(fn ai.ModelFunc) ai.ModelFunc {
-		return func(ctx context.Context, req *ai.ModelRequest, cb ai.ModelStreamCallback) (*ai.ModelResponse, error) {
-			start := time.Now()
-			resp, err := fn(ctx, req, cb)
-			if err != nil {
-				log.Printf("Error after %v", time.Since(start))
-				return nil, err
-			}
-			log.Printf("Success in %v", time.Since(start))
-			return resp, nil
-		}
-	}
+	// Create flows
+	basicGenerationFlow := flows.NewBasicGenerationFlow(g)
+	dotpromptFlow := flows.NewDotpromptFlow(g)
+	imageAnalysisFlow := flows.NewImageAnalysisFlow(g)
+	audioTranscriptionFlow := flows.NewAudioTranscriptionFlow(g)
+	imageGenerationFlow := flows.NewImageGenerationFlow(g)
 
-	// 1. Patterns that do not use dotprompt
-	basicGenerationFlow := genkit.DefineFlow(g, "basicGenerationFlow", func(ctx context.Context, userRequest string) (string, error) {
-		resp, err := genkit.Generate(ctx, g,
-			ai.WithPrompt(fmt.Sprintf("As a helpful cooking instructor, explain %s in simple terms that a beginner can understand.", userRequest)),
-			ai.WithMiddleware(loggingMiddleware),
-		)
-		if err != nil {
-			return "", fmt.Errorf("failed to generate response: %w", err)
-		}
-		return resp.Text(), nil
-	})
-
-	// 2. Patterns using dotprompt
-	cookingInstructor := genkit.LookupPrompt(g, "cooking-instructor")
-	if cookingInstructor == nil {
-		log.Fatal("no prompt named 'cooking-instructor' found")
-	}
-	dotpromptFlow := genkit.DefineFlow(g, "dotpromptFlow", func(ctx context.Context, userRequest string) (string, error) {
-		resp, err := cookingInstructor.Execute(ctx,
-			ai.WithInput(map[string]any{
-				"topic": userRequest,
-			}),
-			ai.WithMiddleware(loggingMiddleware),
-		)
-		if err != nil {
-			return "", fmt.Errorf("error executing prompt: %w", err)
-		}
-		return resp.Text(), nil
-	})
-
+	// Set up HTTP handlers
 	mux := http.NewServeMux()
 	mux.HandleFunc("POST /basicGenerationFlow", genkit.Handler(basicGenerationFlow))
 	mux.HandleFunc("POST /dotpromptFlow", genkit.Handler(dotpromptFlow))
+	mux.HandleFunc("POST /imageAnalysisFlow", genkit.Handler(imageAnalysisFlow))
+	mux.HandleFunc("POST /audioTranscriptionFlow", genkit.Handler(audioTranscriptionFlow))
+	mux.HandleFunc("POST /imageGenerationFlow", genkit.Handler(imageGenerationFlow))
 
 	port := os.Getenv("PORT")
 	if port == "" {

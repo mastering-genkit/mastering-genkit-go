@@ -54,9 +54,19 @@ function getAuthorArray(metadata) {
  * @returns {Array} Array of author objects
  */
 function getAuthorObjects(metadata) {
-    // If new authors array exists, return it
+    // If new authors array exists, process it and clean up twitter handles
     if (metadata.authors && Array.isArray(metadata.authors) && metadata.authors.length > 0) {
-        return metadata.authors;
+        return metadata.authors.map(author => {
+            // Create a new object to avoid modifying the original
+            const processedAuthor = { ...author };
+            
+            // Remove @ from twitter handle if it exists
+            if (processedAuthor.twitter && processedAuthor.twitter.startsWith('@')) {
+                processedAuthor.twitter = processedAuthor.twitter.substring(1);
+            }
+            
+            return processedAuthor;
+        });
     }
     
     // Fallback: create basic author objects from legacy field
@@ -71,7 +81,9 @@ function getAuthorObjects(metadata) {
             bio: '',
             email: '',
             twitter: '',
-            website: ''
+            website: '',
+            linkedin: '',
+            github: ''
         }));
     }
     
@@ -108,9 +120,16 @@ Add your biography here.`;
         
         // Add contact info if available
         const contacts = [];
-        if (author.website) contacts.push(`[Website](${author.website})`);
-        if (author.twitter) contacts.push(`[Twitter](${author.twitter})`);
-        if (author.email) contacts.push(`[Email](mailto:${author.email})`);
+        if (author.website) contacts.push(`[🌐 Website](${author.website})`);
+        if (author.linkedin) contacts.push(`[👔 LinkedIn](${author.linkedin})`);
+        if (author.github) contacts.push(`[📦 GitHub](${author.github})`);
+        if (author.twitter) {
+            const twitterUrl = author.twitter.startsWith('@') 
+                ? `https://twitter.com/${author.twitter.substring(1)}`
+                : `https://twitter.com/${author.twitter}`;
+            contacts.push(`[🐦 Twitter](${twitterUrl})`);
+        }
+        if (author.email) contacts.push(`[📧 Email](mailto:${author.email})`);
         
         if (contacts.length > 0) {
             content += `Contact: ${contacts.join(' • ')}\n\n`;

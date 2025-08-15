@@ -4,7 +4,7 @@
 
 At the heart of every AI application lies the fundamental operation of generation - transforming prompts into meaningful responses. While this might seem straightforward, the reality is far more nuanced. Generation in Genkit Go isn't just about calling an API; it's about understanding the intricate dance between type safety, error handling, schema validation, and the non-deterministic nature of AI responses.
 
-This chapter delves deep into Genkit Go's generation capabilities, exploring not just how to use `Generate` and `GenerateData`, but why they're designed the way they are. You'll learn how Genkit's architecture provides both flexibility and safety, allowing you to build production-ready AI applications that handle edge cases gracefully.
+This chapter delves deep into Genkit Go's generation capabilities, exploring not just how to use the `Generate` function, but why it's designed the way it is. You'll learn how Genkit's architecture provides flexibility through provider independence, middleware patterns, and professional prompt management with Dotprompt, allowing you to build production-ready AI applications that handle edge cases gracefully.
 
 ## Prerequisites
 
@@ -84,37 +84,27 @@ This design enables you to:
 - **Fallback Strategies**: If one provider fails, seamlessly switch to another
 - **Cost Optimization**: Use expensive models only when needed, cheaper ones for routine tasks
 
-### Type Safety with Go
+### Working with Generate
 
-Genkit Go leverages Go's type system to provide compile-time safety and better developer experience:
+Genkit's `Generate` function provides flexible text generation:
 
 ```go
-// Define your expected output structure
-type Recipe struct {
-    Name        string   `json:"name"`
-    PrepTime    int      `json:"prep_time_minutes"`
-    Ingredients []string `json:"ingredients"`
-    Steps       []string `json:"steps"`
+resp, err := genkit.Generate(ctx, g,
+    ai.WithPrompt("Explain quantum computing"),
+    ai.WithModelName("googleai/gemini-2.5-flash"))
+
+// Access the text response
+fmt.Println(resp.Text())
+
+// Check token usage
+if resp.Usage != nil {
+    log.Printf("Tokens used: %d", resp.Usage.TotalTokens)
 }
-
-// Genkit automatically:
-// 1. Generates JSON schema from your struct
-// 2. Instructs the model to follow this schema
-// 3. Validates the response
-// 4. Unmarshals into your type
-recipe, _, err := genkit.GenerateData[Recipe](ctx, g,
-    ai.WithPrompt("Create a healthy breakfast recipe"))
-
-// Use the result with full type safety
-fmt.Printf("Recipe: %s (Prep time: %d minutes)\n", 
-    recipe.Name, recipe.PrepTime)
 ```
 
-This approach prevents common issues:
+The `Generate` function returns a `ModelResponse` with full metadata access, including token usage, finish reasons, and model information.
 
-- **No Runtime Surprises**: Malformed responses are caught immediately
-- **Clear Contracts**: The expected structure is explicit in your code
-- **Refactoring Safety**: Change your struct, and the compiler tells you what to update
+> For type-safe structured output generation, see Chapter 5: Working with Structured Data, which covers `GenerateData` and complex schema patterns.
 
 ### Middleware: Extending Without Modifying
 
@@ -153,84 +143,247 @@ Common middleware use cases:
 - **Resilience**: Implement retry logic or circuit breakers
 - **Cost Control**: Track token usage and enforce limits
 
-### Generate vs GenerateData: Choosing the Right Tool
+## Multimedia Generation
 
-Genkit Go provides two primary generation functions, each optimized for different use cases.
+Until now, we've been working exclusively with text - prompts go in, text comes out. But modern AI models can process and generate various types of media, enabling new types of applications.
 
-#### Generate: Plain Text Responses
+### Beyond Text: Working with Different Media Types
 
-Use `Generate` when you need simple text output:
+Traditional LLMs handle text, but today's models work with multimedia:
+
+**What we've covered so far:**
+
+- Text → Text (traditional prompt-response generation)
+
+**What multimedia generation enables:**
+
+- **Image → Text**: Analyze photos, diagrams, and visual content
+- **Audio → Text**: Transcribe speech and analyze sound
+- **Video → Text**: Process video content and extract information
+- **Text → Image**: Generate visuals from descriptions
+
+This allows AI to work with different media types beyond just text.
+
+### Why Multimedia Matters
+
+Working with multimedia unlocks practical applications that weren't possible with text alone:
+
+- **Visual Understanding**: Analyze product images, medical scans, or design mockups directly
+- **Audio Intelligence**: Transcribe meetings, analyze customer calls, or process podcasts
+- **Content Creation**: Generate logos, illustrations, or marketing visuals on demand
+- **Document Processing**: Extract data from PDFs, invoices, or handwritten notes
+
+### Working with Multimedia in Genkit Go
+
+To demonstrate multimedia capabilities, we'll use two powerful Google models:
+
+#### Gemini 2.5 Flash - Multimedia Input Processing
+
+According to the official documentation, Gemini 2.5 Flash can process: <https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash>
+
+- **Images**: Up to 3000 images in a single request
+- **Audio**: Up to 8.4 hours of audio content
+- **Video**: Approximately 45 minutes
+
+#### Imagen 3 - Text-to-Image Generation
+
+Imagen 3 is Google's image generation model: <https://ai.google.dev/gemini-api/docs/imagen#imagen-3>
+
+- **Input**: Text
+- **Output**: High-quality images in various aspect ratios
+- **Strengths**: Photorealistic quality, accurate text rendering, fewer artifacts
+- **Use cases**: Product design, marketing materials, creative content
+
+Let's explore how to leverage these multimedia capabilities in your Genkit applications.
+
+### From Text-Only to Multimedia Processing
+
+Compare the familiar text-only approach with multimedia:
 
 ```go
+// What we've been doing: Text → Text
 resp, err := genkit.Generate(ctx, g,
-    ai.WithPrompt("Suggest healthy breakfast recipes using Japanese ingredients"),
+    ai.WithPrompt("Describe a red backpack"),
     ai.WithModelName("googleai/gemini-2.5-flash"))
+// AI imagines what a red backpack might look like
 
-// Access the response
-fmt.Println(resp.Text())
-
-// Check token usage
-if resp.Usage != nil {
-    log.Printf("Tokens used: %d", resp.Usage.TotalTokens)
-}
+// What multimedia enables: Image → Text  
+resp, err := genkit.Generate(ctx, g,
+    ai.WithModelName("googleai/gemini-2.5-flash"),
+    ai.WithMessages(
+        ai.NewUserMessage(
+            ai.NewTextPart("What's in this image?"),
+            ai.NewMediaPart("", "https://example.com/actual-backpack.jpg"),
+        ),
+    ))
+// AI sees and describes the actual backpack
 ```
 
-#### GenerateData: Type-Safe Structured Output
+The difference is that instead of the AI imagining based on text, it analyzes the actual content.
 
-Use `GenerateData` when you need structured data:
+### Image Understanding with Gemini
+
+Process images using `WithMessages` and `NewMediaPart`:
 
 ```go
-type Recipe struct {
-    Name        string   `json:"name"`
-    PrepTime    int      `json:"prep_time_minutes"`
-    Ingredients []string `json:"ingredients"`
-    Steps       []string `json:"steps"`
-    Nutrition   struct {
-        Calories int `json:"calories"`
-        Protein  int `json:"protein_grams"`
-    } `json:"nutrition"`
-}
+// Analyze a product image
+resp, err := genkit.Generate(ctx, g,
+    ai.WithModelName("googleai/gemini-2.5-flash"),
+    ai.WithMessages(
+        ai.NewUserMessage(
+            ai.NewTextPart("Describe this product in detail"),
+            ai.NewMediaPart("", "https://example.com/product.jpg"),
+        ),
+    ))
 
-// Generate with automatic schema validation
-recipe, _, err := genkit.GenerateData[Recipe](ctx, g,
-    ai.WithPrompt("Create a healthy breakfast recipe under 300 calories"))
-
-// Use the typed result directly
-fmt.Printf("%s (Prep: %d min, Calories: %d)\n", 
-    recipe.Name, recipe.PrepTime, recipe.Nutrition.Calories)
+fmt.Println(resp.Text())
+// Output: "This is a professional DSLR camera with a black body and 
+//          silver accents. It features a large lens with focal length 
+//          markings, multiple control dials, and appears to be a 
+//          full-frame model suitable for professional photography..."
 ```
 
-> `GenerateData` is a convenience wrapper that automatically applies `WithOutputType()` for you. If you need more control, you can use `Generate` with `WithOutputType()` directly:
->
-> ```go
-> resp, err := genkit.Generate(ctx, g,
->     ai.WithPrompt("Create a healthy breakfast recipe"),
->     ai.WithOutputType(Recipe{}))
-> 
-> // Manual unmarshaling required
-> var recipe Recipe
-> if err := resp.Output(&recipe); err != nil {
->     return err
-> }
-> ```
->
-> While `GenerateData` handles the unmarshaling automatically, using `WithOutputType()` gives you access to the full response metadata and allows for custom error handling before unmarshaling.
+You can also ask specific questions about images:
 
-### Comparison Guide
+```go
+// Visual Q&A
+resp, err := genkit.Generate(ctx, g,
+    ai.WithModelName("googleai/gemini-2.5-flash"),
+    ai.WithMessages(
+        ai.NewUserMessage(
+            ai.NewTextPart("Is this food vegetarian? List any meat products you see."),
+            ai.NewMediaPart("", "https://example.com/meal.jpg"),
+        ),
+    ))
+```
 
-Choose the right approach based on your needs:
+### Audio Processing with Gemini
 
-| Use Case | Recommended Approach | Why |
-|----------|---------------------|-----|
-| **Simple text generation** | `Generate` with `WithPrompt` | No structure needed, maximum flexibility |
-| **Structured data with convenience** | `GenerateData[T]` | Automatic type handling, less boilerplate |
-| **Structured data with metadata access** | `Generate` with `WithOutputType` | Access to token usage, finish reason, etc. |
-| **API responses** | `GenerateData[T]` | Type safety and automatic validation |
-| **When you need response metadata** | `Generate` (with or without `WithOutputType`) | Full `ModelResponse` access |
+Gemini can also process audio files for transcription and analysis:
+
+```go
+// Transcribe audio
+resp, err := genkit.Generate(ctx, g,
+    ai.WithModelName("googleai/gemini-2.5-flash"),
+    ai.WithMessages(
+        ai.NewUserMessage(
+            ai.NewTextPart("Transcribe this audio"),
+            ai.NewMediaPart("", "https://example.com/podcast-clip.mp3"),
+        ),
+    ))
+
+fmt.Println(resp.Text())
+// Output: "Host: Welcome to today's episode. Today we're discussing 
+//          the impact of artificial intelligence on creative industries.
+//          Guest: Thanks for having me. I think it's important to 
+//          understand that AI is a tool that augments creativity..."
+```
+
+Beyond simple transcription, you can analyze audio content:
+
+```go
+// Audio analysis
+resp, err := genkit.Generate(ctx, g,
+    ai.WithModelName("googleai/gemini-2.5-flash"),
+    ai.WithMessages(
+        ai.NewUserMessage(
+            ai.NewTextPart("Identify the speakers and summarize the main points discussed"),
+            ai.NewMediaPart("", "https://example.com/meeting.mp3"),
+        ),
+    ))
+```
+
+### Image Generation with Imagen 3
+
+Generate images from text descriptions using Google's Imagen 3:
+
+```go
+// Generate an image
+resp, err := genkit.Generate(ctx, g,
+    ai.WithModelName("googleai/imagen-3.0-generate-002"),
+    ai.WithPrompt("A minimalist logo for a coffee shop called 'Morning Brew', incorporating a coffee cup and sunrise elements, modern flat design style"),
+    ai.WithConfig(&genai.GenerateImagesConfig{
+        NumberOfImages:    1,
+        AspectRatio:       "1:1",
+        SafetyFilterLevel: genai.SafetyFilterLevelBlockLowAndAbove,
+        PersonGeneration:  genai.PersonGenerationAllowAll,
+        OutputMIMEType:    "image/png",
+    }))
+
+// The image is returned as a base64-encoded data URI in the response
+for _, part := range resp.Message.Content {
+    if part.IsMedia() {
+        imageData := part.Text // Contains data:image/png;base64,...
+        // You can use this directly in HTML or decode for file storage
+        fmt.Printf("Generated image (data URI): %s...
+", imageData[:50])
+        break
+    }
+}
+```
+
+Key configuration options:
+
+| Option | Description | Values |
+|--------|------------|--------|
+| `AspectRatio` | Image dimensions | `"1:1"`, `"3:4"`, `"4:3"`, `"9:16"`, `"16:9"` |
+| `NumberOfImages` | Variations to generate | 1-8 (default: 4) |
+| `NegativePrompt` | What to avoid | e.g., `"blurry, low quality"` |
+| `PersonGeneration` | Allow people in images | `AllowAll`, `AllowAdult`, `DontAllow` |
+| `SafetyFilterLevel` | Content filtering | `BlockLowAndAbove`, `BlockMediumAndAbove`, `BlockOnlyHigh` |
+| `OutputMIMEType` | Output format | `"image/png"`, `"image/jpeg"` |
+
+### Combining Modalities in Workflows
+
+You can chain multimedia operations:
+
+```go
+// Example: Image analysis followed by creative expansion
+func analyzeAndExpand(ctx context.Context, g *genkit.Generator, imageURL string) (string, error) {
+    // Step 1: Analyze the original image
+    analysis, err := genkit.Generate(ctx, g,
+        ai.WithModelName("googleai/gemini-2.5-flash"),
+        ai.WithMessages(
+            ai.NewUserMessage(
+                ai.NewTextPart("Describe this image's style, colors, and mood"),
+                ai.NewMediaPart("", imageURL),
+            ),
+        ))
+    if err != nil {
+        return "", err
+    }
+
+    // Step 2: Generate a creative variation
+    variation, err := genkit.Generate(ctx, g,
+        ai.WithModelName("googleai/imagen-3"),
+        ai.WithPrompt(fmt.Sprintf(
+            "Create an artistic interpretation: %s, but in a surrealist style",
+            analysis.Text(),
+        )),
+        ai.WithConfig(map[string]interface{}{
+            "output": "media",
+        }))
+    if err != nil {
+        return "", err
+    }
+
+    return variation.Media(), nil
+}
+```
+
+### Moving Beyond Simple I/O
+
+While this section demonstrates basic multimedia processing, real applications often need more:
+
+- **Structured extraction from images**: Product details, receipt data, form information
+- **Structured audio analysis**: Meeting minutes with action items, speaker identification
+- **Generated images with metadata**: Creation parameters, style attributes, variations
+
+These advanced patterns - combining multimedia inputs with structured outputs - are covered extensively in Chapter 5, where you'll learn to build production-ready applications that extract structured, type-safe data from various media types.
 
 ## Error Handling: Building Resilient AI Applications
 
-AI introduces unique challenges that Genkit Go helps you handle systematically. Unlike traditional APIs, AI services can fail in unpredictable ways - from rate limits to model unavailability to unexpected output formats. Genkit provides structured error types:
+AI services can fail in various ways - from rate limits to model unavailability to unexpected output formats. Genkit provides structured error types to handle these scenarios:
 
 | Status | When It Occurs | Recovery Strategy |
 |--------|---------------|-------------------|
@@ -267,7 +420,7 @@ if err != nil {
 }
 ```
 
-This structured approach transforms unpredictable AI failures into manageable scenarios, enabling your application to degrade gracefully rather than crash unexpectedly.
+This structured approach helps manage AI failures, allowing your application to handle errors appropriately.
 
 ## Dotprompt: Professional Prompt Management
 
@@ -501,11 +654,47 @@ Navigate to <http://localhost:4000/flows> and you'll see the Flows section:
 
 The Developer UI allows you to:
 
-1. **Test different flows** - Compare outputs between basicGenerationFlow and dotpromptFlow
+1. **Test different flows** - Compare outputs between all five flows:
+   - `basicGenerationFlow` - Standard text generation
+   - `dotpromptFlow` - Template-based generation
+   - `imageAnalysisFlow` - Image analysis from URLs
+   - `audioTranscriptionFlow` - Audio transcription from URLs
+   - `imageGenerationFlow` - Text-to-image generation
 2. **Experiment with parameters** - Adjust temperature, max tokens, and other settings
 3. **View token usage** - Understand the cost implications of your prompts
 
 ![](../images/chapter-04/test-dotprompt-flow-result.png)
+
+#### Testing Multimedia Flows
+
+The Developer UI makes it easy to test multimedia flows:
+
+1. **Image Analysis**: Enter an image URL to get AI-generated descriptions
+2. **Audio Transcription**: Provide audio file URLs for automatic transcription
+3. **Image Generation**: Type text descriptions to generate images
+
+For example, testing the **imageAnalysisFlow**:
+
+- Input: `"https://example.com/food-photo.jpg"`
+- Output: Detailed description of the dish, ingredients, and presentation
+
+![](../images/chapter-04/test-image-analysis-flow.png)
+
+Testing the **audioTranscriptionFlow`**:
+
+- Input: `"https://example.com/podcast-clip.mp3"`
+- Output: Full transcription of the audio content
+
+![](../images/chapter-04/test-audio-transcription-flow.png)
+
+The **imageGenerationFlow** uses Google's Imagen 3 model to generate images from text descriptions. The flow returns base64-encoded image data that the Developer UI automatically renders.
+
+Testing the flow:
+
+- Input: `"Genkit development engineer"`
+- Output: Visual preview of the generated image
+
+![](../images/chapter-04/test-image-generation-flow.png)
 
 #### Working with Dotprompt Files
 
@@ -534,19 +723,19 @@ genkit flow:run dotpromptFlow '"fermentation techniques"'
 
 ## Beyond Simple Generation
 
-This chapter has taken you through the practical aspects of AI generation with Genkit Go. From basic text generation to type-safe structured output, from simple prompts to sophisticated Dotprompt management, you've seen how Genkit provides the tools needed for production AI applications.
+This chapter covered the practical aspects of AI generation with Genkit Go, from basic text generation to multimedia processing and Dotprompt management.
 
-The middleware pattern demonstrated with our logging example shows how Genkit enables cross-cutting concerns without modifying core logic. While we focused on logging here, the same pattern enables authentication, authorization, rate limiting, cost tracking, and retry logic - essential capabilities for production AI applications. The seamless switching between providers means you're never locked into a single vendor, giving you the flexibility to optimize for cost, performance, or capabilities as your needs evolve.
+The middleware pattern demonstrated with our logging example shows how to add cross-cutting concerns without modifying core logic. The same pattern works for authentication, authorization, rate limiting, cost tracking, and retry logic. Provider switching is straightforward, allowing you to change models based on your requirements.
 
-Perhaps most importantly, the Developer UI represents a significant step toward practical LLMOps. It transforms the traditionally opaque process of prompt engineering into a visual, iterative workflow with full observability. Instead of deploying to production to test each prompt variation, you can refine locally, track performance metrics, export successful configurations, and maintain consistency across your team - laying the foundation for systematic prompt management and continuous improvement.
+The Developer UI provides a visual workflow for prompt development with observability. You can test prompt variations locally, track metrics, export configurations, and maintain consistency across your team.
 
 ## Key Takeaways
 
-- Generation in Genkit Go offers two approaches: `Generate` for text and `GenerateData` for structured output
+- The `Generate` function provides flexible text generation with full response metadata
 - Middleware enables cross-cutting concerns like logging, auth, and monitoring
 - Provider switching is as simple as changing a model name string
 - Dotprompt brings engineering discipline to prompt management
 
 ## What's Next
 
-This chapter introduced the fundamentals of AI generation with Genkit Go. In the next chapter, we'll explore structured output in depth, covering complex schemas, validation strategies, and techniques for reliable data extraction. You'll build on the patterns learned here to create more sophisticated AI applications that can handle real-world complexity.
+This chapter introduced the fundamentals of AI generation with Genkit Go, focusing on text generation, provider independence, middleware patterns, and professional prompt management with Dotprompt. In the next chapter, we'll explore structured output in depth with `GenerateData`, covering type-safe generation, complex schemas, validation strategies, and techniques for reliable data extraction. You'll build on the patterns learned here to create more sophisticated AI applications that can handle real-world complexity with structured, type-safe outputs.

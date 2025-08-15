@@ -1,3 +1,59 @@
+# [1.9.0](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.8.0...v1.9.0) (2025-08-14)
+
+
+### Bug Fixes
+
+* 05-structured-output.md ([7e0a35d](https://github.com/mastering-genkit/mastering-genkit-go/commit/7e0a35d2eb0ae49828be1158707ee927fce5ae55))
+* remove images ([8015d15](https://github.com/mastering-genkit/mastering-genkit-go/commit/8015d15a6c5295ecfee585b434da0703b2e2503d))
+
+
+### Features
+
+* add `chapter-05: Working with Structured Data` ([3bee0e4](https://github.com/mastering-genkit/mastering-genkit-go/commit/3bee0e4782b12c55262dbc6314afdb601e5f0faa))
+* add example code and structured data (I/O) flows for chapter 05 ([75a5006](https://github.com/mastering-genkit/mastering-genkit-go/commit/75a5006fbff610c5b83fe6c2fba57337efc98dff))
+* add multimodal structured flow diagram for chapter 05 ([aad7dee](https://github.com/mastering-genkit/mastering-genkit-go/commit/aad7deea4ada61f5a4ec36a2b1c96fd09731d52a))
+* add new images for chapter 05 ([fa438d5](https://github.com/mastering-genkit/mastering-genkit-go/commit/fa438d5667c1fca0dd7e7546a3e03b864ce89de5))
+* add sample code for chapter-05 ([efcc892](https://github.com/mastering-genkit/mastering-genkit-go/commit/efcc892130c9a4bca00b88a707412c1e7576f7b7))
+* enhance chapter 04 with multimedia generation capabilities and detailed examples ([d32f4d7](https://github.com/mastering-genkit/mastering-genkit-go/commit/d32f4d75d70311bc4f4234ff7095f1114e59d649))
+* refactor chapter 04 flows and add moltimedia flows ([cbbd85e](https://github.com/mastering-genkit/mastering-genkit-go/commit/cbbd85eef2ee692a566cb16690619aa468388ca7))
+
+# [1.8.0](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.7.0...v1.8.0) (2025-08-11)
+
+
+### Bug Fixes
+
+* genkit org ([dedd63c](https://github.com/mastering-genkit/mastering-genkit-go/commit/dedd63ceadf5a6e584b98b0561d3433942974c7d))
+* remove unnecessary blank line ([c9e51bb](https://github.com/mastering-genkit/mastering-genkit-go/commit/c9e51bbc94786fdf3bd55c61f7cd812604dd066f))
+* renaming ([8376873](https://github.com/mastering-genkit/mastering-genkit-go/commit/837687339d984545dcfc46a1cb7c7eab56577a8a))
+
+
+### Features
+
+* add intros + resources ([cab78c3](https://github.com/mastering-genkit/mastering-genkit-go/commit/cab78c33c3af6a7284e3ef7d3bfcce64db43cf39))
+* added more resources ([048cf33](https://github.com/mastering-genkit/mastering-genkit-go/commit/048cf332c4297b2ca29f2b13cfc7324349fa1c5b))
+* enhance introduction chapter with Nozomi's background ([ad87513](https://github.com/mastering-genkit/mastering-genkit-go/commit/ad87513e60956bf3c403a75f8bc2455fdc666ea9))
+
+# [1.7.0](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.6.1...v1.7.0) (2025-08-07)
+
+
+### Features
+
+* add the ability to click on images and better readability of code blocks ([7c3dd7f](https://github.com/mastering-genkit/mastering-genkit-go/commit/7c3dd7f4ede43760e21bcaedadf6fc76ccdac0e6))
+
+## [1.6.1](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.6.0...v1.6.1) (2025-08-07)
+
+
+### Bug Fixes
+
+* js style ([802cb9d](https://github.com/mastering-genkit/mastering-genkit-go/commit/802cb9d90ead84386c5d8efe33200908b1322de5))
+
+# [1.6.0](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.5.0...v1.6.0) (2025-08-07)
+
+
+### Features
+
+* improve web and pdf generation ([f4fe19d](https://github.com/mastering-genkit/mastering-genkit-go/commit/f4fe19dc6e063ac3166df285d9e225e87bacb830))
+
 # [1.5.0](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.4.0...v1.5.0) (2025-08-04)
 
 
