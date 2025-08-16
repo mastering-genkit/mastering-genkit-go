@@ -58,3 +58,5 @@ coverage/
 .yarn-integrity
 
 .genkit/
+
+!src/examples/chapter-10/internal/docs/
