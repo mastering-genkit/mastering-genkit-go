@@ -1,3 +1,15 @@
+# [1.10.0](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.9.0...v1.10.0) (2025-08-16)
+
+
+### Bug Fixes
+
+* feedback ([6b06ada](https://github.com/mastering-genkit/mastering-genkit-go/commit/6b06ada6e7e5cc6f3ba8235f593da2154a50a5eb))
+
+
+### Features
+
+* chapter 10 ([611b930](https://github.com/mastering-genkit/mastering-genkit-go/commit/611b930552dbd6a57106b228a7b29565bc6882b4))
+
 # [1.9.0](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.8.0...v1.9.0) (2025-08-14)
 
 
