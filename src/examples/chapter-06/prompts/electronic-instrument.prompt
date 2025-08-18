@@ -1,0 +1,24 @@
+---
+model: googleai/gemini-2.5-flash
+config:
+  temperature: 0.7
+input:
+  schema:
+    genre: string
+output:
+  schema: string
+---
+
+Based on the electronic music genre "{{genre}}", recommend ONE beginner-friendly electronic instrument or tool.
+
+Consider these electronic instruments/tools:
+- MIDI Keyboard (essential for electronic music production)
+- Launchpad (for beat making and live performance)
+- DJ Controller (for mixing and DJing)
+- Sampler/MPC (for beat production)
+- Synthesizer (for sound design)
+
+Return ONLY the instrument/tool name, nothing else.
+Example: "MIDI Keyboard"
+
+Genre: {{genre}}

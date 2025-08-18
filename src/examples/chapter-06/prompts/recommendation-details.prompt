@@ -1,0 +1,30 @@
+---
+model: googleai/gemini-2.5-flash
+config:
+  temperature: 0.8
+input:
+  schema:
+    genre: string
+    category: string
+    instrument: string
+    experience: string
+output:
+  schema:
+    instrument: string
+    why: string
+    starter_items(array): string
+---
+
+Create a detailed music instrument recommendation.
+
+Genre: {{genre}}
+Category: {{category}}
+Recommended Instrument: {{instrument}}
+Experience Level: {{experience}}
+
+Generate a response with:
+1. "instrument": The exact instrument name ({{instrument}})
+2. "why": A 2-3 sentence explanation of why this instrument is perfect for this genre and experience level
+3. "starter_items": An array of 3-5 essential items/accessories needed to start (e.g., picks, cables, software, cases, machines)
+
+Focus on practical advice for beginners getting started.

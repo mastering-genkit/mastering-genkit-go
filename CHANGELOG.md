@@ -1,3 +1,17 @@
+# [1.12.0](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.11.0...v1.12.0) (2025-08-18)
+
+
+### Features
+
+* add `Chapter 6: Building Flow` ([#16](https://github.com/mastering-genkit/mastering-genkit-go/issues/16)) ([0bf4880](https://github.com/mastering-genkit/mastering-genkit-go/commit/0bf488051718e832f1ab9e1fe71b0d67d417335e))
+
+# [1.11.0](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.10.0...v1.11.0) (2025-08-18)
+
+
+### Features
+
+* add `chapter-12: AI Agents` ([#10](https://github.com/mastering-genkit/mastering-genkit-go/issues/10)) ([7026de5](https://github.com/mastering-genkit/mastering-genkit-go/commit/7026de59ec04c47113a691f7705fefd0c7cc3923))
+
 # [1.10.0](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.9.0...v1.10.0) (2025-08-16)
 
 
