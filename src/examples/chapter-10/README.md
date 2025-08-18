@@ -45,7 +45,7 @@ Indexes documents for search. Use this to process and store PDF content.
 ```bash
 curl -X POST http://localhost:9090/indexerFlow \
   -H "Content-Type: application/json" \
-  -d '{"pdfPath": "internal/docs/arduino_report.pdf"}'
+  -d '{"data":{"pdfPath": "internal/docs/arduino_report.pdf"}}'
 ```
 
 ### 2. Retrieval Flow
@@ -65,7 +65,7 @@ Searches indexed documents and generates contextual responses.
 ```bash
 curl -X POST http://localhost:9090/retrievalFlow \
   -H "Content-Type: application/json" \
-  -d '{"query": "What are the key features of Arduino?", "k": 3}'
+  -d '{"data":{"query": "What are the key features of Arduino?", "k": 3}}'
 ```
 
 ## Setup and Running
@@ -102,7 +102,7 @@ First, run the indexer to process and store your documents:
 ```bash
 curl -X POST http://localhost:9090/indexerFlow \
   -H "Content-Type: application/json" \
-  -d '{}'
+  -d '{"data":{}}'
 ```
 
 ### Step 2: Query the System
@@ -110,7 +110,7 @@ Once indexing is complete, you can query the system:
 ```bash
 curl -X POST http://localhost:9090/retrievalFlow \
   -H "Content-Type: application/json" \
-  -d '{"query": "How does Arduino work?"}'
+  -d '{"data":{"query": "How does Arduino work?"}}'
 ```
 
 ## Technical Details

@@ -7,6 +7,17 @@
     <meta name="description" content="{{book.description}}">
     <meta name="author" content="{{book.author}}">
     <link rel="stylesheet" href="{{#if chapter}}../assets/style.css{{else}}assets/style.css{{/if}}">
+    
+    {{#if book.web.google_analytics}}
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{book.web.google_analytics}}"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', '{{book.web.google_analytics}}');
+    </script>
+    {{/if}}
 </head>
 <body>
     <div class="reading-progress"></div>
@@ -73,6 +84,16 @@
                 </div>
                 {{/if}}
                 
+                <!-- Social Links in Nav -->
+                <div class="social-links header-social-links">
+                    {{#if book.social}}
+                        {{#if book.social.github}}<a href="{{book.social.github}}" class="icon-only" title="GitHub Repository" target="_blank" rel="noopener noreferrer"><i class="icon">📦</i></a>{{/if}}
+                        {{#if book.social.twitter}}<a href="https://twitter.com/{{book.social.twitter}}" class="icon-only" title="Twitter" target="_blank" rel="noopener noreferrer"><i class="icon">🐦</i></a>{{/if}}
+                        {{#if book.social.linkedin}}<a href="{{book.social.linkedin}}" class="icon-only" title="LinkedIn" target="_blank" rel="noopener noreferrer"><i class="icon">👔</i></a>{{/if}}
+                        {{#if book.social.website}}<a href="{{book.social.website}}" class="icon-only" title="Website" target="_blank" rel="noopener noreferrer"><i class="icon">🌐</i></a>{{/if}}
+                    {{/if}}
+                </div>
+                
                 <!-- Theme toggle -->
                 <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme"></button>
             </div>
@@ -87,7 +108,16 @@
     
     <footer>
         <div class="container">
-            <p>&copy; {{book.date}} {{book.author}}. All rights reserved.</p>
+            <p class="text-center">&copy; {{book.date}} {{book.author}}. All rights reserved.</p>
+            
+            <div class="social-links footer-links centered-links">
+                {{#if book.social}}
+                    {{#if book.social.github}}<a href="{{book.social.github}}" title="GitHub Repository" target="_blank" rel="noopener noreferrer"><i class="icon">📦</i> GitHub</a>{{/if}}
+                    {{#if book.social.twitter}}<a href="https://twitter.com/{{book.social.twitter}}" title="Twitter" target="_blank" rel="noopener noreferrer"><i class="icon">🐦</i> Twitter</a>{{/if}}
+                    {{#if book.social.linkedin}}<a href="{{book.social.linkedin}}" title="LinkedIn" target="_blank" rel="noopener noreferrer"><i class="icon">👔</i> LinkedIn</a>{{/if}}
+                    {{#if book.social.website}}<a href="{{book.social.website}}" title="Website" target="_blank" rel="noopener noreferrer"><i class="icon">🌐</i> Website</a>{{/if}}
+                {{/if}}
+            </div>
         </div>
     </footer>
     
