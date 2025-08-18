@@ -1,4 +1,4 @@
-module example/chapter-04
+module examples/chapter-04
 
 go 1.24.5
 

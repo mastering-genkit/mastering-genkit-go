@@ -18,7 +18,150 @@ Before diving into this chapter, you should have:
 - Understanding of Genkit flows and model integration from previous chapters
 - Basic knowledge of conversation state management concepts
 
-### Setting up Ollama
+
+## AI Agent Design Patterns
+
+As AI agents become more complex, different architectural patterns have emerged to handle various complexity levels and use cases. Understanding these patterns helps you choose the right approach for your specific needs and scale your agent systems effectively.
+
+### 1. LLM Augmented Agent
+
+The LLM Augmented Agent is the foundational pattern where a single Language Model is enhanced with additional capabilities through memory, tools, and context management. This is the pattern we implement in this chapter.
+
+![](../images/chapter-12/llm-augmented-agent.png)
+
+We will cover this pattern in detail, including its implementation and use cases below.
+
+### 2. Network Agent (Router-Based)
+
+The Network Agent pattern uses a router component to direct tasks to specialized agents based on the task type or domain. Each agent is optimized for specific capabilities.
+
+
+![](../images/chapter-12/network-agent.png)
+
+### 3. Supervisor Agent
+
+The Supervisor Agent pattern introduces a coordinating agent that orchestrates multiple specialized agents, enabling more complex workflows and inter-agent communication.
+
+![](../images/chapter-12/supervisor-agent.png)
+
+### 4. Hierarchical Agent (Mega Agents)
+
+The Hierarchical Agent pattern extends the supervisor model by organizing agents into teams, with supervisors managing teams rather than individual agents. This creates a tree-like organizational structure.
+
+![](../images/chapter-12/mega-agent.png)
+
+### Choosing the Right Pattern
+
+| Pattern | Complexity | Scalability | Use Case |
+|---------|------------|-------------|----------|
+| LLM Augmented | Low | Limited | Single domain, personal assistants |
+| Network Agent | Medium | High | Multi-domain applications |
+| Supervisor Agent | High | Medium | Complex workflows, task orchestration |
+| Hierarchical Agent | Very High | Very High | Enterprise-scale, complex organizations |
+
+The choice of pattern depends on your application's complexity, performance requirements, and the sophistication of tasks you need to handle. Start with simpler patterns and evolve to more complex architectures as your needs grow.
+
+## AI Agent Common Architecture
+
+Modern AI agents follow a common architectural pattern that combines three core components: **Language Model (LLM)**, **Memory**, and **Tools**. This architecture enables agents to process natural language, maintain context, and perform actions in their environment.
+
+### Core Components Architecture
+
+![](../images/chapter-12/ai-agent-architecture.png)
+
+### 1. Language Model (LLM) - The Brain
+
+The Language Model serves as the cognitive core of the AI agent, responsible for:
+
+**Primary Functions**:
+
+- **Natural Language Understanding**: Parsing and interpreting user inputs
+- **Reasoning and Planning**: Making decisions about what actions to take
+- **Response Generation**: Creating appropriate responses in natural language
+- **Context Integration**: Combining information from memory and tools
+
+**In Genkit Go Implementation**:
+
+```go
+// The LLM component processes requests with context
+resp, err := genkit.Generate(ctx, g,
+    ai.WithSystem("You're a helpful AI assistant..."),
+    ai.WithMessages(conversationHistory...),
+    ai.WithTools(availableTools...),
+    ai.WithModel(modelRef),
+)
+```
+
+### 2. Memory - The Context Keeper
+
+Memory systems in AI agents manage different types of information:
+
+**Memory Types**:
+
+- **Short-term Memory (Session Context)**:
+  - Stores current conversation
+  - Maintains immediate context
+  - Typically volatile (lost on restart)
+
+- **Long-term Memory (Persistent Storage)**:
+  - User preferences and profiles
+  - Historical interactions
+  - Learned patterns and behaviors
+
+- **Working Memory (Active Processing)**:
+  - Current task state
+  - Temporary calculations
+  - Active reasoning chains
+
+**Implementation Pattern**:
+
+```go
+type AgentMemory struct {
+    conversationHistory []*ai.Message  // Short-term
+    userProfile        UserProfile     // Long-term
+    currentTask        TaskState       // Working
+}
+```
+
+### 3. Tools - The Action Layer
+
+Tools extend the agent's capabilities beyond text generation as we have seen in chapter 9:
+
+**Tool Categories**:
+
+- **Internal Tools**: Built-in functions like calculators, validators, and formatters
+- **External APIs**: Web services, databases, and third-party integrations
+- **Custom Tools**: Domain-specific functions and business logic
+
+**Genkit Go Tool Integration**:
+
+```go
+// Define tools that the agent can use
+tools := []ai.ToolRef{
+    calculatorTool,
+    databaseQueryTool,
+    apiCallTool,
+}
+
+// Make tools available to the LLM
+genkit.Generate(ctx, g,
+    ai.WithTools(tools...),
+    // ... other options
+)
+```
+
+### Agent Decision Flow
+
+The agent follows this decision-making process:
+
+1. **Input Processing**: Receive and parse user input
+2. **Context Retrieval**: Load relevant context from memory
+3. **Route Decision**: Determine if simple response or complex processing needed
+4. **Tool Selection**: Choose appropriate tools if actions are required
+5. **Response Generation**: Create response using LLM with full context
+6. **Memory Update**: Store new information and conversation state
+
+## Setting Up Ollama
 
 For this chapter, we'll use Ollama to run a local AI model, providing privacy and offline operation capabilities:
 
@@ -431,26 +574,6 @@ In production environments, you'll want to move beyond storing conversation data
 
 For applications serving multiple users simultaneously, implementing proper user session management becomes crucial. You'll need to develop a user identification system that can distinguish between different conversations and maintain separate context for each user. This ensures that conversations remain private and that model's responses are appropriately contextualized for each individual user rather than mixing contexts between different sessions.
 
-
-## Advanced AI Agent Features
-
-### Tool Integration
-
-You can extend the agent with tools for enhanced capabilities as described in the previous chapters. Tools allow your AI agent to perform actions beyond text generation, such as accessing APIs, performing calculations, or retrieving real-time data:
-
-### Persistent Storage
-
-Implement database storage for conversation persistence across sessions and users. This is crucial for production AI agents that need to remember conversations between application restarts. This can be achieved by defining a `ConversationStore` interface that abstracts the storage operations:
-
-```go
-// ConversationStore interface defines methods for persistent storage
-type ConversationStore interface {
-    SaveConversation(userID string, messages []*ai.Message) error
-    LoadConversation(userID string) ([]*ai.Message, error)
-    ClearConversation(userID string) error
-    GetUserSessions(userID string) ([]SessionInfo, error)
-}
-```
 
 ## Conclusion
 

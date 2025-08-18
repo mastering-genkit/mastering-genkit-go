@@ -344,13 +344,20 @@ async function createDefaultLayout() {
     <footer>
         <div class="container">
             <p>&copy; {{book.date}} {{book.author}}. All rights reserved.</p>
-            {{#if book.social}}
             <div class="social-links">
-                {{#if book.social.twitter}}<a href="{{book.social.twitter}}">Twitter</a>{{/if}}
-                {{#if book.social.github}}<a href="https://github.com/{{book.social.github}}">GitHub</a>{{/if}}
-                {{#if book.social.website}}<a href="{{book.social.website}}">Website</a>{{/if}}
+                {{#if book.social}}
+                    {{#if book.social.github}}<a href="{{book.social.github}}" title="GitHub Repository"><i class="icon">📦</i> GitHub</a>{{/if}}
+                    {{#if book.social.twitter}}<a href="https://twitter.com/{{book.social.twitter}}" title="Twitter"><i class="icon">🐦</i> Twitter</a>{{/if}}
+                    {{#if book.social.linkedin}}<a href="{{book.social.linkedin}}" title="LinkedIn"><i class="icon">👔</i> LinkedIn</a>{{/if}}
+                    {{#if book.social.website}}<a href="{{book.social.website}}" title="Website"><i class="icon">🌐</i> Website</a>{{/if}}
+                {{/if}}
+                
+                {{#each book.authorObjects}}
+                    {{#if this.email}}<a href="mailto:{{this.email}}" title="Email {{this.name}}"><i class="icon">📧</i> Email</a>{{/if}}
+                    {{#if this.twitter}}<a href="https://twitter.com/{{this.twitter}}" title="Twitter {{this.name}}"><i class="icon">🐦</i> Twitter</a>{{/if}}
+                    {{#if this.website}}<a href="{{this.website}}" title="Website {{this.name}}"><i class="icon">🌐</i> Website</a>{{/if}}
+                {{/each}}
             </div>
-            {{/if}}
         </div>
     </footer>
     
@@ -377,8 +384,35 @@ async function createDefaultIndex() {
     </ol>
     
     <div class="book-info">
-        <p><strong>Author:</strong> {{book.author}}</p>
+        <p><strong>Author{{#if book.authorObjects}}{{#gt book.authorObjects.length 1}}s{{/gt}}{{/if}}:</strong> {{book.author}}</p>
         <p><strong>Last Updated:</strong> {{book.date}}</p>
+        
+        {{#if book.social}}
+        <div class="book-social-links">
+            <h3>Book Resources</h3>
+            <div class="social-links book-links">
+                {{#if book.social.github}}<a href="{{book.social.github}}" title="GitHub Repository"><i class="icon">📦</i> GitHub</a>{{/if}}
+                {{#if book.social.twitter}}<a href="https://twitter.com/{{book.social.twitter}}" title="Twitter"><i class="icon">🐦</i> Twitter</a>{{/if}}
+                {{#if book.social.linkedin}}<a href="{{book.social.linkedin}}" title="LinkedIn"><i class="icon">👔</i> LinkedIn</a>{{/if}}
+                {{#if book.social.website}}<a href="{{book.social.website}}" title="Website"><i class="icon">🌐</i> Website</a>{{/if}}
+            </div>
+        </div>
+        {{/if}}
+        
+        {{#if book.authorObjects}}
+        <div class="author-social-links">
+            {{#each book.authorObjects}}
+            <div class="author-block">
+                <h3>{{this.name}}</h3>
+                <div class="social-links author-links">
+                    {{#if this.email}}<a href="mailto:{{this.email}}" title="Email {{this.name}}"><i class="icon">📧</i> Email</a>{{/if}}
+                    {{#if this.twitter}}<a href="https://twitter.com/{{this.twitter}}" title="Twitter {{this.name}}"><i class="icon">🐦</i> Twitter</a>{{/if}}
+                    {{#if this.website}}<a href="{{this.website}}" title="Website {{this.name}}"><i class="icon">🌐</i> Website</a>{{/if}}
+                </div>
+            </div>
+            {{/each}}
+        </div>
+        {{/if}}
     </div>
 </div>`;
 }

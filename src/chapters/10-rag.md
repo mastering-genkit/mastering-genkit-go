@@ -285,14 +285,14 @@ You can test the indexer flow using the developer UI or curl:
 # Index the default Arduino report
 curl -X POST http://localhost:9090/indexerFlow \
   -H "Content-Type: application/json" \
-  -d '{}'
+  -d '{"data":{}}'
 ```
 
 ```bash
 # Index a custom PDF
 curl -X POST http://localhost:9090/indexerFlow \
   -H "Content-Type: application/json" \
-  -d '{"pdfPath": "path/to/your/document.pdf"}'
+  -d '{"data":{"pdfPath": "path/to/your/document.pdf"}}'
 ```
 
 Or using the Genkit CLI. Make sure you have your app running in a separate terminal with `genkit start -- go run .`:

@@ -122,6 +122,7 @@ a:hover {
 
 /* Table of Contents */
 #TOC {
+    page-break-before: always;
     page-break-after: always;
     margin-bottom: 2em;
 }
