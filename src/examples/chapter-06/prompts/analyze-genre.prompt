@@ -1,0 +1,20 @@
+---
+model: googleai/gemini-2.5-flash
+config:
+  temperature: 0.3
+input:
+  schema:
+    genre: string
+output:
+  schema: string
+---
+
+Analyze the music genre "{{genre}}" and categorize it.
+
+Rules:
+- If the genre primarily uses acoustic instruments (guitar, piano, drums, brass, strings), return "acoustic"
+- If the genre primarily uses electronic/synthesized sounds (synths, drum machines, samplers), return "electronic"
+- For hybrid genres, choose based on the dominant characteristic
+- Return ONLY one word: either "acoustic" or "electronic"
+
+Genre to analyze: {{genre}}
