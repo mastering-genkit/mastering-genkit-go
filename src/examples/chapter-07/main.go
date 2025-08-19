@@ -16,14 +16,14 @@ import (
 func main() {
 	ctx := context.Background()
 
-	// Initialize Genkit with OpenAI plugin and default model using GPT-4o.
+	// Initialize Genkit with OpenAI plugin and default model using GPT-5
 	g, err := genkit.Init(ctx,
 		genkit.WithPlugins(
 			&openai.OpenAI{
 				APIKey: os.Getenv("OPENAI_API_KEY"),
 			},
 		),
-		genkit.WithDefaultModel("openai/gpt-4o-mini"),
+		genkit.WithDefaultModel("openai/gpt-5"),
 	)
 	if err != nil {
 		log.Fatalf("could not initialize Genkit: %v", err)
