@@ -15,7 +15,8 @@ function initializeFeatures() {
     initEnhancedKeyboardNavigation();
     initChapterGrouping();
     enhanceChapterNavigation();
-    initCopyButtons(); // Add this line
+    initCopyButtons();
+    initImageModal(); // Add image modal functionality
 }
 
 // Enhanced Navigation Functions
@@ -649,3 +650,97 @@ const printStyles = `
 const style = document.createElement('style');
 style.textContent = printStyles;
 document.head.appendChild(style);
+
+// Image Modal functionality
+function initImageModal() {
+    // Create modal elements once
+    const modal = document.createElement('div');
+    modal.className = 'image-modal';
+    
+    const closeBtn = document.createElement('span');
+    closeBtn.className = 'close-modal';
+    closeBtn.innerHTML = '&times;';
+    closeBtn.setAttribute('aria-label', 'Close image');
+    closeBtn.setAttribute('role', 'button');
+    closeBtn.setAttribute('tabindex', '0');
+    
+    const modalImg = document.createElement('img');
+    modalImg.className = 'modal-content';
+    
+    modal.appendChild(closeBtn);
+    modal.appendChild(modalImg);
+    document.body.appendChild(modal);
+    
+    // Create a background overlay
+    const overlay = document.createElement('div');
+    overlay.style.position = 'fixed';
+    overlay.style.top = '0';
+    overlay.style.left = '0';
+    overlay.style.width = '100%';
+    overlay.style.height = '100%';
+    overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.4)';
+    overlay.style.zIndex = '999';
+    overlay.style.display = 'none';
+    document.body.appendChild(overlay);
+    
+    // Get all images in content
+    const contentImages = document.querySelectorAll('.chapter-content img');
+    
+    // Add click event to each image
+    contentImages.forEach(img => {
+        img.addEventListener('click', function() {
+            // Show overlay
+            overlay.style.display = 'block';
+            
+            // Get natural image dimensions
+            const imgWidth = this.naturalWidth;
+            const imgHeight = this.naturalHeight;
+            
+            // Calculate display size (max 80% of viewport width/height, maintaining aspect ratio)
+            const maxWidth = Math.min(imgWidth, window.innerWidth * 0.8);
+            const maxHeight = Math.min(imgHeight, window.innerHeight * 0.8);
+            
+            // Set modal image src
+            modalImg.src = this.src;
+            modalImg.style.maxWidth = maxWidth + 'px';
+            modalImg.style.maxHeight = maxHeight + 'px';
+            
+            // Show modal
+            modal.classList.add('active');
+            
+            // Ensure the close button is visible and positioned correctly
+            closeBtn.style.opacity = '1';
+            closeBtn.style.display = 'flex';
+            
+            // Set focus on the close button for keyboard accessibility
+            setTimeout(() => {
+                closeBtn.focus();
+            }, 100);
+            
+            // Optional: add slight zoom animation to the clicked image
+            this.style.transition = 'transform 0.3s';
+            this.style.transform = 'scale(1.05)';
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 300);
+        });
+    });
+    
+    // Close modal when clicking the close button
+    closeBtn.addEventListener('click', closeModal);
+    
+    // Close modal when clicking on the overlay
+    overlay.addEventListener('click', closeModal);
+    
+    // Close modal when pressing Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeModal();
+        }
+    });
+    
+    function closeModal() {
+        modal.classList.remove('active');
+        overlay.style.display = 'none';
+    }
+}
