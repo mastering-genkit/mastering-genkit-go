@@ -9,17 +9,21 @@ import (
 	"mastering-genkit-go/example/chapter-07/internal/flows"
 
 	"github.com/firebase/genkit/go/genkit"
-	"github.com/firebase/genkit/go/plugins/googlegenai"
+	"github.com/firebase/genkit/go/plugins/compat_oai/openai"
 	"github.com/firebase/genkit/go/plugins/server"
 )
 
 func main() {
 	ctx := context.Background()
 
-	// Initialize Genkit with the Google AI plugin and Gemini 2.5 Flash.
+	// Initialize Genkit with OpenAI plugin and default model using GPT-4o.
 	g, err := genkit.Init(ctx,
-		genkit.WithPlugins(&googlegenai.GoogleAI{}),
-		genkit.WithDefaultModel("googleai/gemini-2.5-flash"),
+		genkit.WithPlugins(
+			&openai.OpenAI{
+				APIKey: os.Getenv("OPENAI_API_KEY"),
+			},
+		),
+		genkit.WithDefaultModel("openai/gpt-4o-mini"),
 	)
 	if err != nil {
 		log.Fatalf("could not initialize Genkit: %v", err)
