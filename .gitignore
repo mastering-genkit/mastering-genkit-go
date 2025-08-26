@@ -59,4 +59,6 @@ coverage/
 
 .genkit/
 
+.dart_tool/
+
 !src/examples/chapter-10/internal/docs/
