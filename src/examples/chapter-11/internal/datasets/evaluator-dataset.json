@@ -1,0 +1,20 @@
+[
+    {
+      "testCaseId": "test-case-1",
+      "input": "hola",
+      "output": "hola",
+      "reference": "hola"
+    },
+    {
+      "testCaseId": "test-case-2",
+      "input": "What is the capital of France?",
+      "output": "Paris",
+      "reference": "Paris"
+    },
+    {
+      "testCaseId": "test-case-3",
+      "input": "What is the capital of France?",
+      "output": "The capital of France is Paris.",
+      "reference": "Paris"
+    }
+]

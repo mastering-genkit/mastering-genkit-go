@@ -18,6 +18,7 @@ Before diving into this chapter, you should have:
 - Understanding of Genkit flows and model integration from previous chapters
 - Basic knowledge of conversation state management concepts
 
+
 ## AI Agent Design Patterns
 
 As AI agents become more complex, different architectural patterns have emerged to handle various complexity levels and use cases. Understanding these patterns helps you choose the right approach for your specific needs and scale your agent systems effectively.
@@ -572,6 +573,7 @@ When building applications that involve extended conversations with LLMs, it's i
 In production environments, you'll want to move beyond storing conversation data in temporary memory and instead implement persistent storage solutions. Consider integrating a database system to store conversation history, which allows for better data management, recovery capabilities, and the ability to maintain conversations across different sessions or application restarts.
 
 For applications serving multiple users simultaneously, implementing proper user session management becomes crucial. You'll need to develop a user identification system that can distinguish between different conversations and maintain separate context for each user. This ensures that conversations remain private and that model's responses are appropriately contextualized for each individual user rather than mixing contexts between different sessions.
+
 
 ## Conclusion
 

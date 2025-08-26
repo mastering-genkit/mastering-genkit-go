@@ -1,3 +1,10 @@
+# [1.13.0](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.12.0...v1.13.0) (2025-08-19)
+
+
+### Features
+
+* add `chapter-11: Evaluations` ([#11](https://github.com/mastering-genkit/mastering-genkit-go/issues/11)) ([4b93cef](https://github.com/mastering-genkit/mastering-genkit-go/commit/4b93cef1e1c06e0029292de151c6c0fdb48f2d41))
+
 # [1.12.0](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.11.0...v1.12.0) (2025-08-18)
 
 
