@@ -1,3 +1,10 @@
+# [1.14.0](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.13.0...v1.14.0) (2025-08-26)
+
+
+### Features
+
+* add `Chapter 7: Streaming Flow` ([#17](https://github.com/mastering-genkit/mastering-genkit-go/issues/17)) ([46194d7](https://github.com/mastering-genkit/mastering-genkit-go/commit/46194d72d9f04623c491be3fbd24202e53b118e3))
+
 # [1.13.0](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.12.0...v1.13.0) (2025-08-19)
 
 
