@@ -17,7 +17,7 @@ func main() {
 	ctx := context.Background()
 
 	// Initialize Genkit with OpenAI plugin and default model using GPT-5
-	g, err := genkit.Init(ctx,
+	g := genkit.Init(ctx,
 		genkit.WithPlugins(
 			&openai.OpenAI{
 				APIKey: os.Getenv("OPENAI_API_KEY"),
@@ -25,9 +25,6 @@ func main() {
 		),
 		genkit.WithDefaultModel("openai/gpt-5"),
 	)
-	if err != nil {
-		log.Fatalf("could not initialize Genkit: %v", err)
-	}
 
 	// Define the streaming flow
 	recipeStepsFlow := flows.NewRecipeFlow(g)
