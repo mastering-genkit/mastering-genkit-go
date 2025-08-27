@@ -1,3 +1,10 @@
+# [1.17.0](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.16.0...v1.17.0) (2025-08-27)
+
+
+### Features
+
+* add `Chapter 3: AI-Assisted Development section` ([#19](https://github.com/mastering-genkit/mastering-genkit-go/issues/19)) ([4b5a066](https://github.com/mastering-genkit/mastering-genkit-go/commit/4b5a066d783557607b16e5ec0ac263a31eb6be14))
+
 # [1.16.0](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.15.0...v1.16.0) (2025-08-27)
 
 
