@@ -445,7 +445,13 @@ By creating these simple instruction files, your AI coding assistant will know t
 
 > This is an experimental feature and may change in future releases.
 
-Beyond static documentation references, Genkit offers an AI-Assisted Development feature that enables your AI coding assistant to directly interact with your running Genkit application. This feature uses the Model Context Protocol (MCP) to create a dynamic bridge between AI tools and your Genkit flows.
+Beyond static documentation references, Genkit offers an AI-Assisted Development feature that enables your AI coding assistant to directly interact with your running Genkit application. This powerful capability transforms your AI assistant from a passive code generator into an active development partner.
+
+### Understanding the Key Concepts
+
+**Model Context Protocol (MCP)** is an open standard that enables secure communication between AI assistants and external systems. Think of it as a standardized API that allows your AI coding assistant to safely discover and execute functionality in your Genkit application. (For deep technical details on MCP architecture and building MCP servers, see `Chapter 9: Model Context Protocol (MCP)`)
+
+**Tools** in this context are specific functions that AI assistants can invoke—like reading files, executing flows, or retrieving documentation. Each tool has defined inputs, outputs, and permissions, ensuring safe and predictable interactions. (For comprehensive coverage of creating custom tools and tool patterns, see `Chapter 8: Tool Calling`)
 
 ### Setting Up MCP Integration
 
@@ -465,14 +471,14 @@ The setup creates an MCP server (<https://genkit.dev/docs/mcp-server>) that expo
 
 ### Available Tools
 
-Once configured, your AI assistant gains access to powerful tools for interacting with your Genkit application:
+Once configured, your AI assistant gains access to these MCP-provided tools for interacting with your Genkit application:
 
 - **`lookup_genkit_docs`**: Query Genkit documentation programmatically based on context
 - **`list_flows`**: Discover all flows defined in your project, including their input/output schemas
 - **`run_flow`**: Execute any flow with proper input validation and receive the output
 - **`get_trace`**: Retrieve detailed execution traces to analyze performance and debug issues
 
-These tools transform your AI assistant from a code generator into an active development partner that can test and validate the code it writes.
+Through these MCP tools, your AI assistant becomes an active participant in your development workflow—capable of testing flows, validating outputs, and debugging issues in real-time.
 
 ### Generated Configuration Files
 
