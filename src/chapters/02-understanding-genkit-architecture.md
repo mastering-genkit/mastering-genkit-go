@@ -143,7 +143,7 @@ result, err := genkit.Generate(ctx, g,
 )
 ```
 
-The beauty of this system is its vendor neutrality. Whether you're using OpenAI's latest GPT, Anthropic's Claude via AWS Bedrock, Google's Gemini, or even a locally-running Ollama model, they all work through the same interface. This eliminates vendor lock-in - you can switch providers based on cost, performance, or availability without changing your application code.
+This unified interface means all models work through the same API, regardless of provider.
 
 ### Dynamic Plugin Resolution
 
@@ -394,27 +394,15 @@ This context propagation enables powerful patterns:
 
 #### 3. Middleware Pipeline
 
-Actions (including flows and model calls) support middleware for cross-cutting concerns:
+Actions (including flows and model calls) support middleware for cross-cutting concerns. The middleware system allows you to wrap action execution with pre/post processing, modify inputs and outputs, and add logging, metrics, or authentication.
 
-```go
-type Middleware[In, Out, Stream any] = func(StreamingFunc[In, Out, Stream]) StreamingFunc[In, Out, Stream]
-```
-
-This middleware design allows:
-
-- Wrapping action execution with pre/post processing
-- Modifying inputs and outputs
-- Adding cross-cutting concerns like logging, metrics, auth
-- Composing multiple middlewares via `ChainMiddleware`
+> For detailed middleware implementation patterns and examples, see `Chapter 4: Mastering AI Generation`, where we explore logging middleware, retry logic, and other production patterns.
 
 ### Observability Integration
 
-Genkit Go integrates with OpenTelemetry for production observability. These traces flow to your observability platform (Cloud Trace, Datadog, etc.), providing insights into:
+Genkit Go automatically creates OpenTelemetry spans during action execution, as shown in the sequence diagram. This built-in instrumentation captures the complete request lifecycle without additional code.
 
-- Request latency breakdown
-- Model token usage
-- Error rates by flow
-- User behavior patterns
+> For detailed observability implementation patterns, monitoring strategies, and production deployment guidance, see `Chapter 13: Monitoring and Observability` with Genkit Go.
 
 ### Putting It All Together
 
@@ -424,22 +412,8 @@ The following sequence diagram illustrates the complete request flow we've discu
 
 This diagram shows how all the architectural components work together: the HTTP handler deserializes requests, context flows through every layer enabling cancellation and tracing, middleware wraps execution for cross-cutting concerns, and errors are properly categorized for security while maintaining debuggability.
 
-## Context from Chapter 1's Framework Comparison
-
-In Chapter 1, we explored the diverse AI framework landscape. Now we can understand how Genkit Go's architecture addresses the challenges other frameworks face:
-
-**LangChain Complexity**: Where LangChain offers hundreds of components, Genkit Go provides a minimal set of well-designed interfaces. The plugin system allows extension without framework bloat.
-
-**Semantic Kernel Enterprise Focus**: While Semantic Kernel emphasizes enterprise patterns, Genkit Go achieves enterprise readiness through Go's inherent strengths—type safety, clear error handling, and simple deployment.
-
-**Agent Development Kit (ADK), Mastra Agent Architecture**: Where ADK and Mastra builds agent-specific abstractions, Genkit Go's flow system provides the primitives to build any orchestration pattern, including agents, without prescribing a specific approach.
-
-This architectural philosophy—providing powerful primitives rather than prescriptive patterns—gives you flexibility while maintaining simplicity.
-
 ## Key Takeaways
 
-- Genkit Go's architecture mirrors Go's philosophy: explicit, simple, and composable rather than magical or implicit
-- The plugin system achieves vendor neutrality and extensibility through Go's type system—switch between OpenAI, Anthropic, Google, or any provider without changing application code
 - Compile-time type safety in Go provides different tradeoffs than TypeScript's runtime validation
 - Production concerns like error handling and observability are built into the architecture, not bolted on
 - Understanding these internals helps you avoid vendor lock-in and make better architectural decisions
