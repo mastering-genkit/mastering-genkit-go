@@ -441,6 +441,141 @@ This project uses Genkit Go. Reference official documentation:
 
 By creating these simple instruction files, your AI coding assistant will know to reference the official Genkit documentation when generating code. This helps ensure accuracy and keeps your assistant up-to-date with the latest patterns.
 
+## AI-Assisted Development
+
+> This is an experimental feature and may change in future releases.
+
+Beyond static documentation references, Genkit offers an AI-Assisted Development feature that enables your AI coding assistant to directly interact with your running Genkit application. This feature uses the Model Context Protocol (MCP) to create a dynamic bridge between AI tools and your Genkit flows.
+
+### Setting Up MCP Integration
+
+Initialize the AI-Assisted Development feature for your project:
+
+```bash
+genkit init:ai-tools
+```
+
+This command will:
+
+1. Prompt you to select your AI development tool (Claude Code, Cursor, Gemini CLI, etc.)
+2. Generate the appropriate MCP configuration for your selected tool
+3. Install the Genkit MCP server that enables dynamic interaction
+
+The setup creates an MCP server (<https://genkit.dev/docs/mcp-server>) that exposes your Genkit application's capabilities to AI assistants, allowing them to discover, execute, and debug your flows in real-time.
+
+### Available Tools
+
+Once configured, your AI assistant gains access to powerful tools for interacting with your Genkit application:
+
+- **`lookup_genkit_docs`**: Query Genkit documentation programmatically based on context
+- **`list_flows`**: Discover all flows defined in your project, including their input/output schemas
+- **`run_flow`**: Execute any flow with proper input validation and receive the output
+- **`get_trace`**: Retrieve detailed execution traces to analyze performance and debug issues
+
+These tools transform your AI assistant from a code generator into an active development partner that can test and validate the code it writes.
+
+### Generated Configuration Files
+
+When you run `genkit init:ai-tools` and select your AI tools, the command automatically generates the appropriate configuration files. Here's what gets created for each tool:
+
+#### Claude Code
+
+For Claude Code, the command automatically generates `.mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "genkit": {
+      "command": "npx",
+      "args": [
+        "genkit",
+        "mcp"
+      ]
+    }
+  }
+}
+```
+
+#### Gemini CLI
+
+For Gemini CLI, the command automatically generates `.gemini/settings.json`
+
+```json
+{
+  "mcpServers": {
+    "genkit": {
+      "command": "npx",
+      "args": [
+        "genkit",
+        "mcp"
+      ],
+      "cwd": ".",
+      "timeout": 30000,
+      "trust": false,
+      "excludeTools": [
+        "run_shell_command(genkit start)",
+        "run_shell_command(npx genkit start)"
+      ]
+    }
+  }
+}
+```
+
+#### Cursor
+
+For Cursor, the command automatically generates `.cursor/mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "genkit": {
+      "command": "npx",
+      "args": ["@genkit-ai/mcp-server"],
+      "env": {}
+    }
+  }
+}
+```
+
+#### Other AI Tools (Generic Configuration)
+
+For tools not directly supported, selecting the generic option generates the same `GENKIT.md` file but without tool-specific MCP configuration. You can manually integrate this file with your preferred AI tool's configuration system:
+
+- **GitHub Copilot**: Copy contents to `.github/copilot-instructions.md`
+- **JetBrains IDEs**: Add to `guidelines.md`
+- **VS Code**: Include in `.instructions.md`
+- **Windsurf**: Integrate into `guidelines.md`
+
+### Customizing GENKIT.md
+
+The `genkit init:ai-tools` command always generates a `GENKIT.md` file, regardless of which tools you select. This file contains:
+
+- Genkit API rules and best practices
+- Code examples for common patterns
+- Project structure recommendations
+- Model configuration guidelines
+
+While the default `GENKIT.md` provides comprehensive coverage for Node.js/TypeScript projects, you should customize it to match your specific needs. For Go projects, consider:
+
+- Replacing TypeScript examples with Go equivalents
+- Updating import statements to use Go packages
+- Adjusting flow definitions to match Go syntax
+- Adding project-specific conventions and patterns
+
+The `GENKIT.md` file serves as the primary knowledge base for your AI assistant, ensuring consistent and accurate code generation aligned with your project's requirements.
+
+### When to Use AI-Assisted Development
+
+AI-Assisted Development is particularly valuable when:
+
+- **Iterating on prompt engineering**: Test prompts immediately without manual copy-paste
+- **Debugging flow behavior**: Analyze traces to understand unexpected outputs
+- **Exploring existing codebases**: Discover and understand flows in unfamiliar projects
+- **Performance optimization**: Identify bottlenecks through trace analysis
+- **Integration testing**: Validate flow interactions before deployment
+
+The combination of static documentation (llms.txt) and dynamic interaction (MCP) provides a comprehensive AI-assisted development experience that adapts to your workflow needs.
+
 ## Key Takeaways
 
 - **Go 1.24+ and Node.js 20+** are required for Genkit Go development
