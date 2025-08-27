@@ -1,3 +1,18 @@
+# [1.16.0](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.15.0...v1.16.0) (2025-08-27)
+
+
+### Features
+
+* add `chapter 14: Deploying Genkit Go Applications` ([#13](https://github.com/mastering-genkit/mastering-genkit-go/issues/13)) ([d8588dd](https://github.com/mastering-genkit/mastering-genkit-go/commit/d8588dd0b8141ee309197ae50034232b7a808a8a))
+
+# [1.15.0](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.14.0...v1.15.0) (2025-08-27)
+
+
+### Features
+
+* add `chapter-13: Observability` ([#12](https://github.com/mastering-genkit/mastering-genkit-go/issues/12)) ([f8a98a4](https://github.com/mastering-genkit/mastering-genkit-go/commit/f8a98a4a9a25f61005a4c6df12ec99a65cc801b1))
+* add `Chapter2: Understanding Genkit Architecture` ([#18](https://github.com/mastering-genkit/mastering-genkit-go/issues/18)) ([6c0e629](https://github.com/mastering-genkit/mastering-genkit-go/commit/6c0e629115e71332892b8eef2af95283d0dcb5dd))
+
 # [1.14.0](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.13.0...v1.14.0) (2025-08-26)
 
 
