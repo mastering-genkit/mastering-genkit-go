@@ -10,6 +10,9 @@ MD013: false
 MD012:
   maximum: 2
 
+# Multiple headings with the same content
+MD024: false
+
 # Multiple top-level headers in the same document
 MD025:
   front_matter_title: "^title"
