@@ -1,28 +1,44 @@
-title: "Mastering Genkit Go Edition"
-subtitle: "A walking guide to mastering Genkit in Go"
+title: "Mastering Genkit: Go Edition"
+subtitle: "Build Production-Ready AI Applications with Go and Genkit"
 # New multiple authors support
 authors:
   - name: "Xavier Portilla Edo"
     bio: "Xavier was born in Valencia, but currently living in Madrid. He has +10 years of experience. He focuses on Cloud, Kubernetes, DevOps, Q&A, microservices, Generative AI & Conversational AI and mentoring startups thanks to the Google & Microsoft For Startups Program. He is an organizer of GDG Madrid, DevopsDays Madrid and the Alexa community in Spanish. In his spare time, he enjoys music, beer, and friends. He has been recognized as a Microsoft MVP, GitHub Star, AWS Alexa Champion & Community Builder, and Google Developer Expert in AI and Cloud."
     email: "xavierportillaedo@gmail.com"
+    linkedin: "https://www.linkedin.com/in/xavierportillaedo/"
     twitter: "@xavidop"
     website: "https://xavidop.me"
+    github: "https://github.com/xavidop"
   - name: "Nozomi Koborinai"
     bio: "Nozomi is a developer advocate and technical writer specializing in AI and ML."
     email: "nozomi@example.com"
-    twitter: "@nozomi_koborinai"
-    website: "https://nozomi.dev"
+    twitter: "@fender_kn"
+    website: "https://medium.com/@nozomi-koborinai"
+    github: "https://github.com/nozomi-koborinai"
 description: |
-  A detailed description of your book that will appear in various
-  publishing platforms and metadata.
+  Master the art of building AI with Genkit and Go. This guide takes you from the basics of setting up your development environment to advanced topics like RAG systems, AI agents, and production deployment.
+
+pdfDescription: |
+  Master the art of building AI with Genkit and Go. This guide takes you from the basics of setting up your development environment to advanced topics like RAG systems, AI agents, and production deployment.
+
+  Learn to harness the power of Genkit's flow-based architecture, integrate with leading AI models, implement robust evaluation systems, and deploy scalable AI applications. This book provides practical examples and real-world use cases.
+
+  This book combines theoretical understanding with hands-on experience to help you build production-ready AI applications that scale.
+  
+  Important Note:
+  The information contained in this publication is purely for educational purposes. Therefore, its use is not intended on a professional or industrial level. All technical indications and programs included have been prepared with great care by the authors and reproduced under strict control standards.
+
+  This book is published under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License. You may not use this work for commercial purposes, and you may not distribute modified versions of this work. For more details, see [CC BY-NC-ND 4.0](https://creativecommons.org/licenses/by-nc-nd/4.0/).
+  This publication is an intellectual property of its authors. The rights of publication have been legally transferred to the editor.
+
 language: en
 date: "2025"
 version: "1.0"
 
 # Publishing information
-isbn: ""
-publisher: ""
-copyright: "© 2025 Your Name. All rights reserved."
+isbn: "TBD"
+publisher: "self-published"
+copyright: "© 2025 Xavier Portilla Edo and Nozomi Koborinai. All rights reserved."
 
 # Leanpub specific
 leanpub:
@@ -42,13 +58,9 @@ kindle:
 
 # Web specific
 web:
-  base_url: "https://yourusername.github.io/your-repo"
+  base_url: "https://mastering-genkit.github.io/mastering-genkit-go"
   theme: "default"
-  google_analytics: ""
-  disqus_shortname: ""
+  google_analytics: "G-XXXXXXXXXX"  # Replace with your actual Google Analytics ID
 
-# Social media
 social:
-  twitter: "@yourusername"
-  github: "yourusername"
-  website: "https://yourwebsite.com"
+  github: "https://github.com/mastering-genkit/mastering-genkit-go"

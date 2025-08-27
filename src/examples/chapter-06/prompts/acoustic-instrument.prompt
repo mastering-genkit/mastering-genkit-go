@@ -1,0 +1,24 @@
+---
+model: googleai/gemini-2.5-flash
+config:
+  temperature: 0.7
+input:
+  schema:
+    genre: string
+output:
+  schema: string
+---
+
+Based on the acoustic music genre "{{genre}}", recommend ONE beginner-friendly acoustic instrument.
+
+Consider these acoustic instruments:
+- Acoustic Guitar (versatile, good for most genres)
+- Ukulele (easy to learn, great for light music)
+- Cajon (percussion box, good for rhythm)
+- Keyboard/Piano (foundational for music theory)
+- Harmonica (portable, good for blues/folk)
+
+Return ONLY the instrument name, nothing else.
+Example: "Acoustic Guitar"
+
+Genre: {{genre}}

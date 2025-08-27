@@ -1,43 +1,36 @@
 ```mermaid
-sequenceDiagram
-    participant User
-    participant CLI as CLI Agent
-    participant History as Conversation History
-    participant Flow as Chat Flow
-    participant Genkit as Genkit Generate
-    participant Ollama as Ollama Model
-
-    Note over User, Ollama: Initialization
-    CLI->>History: Initialize empty history
-    CLI->>Flow: Create chat flow
-    CLI->>User: Display welcome message
-
-    Note over User, Ollama: Conversation Loop
-    loop Each User Message
-        User->>CLI: Send message
-        CLI->>History: Get conversation history
-        CLI->>Flow: ChatRequest{message, history}
+graph TB
+    subgraph "AI Agent Architecture"
         
-        Flow->>Genkit: Generate with context
-        Genkit->>Ollama: Process request
-        Ollama-->>Genkit: AI response
-        Genkit-->>Flow: Generated response
+        subgraph "Agent Loop"
+            LLM[🧠 Language Model<br/>- Reasoning<br/>- Decision Making<br/>- Response Generation]
+            Memory[💾 Memory<br/>- Conversation History<br/>- Context Storage<br/>- Long-term Memory]
+            Tools[🛠️ Tools<br/>- Function Calling<br/>- API Integration<br/>- External Actions]
+            
+            LLM <--> Memory
+            LLM <--> Tools
+            Memory --> LLM
+            Tools --> LLM
+        end
         
-        Flow-->>CLI: ChatResponse{response, updated_history}
-        CLI->>History: Update conversation history
-        CLI->>User: Display AI response
-    end
-
-    Note over User, Ollama: Special Commands
-    alt history command
-        User->>CLI: "history"
-        CLI->>User: Display conversation history
-    else clear command
-        User->>CLI: "clear"
-        CLI->>History: Reset history
-        CLI->>User: "History cleared"
-    else quit command
-        User->>CLI: "quit"
-        CLI->>User: "Goodbye!"
+        subgraph "Memory Types"
+            ShortTerm[📝 Short-term<br/>Session Context]
+            LongTerm[🗄️ Long-term<br/>Persistent Storage]
+            Working[⚡ Working<br/>Active Processing]
+        end
+        
+        Memory --> ShortTerm
+        Memory --> LongTerm
+        Memory --> Working
+        
+        subgraph "Tool Categories"
+            Internal[🔧 Internal Tools<br/>- Calculators<br/>- Validators<br/>- Formatters]
+            External[🌐 External APIs<br/>- Web Services<br/>- Databases<br/>- File Systems]
+            Custom[⚙️ Custom Tools<br/>- Domain Specific<br/>- Business Logic<br/>- Integrations]
+        end
+        
+        Tools --> Internal
+        Tools --> External
+        Tools --> Custom
     end
 ```
