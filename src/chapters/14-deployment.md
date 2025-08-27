@@ -74,19 +74,25 @@ func main() {
 }
 ```
 
-The strucutture of the application is as follows:
+The strucuture of the application is as follows:
 
 ```src/examples/chapter-14/
 ├── Dockerfile
 ├── main.go
 ├── go.mod
 ├── go.sum
-└── internal
-    ├── flows
+├── README.md
+├── k8s/
+│   ├── deployment.yml
+│   ├── hpa.yml
+│   └── svc.yml
+└── internal/
+    ├── flows/
     │   └── simple.go
-    └── handlers
+    └── handlers/
         ├── health.go
-        └── ready.go
+        ├── ready.go
+        └── utils.go
 ```
 
 ## Containerization with Docker
