@@ -72,25 +72,33 @@ This isn't just a development convenience—it demonstrates how Genkit Go consid
 
 ### Error Handling as a First-Class Concern
 
-Genkit Go's error system provides structured, actionable errors:
+Genkit Go's error system provides two distinct error types for different contexts:
 
 ```go
+// GenkitError is the base error type for Genkit errors.
 type GenkitError struct {
-    Message  string         `json:"message"`
+    Message  string         `json:"message"` // Exclude from default JSON if embedded elsewhere
     Status   StatusName     `json:"status"`
-    HTTPCode int            `json:"-"`
-    Details  map[string]any `json:"details"`
-    Source   *string        `json:"source,omitempty"`
+    HTTPCode int            `json:"-"`                // Exclude from default JSON
+    Details  map[string]any `json:"details"`          // Use map for arbitrary details
+    Source   *string        `json:"source,omitempty"` // Pointer for optional
+}
+
+// UserFacingError is the base error type for user facing errors.
+type UserFacingError struct {
+    Message string         `json:"message"` // Exclude from default JSON if embedded elsewhere
+    Status  StatusName     `json:"status"`
+    Details map[string]any `json:"details"` // Use map for arbitrary details
 }
 ```
 
-This structure serves multiple purposes:
+This dual-error structure serves multiple purposes:
 
-- **Security**: Separate `UserFacingError` prevents internal details from leaking to clients
-- **Debugging**: Stack traces are captured but only exposed in appropriate contexts
+- **Security**: `UserFacingError` prevents internal details from leaking to clients
+- **Debugging**: `GenkitError` captures stack traces but only exposes them in development mode
 - **Integration**: HTTP status codes map cleanly to REST API responses
 
-The distinction between `GenkitError` and `UserFacingError` reflects production experience where internal exceptions must never leak to attackers, while developers still need detailed debugging information.
+The distinction between `GenkitError` (internal) and `UserFacingError` (external) reflects production experience where internal exceptions must never leak to attackers, while developers still need detailed debugging information.
 
 ## Plugin System Deep Dive
 
