@@ -1,3 +1,10 @@
+# [1.16.0](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.15.0...v1.16.0) (2025-08-27)
+
+
+### Features
+
+* add `chapter 14: Deploying Genkit Go Applications` ([#13](https://github.com/mastering-genkit/mastering-genkit-go/issues/13)) ([d8588dd](https://github.com/mastering-genkit/mastering-genkit-go/commit/d8588dd0b8141ee309197ae50034232b7a808a8a))
+
 # [1.15.0](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.14.0...v1.15.0) (2025-08-27)
 
 
