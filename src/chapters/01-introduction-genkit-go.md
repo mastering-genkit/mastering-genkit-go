@@ -77,9 +77,15 @@ We owe special thanks to our dear friend **Iman Rahmati** for agreeing to serve 
 
 His trust in our work, combined with his thoughtful guidance, has been invaluable throughout this journey. Iman has contributed not only to the development of this book, but also to our growth as authors.
 
-Above all, we’re especially grateful for his patience and availability, which allowed us to learn and grow through many lively discussions. His involvement has truly enriched this project—and marked the beginning of a lasting friendship.
+Above all, we’re especially grateful for his patience and availability, which allowed us to learn and grow through many lively discussions. His involvement has enriched this project—and marked the beginning of a lasting friendship.
 
 **Thank you, Iman!**
+
+We also extend our heartfelt gratitude to the entire **Genkit team** at Google. Your innovative work in creating this powerful framework has made this book possible. The team's dedication to building developer-friendly AI tools and their commitment to open-source principles has been very inspiring.
+
+The Genkit team's responsiveness to community feedback, their documentation, and their vision for making AI development accessible to all Go developers has shaped not only this book but the future of AI application development.
+
+**Thank you to the Genkit team for making AI development in Go a reality!**
 
 ## New Choices in AI Development - Introduction to Genkit for Go Developers
 
@@ -143,17 +149,11 @@ This fragmentation creates a dilemma for development teams: choosing a framework
 
 When deploying AI applications to production environments, developers face common challenges.
 
-### Performance and Scalability
+- **Performance and Scalability:** LLM inference costs increase proportionally with the number of requests. Balancing response time and cost becomes a critical challenge, especially when dealing with long contexts or complex reasoning requirements.
 
-LLM inference costs increase proportionally with the number of requests. Balancing response time and cost becomes a critical challenge, especially when dealing with long contexts or complex reasoning requirements.
+- **Integration Complexity:** Communication between components written in different languages, protocol standardization, and data format unification present numerous technical challenges.
 
-### Integration Complexity
-
-Communication between components written in different languages, protocol standardization, and data format unification present numerous technical challenges.
-
-### Operational Considerations
-
-Building monitoring, logging, error handling, and deployment pipelines requires consideration of AI-specific requirements. In particular, monitoring model output quality and dealing with unexpected responses are new challenges.
+- **Operational Considerations:** Building monitoring, logging, error handling, and deployment pipelines requires consideration of AI-specific requirements. In particular, monitoring model output quality and dealing with unexpected responses are new challenges.
 
 ## What is Genkit?
 
@@ -204,25 +204,15 @@ recipe, resp, err := genkit.GenerateData[Recipe](ctx, g,
 
 ## Why It Matters for Go Developers
 
-### Limited Production-Ready Options for Go
+- **Limited Production-Ready Options for Go:** Unlike Python or JavaScript ecosystems that offer numerous AI frameworks, Go developers have historically had limited choices for production-ready AI development. Most AI frameworks focus on Python first, leaving Go developers to either write bindings, use REST APIs, or switch languages entirely. Genkit Go changes this landscape by providing a native, production-ready framework specifically designed for Go - and with Google's backing, it's here to stay.
 
-Unlike Python or JavaScript ecosystems that offer numerous AI frameworks, Go developers have historically had limited choices for production-ready AI development. Most AI frameworks focus on Python first, leaving Go developers to either write bindings, use REST APIs, or switch languages entirely. Genkit Go changes this landscape by providing a native, production-ready framework specifically designed for Go - and with Google's backing, it's here to stay.
+- **Integration with Existing Infrastructure:** Many companies already operate high-performance backend systems built with Go. Genkit Go can natively integrate AI capabilities into these systems.
 
-### Integration with Existing Infrastructure
+- **Predictable Performance:** Go's efficient memory management and concurrency model allow precise control over AI inference latency and resource usage.
 
-Many companies already operate high-performance backend systems built with Go. Genkit Go can natively integrate AI capabilities into these systems.
+- **Deployment Simplicity:** Compilation to a single binary, minimal dependencies, and container-friendly design make deployment to any hosting platform straightforward - from cloud services like Cloud Run and Kubernetes to traditional servers and container orchestration platforms.
 
-### Predictable Performance
-
-Go's efficient memory management and concurrency model allow precise control over AI inference latency and resource usage.
-
-### Deployment Simplicity
-
-Compilation to a single binary, minimal dependencies, and container-friendly design make deployment to any hosting platform straightforward - from cloud services like Cloud Run and Kubernetes to traditional servers and container orchestration platforms.
-
-### Ecosystem Consistency
-
-If your team is already familiar with Go, there's no need to learn new languages or paradigms.
+- **Ecosystem Consistency:** If your team is already familiar with Go, there's no need to learn new languages or paradigms.
 
 ## Common Misconceptions About AI Development
 
