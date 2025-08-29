@@ -44,11 +44,7 @@ func main() {
     ctx := context.Background()
 
     // Initialize Genkit
-    g, err := genkit.Init(ctx)
-
-    if err != nil {
-        log.Fatalf("could not initialize Genkit: %v", err)
-    }
+    g := genkit.Init(ctx)
 
     // Create the simple flow with tools (empty for now)
     simpleFlow := flows.NewSimpleFlow(g, []ai.ToolRef{})

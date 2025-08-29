@@ -18,15 +18,13 @@ import (
 
 func main() {
 	ctx := context.Background()
-
+	bedrockPlugin := &bedrock.Bedrock{
+		Region: "us-east-1",
+	}
 	// Initialize Genkit
-	g, err := genkit.Init(ctx,
+	g := genkit.Init(ctx,
 		genkit.WithPlugins(
-			&bedrock.Bedrock{
-				Region:                "us-east-1",
-				DefineCommonModels:    true, // Automatically define common models
-				DefineCommonEmbedders: true, // Automatically define common embedders
-			},
+			bedrockPlugin,
 			opentelemetry.NewWithPreset(opentelemetry.PresetOTLP, opentelemetry.Config{
 				ServiceName:    "my-genkit-app",
 				ForceExport:    true, // Export even in development
@@ -36,9 +34,7 @@ func main() {
 		genkit.WithDefaultModel("bedrock/anthropic.claude-3-haiku-20240307-v1:0"), // Set default model
 	)
 
-	if err != nil {
-		log.Fatalf("could not initialize Genkit: %v", err)
-	}
+	bedrock.DefineCommonModels(bedrockPlugin, g)
 
 	// Create the chat flow with tools (empty for now)
 	chatFlow := flows.NewChatFlow(g, []ai.ToolRef{})

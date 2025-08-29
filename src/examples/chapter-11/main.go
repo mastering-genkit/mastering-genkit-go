@@ -28,7 +28,7 @@ func main() {
 		},
 	}
 
-	g, err := genkit.Init(ctx,
+	g := genkit.Init(ctx,
 		genkit.WithPlugins(
 			&anthropic.Anthropic{Opts: []option.RequestOption{
 				option.WithAPIKey(os.Getenv("ANTHROPIC_API_KEY")),
@@ -40,10 +40,6 @@ func main() {
 		),
 		genkit.WithDefaultModel("anthropic/claude-3-7-sonnet-20250219"),
 	)
-
-	if err != nil {
-		log.Fatalf("could not initialize Genkit: %v", err)
-	}
 
 	// Create the chat flow with tools (empty for now)
 	chatFlow := flows.NewChatFlow(g, []ai.ToolRef{})
@@ -73,16 +69,13 @@ func runNonBilledEvaluator(ctx context.Context, g *genkit.Genkit) {
 
 	nonBilledEvaluatorService := evals.NewNonBilledEvaluatorService(g)
 
-	nonBilledEvaluator, err := nonBilledEvaluatorService.NewResponseQualityEvaluator()
-	if err != nil {
-		log.Fatalf("could not define evaluator: %v", err)
-	}
+	nonBilledEvaluator := nonBilledEvaluatorService.NewResponseQualityEvaluator()
 
 	log.Println("Custom evaluator defined:", nonBilledEvaluator.Name())
 
 	dataset := nonBilledEvaluatorService.GetResponseQualityEvaluatorDataset()
 
-	_, err = nonBilledEvaluatorService.RunResponseQualityEvaluator(nonBilledEvaluator, ctx, dataset)
+	_, err := nonBilledEvaluatorService.RunResponseQualityEvaluator(nonBilledEvaluator, ctx, dataset)
 	if err != nil {
 		log.Fatalf("could not evaluate: %v", err)
 	}

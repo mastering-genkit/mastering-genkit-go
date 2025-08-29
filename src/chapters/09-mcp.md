@@ -77,18 +77,15 @@ func main() {
     ctx := context.Background()
 
     // Initialize Genkit with OpenAI plugin
-    g, err := genkit.Init(ctx,
+    g := genkit.Init(ctx,
         genkit.WithPlugins(&openai.OpenAI{
             APIKey: os.Getenv("OPENAI_API_KEY"),
         }),
         genkit.WithDefaultModel("openai/gpt-4o"),
     )
-    if err != nil {
-        log.Fatalf("could not initialize Genkit: %v", err)
-    }
 
     // Configure MCP filesystem server
-    mcpFileSystem := mcpinternal.NewFilesystemServerConfig("file-system", "/")
+    mcpFileSystem := mcpinternal.NewFilesystemServerConfig("file-system", "./")
 
     // Create MCP manager with filesystem server
     manager, err := mcpinternal.NewMCPManagerWrapper("my-manager", "1.0.0", []mcp.MCPServerConfig{
@@ -314,10 +311,7 @@ func main() {
     ctx := context.Background()
 
     // Initialize Genkit
-    g, err := genkit.Init(ctx)
-    if err != nil {
-        log.Fatalf("could not initialize Genkit: %v", err)
-    }
+    g := genkit.Init(ctx)
 
     // Create MCP server with custom tools
     mcpServer := mcpinternal.NewMCPServer(g, "file-system", "1.0.0", []ai.Tool{
@@ -328,7 +322,7 @@ func main() {
 
     // Start the MCP server
     log.Println("Starting MCP server...")
-    err = mcpServer.ServeStdio(ctx)
+    err := mcpServer.ServeStdio(ctx)
     if err != nil {
         log.Fatalf("could not start MCP server: %v", err)
     }

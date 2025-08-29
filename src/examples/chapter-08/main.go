@@ -18,15 +18,12 @@ func main() {
 	ctx := context.Background()
 
 	// Initialize Genkit with OpenAI plugin and default model using GPT-4o.
-	g, err := genkit.Init(ctx,
+	g := genkit.Init(ctx,
 		genkit.WithPlugins(&openai.OpenAI{
 			APIKey: os.Getenv("OPENAI_API_KEY"),
 		}),
 		genkit.WithDefaultModel("openai/gpt-4o"),
 	)
-	if err != nil {
-		log.Fatalf("could not initialize Genkit: %v", err)
-	}
 
 	operatingSystemFlow := flows.NewOperatingSystemFlow(g, []ai.ToolRef{
 		tools.NewListDirectories(g),

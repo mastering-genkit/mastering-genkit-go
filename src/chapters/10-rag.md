@@ -457,29 +457,26 @@ The system consists of several components working in harmony:
 func main() {
     ctx := context.Background()
 
-    // Initialize Genkit with OpenAI plugin and default model using GPT-4o.
-    g, err := genkit.Init(ctx,
-        genkit.WithPlugins(
-            &openai.OpenAI{
-                APIKey: os.Getenv("OPENAI_API_KEY"),
-            },
-        ),
-        genkit.WithDefaultModel("openai/gpt-4o"),
-    )
-    if err != nil {
-        log.Fatalf("could not initialize Genkit: %v", err)
+    oai := &openai.OpenAI{
+        APIKey: os.Getenv("OPENAI_API_KEY"),
     }
 
+    // Initialize Genkit with OpenAI plugin and default model using GPT-4o.
+    g := genkit.Init(ctx,
+        genkit.WithPlugins(oai),
+        genkit.WithDefaultModel("openai/gpt-4o"),
+    )
+
     // Initialize localvec plugin
-    err = localvec.Init()
+    err := localvec.Init()
     if err != nil {
         log.Fatalf("could not initialize localvec: %v", err)
     }
 
-    // Get OpenAI embedder (text-embedding-3-large) using LookupEmbedder
-    embedder := genkit.LookupEmbedder(g, "openai", "text-embedding-3-large")
+    // Get OpenAI embedder (text-embedding-3-large) using DefineEmbedder
+    embedder := oai.DefineEmbedder("text-embedding-3-large", nil)
     if embedder == nil {
-        log.Println("failed to get text-embedding-3-large embedder")
+        log.Println("failed to create text-embedding-3-large embedder")
     }
 
     // Define retriever with localvec

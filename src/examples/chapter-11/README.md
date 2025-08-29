@@ -87,7 +87,7 @@ The main conversational flow for generating AI responses.
 ```bash
 curl -X POST http://localhost:9090/chatFlow \
   -H "Content-Type: application/json" \
-  -d '{"message": "What are the benefits of using AI evaluations?"}'
+  -d '{"data": {"message": "What are the benefits of using AI evaluations?"}}'
 ```
 
 ## Run evaluations using the Genkit CLI

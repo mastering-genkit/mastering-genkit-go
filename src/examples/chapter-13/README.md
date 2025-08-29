@@ -64,9 +64,9 @@ This example exports telemetry data using OTLP. You can configure it to work wit
 You can test any example by sending a POST request:
 
 ```bash
-curl -X POST http://localhost:3000/chatFlow \
+curl -X POST http://localhost:9091/chatFlow \
   -H "Content-Type: application/json" \
-  -d '{"message": "Hello, how are you?"}'
+  -d '{"data": {"message": "Hello, how are you?"}}'
 ```
 
 ## Configuration Options

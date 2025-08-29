@@ -54,16 +54,16 @@ This is what you can do with the Genkit UI in terms of observability:
 // Example from src/examples/chapter-13/otel/main.go
 func main() {
     ctx := context.Background()
-
+    bedrock := &bedrock.Bedrock{
+        Region: "us-east-1",
+    }
     // Initialize Genkit with OpenTelemetry support
-    g, err := genkit.Init(ctx,
+    g := genkit.Init(ctx,
         genkit.WithPlugins(
-            &bedrock.Bedrock{
-                Region: "us-east-1",
-                DefineCommonModels: true,
-            },
+            bedrock,
         ),
     )
+    bedrock.DefineCommonModels(bedrockPlugin, g)
     
     // Your flows and handlers here...
 }
@@ -109,7 +109,7 @@ import (
 func main() {
     ctx := context.Background()
 
-    g, err := genkit.Init(ctx,
+    g = genkit.Init(ctx,
         genkit.WithPlugins(
             &googlecloud.GoogleCloud{
                 ProjectID:      "my-project-id", // Replace with your project ID
@@ -174,7 +174,7 @@ import (
 func main() {
     ctx := context.Background()
 
-    g, err := genkit.Init(ctx,
+    g := genkit.Init(ctx,
         genkit.WithPlugins(
             opentelemetry.NewWithPreset(opentelemetry.PresetOTLP, opentelemetry.Config{
                 ServiceName:    "my-genkit-app",
