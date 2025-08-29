@@ -394,14 +394,13 @@ func runNonBilledEvaluator(ctx context.Context, g *genkit.Genkit) {
 
     nonBilledEvaluatorService := evals.NewNonBilledEvaluatorService(g)
 
-    nonBilledEvaluator, err := nonBilledEvaluatorService.NewResponseQualityEvaluator()
-    if err != nil {
-        log.Fatalf("could not define evaluator: %v", err)
-    }
+    nonBilledEvaluator := nonBilledEvaluatorService.NewResponseQualityEvaluator()
+
+    log.Println("Custom evaluator defined:", nonBilledEvaluator.Name())
 
     dataset := nonBilledEvaluatorService.GetResponseQualityEvaluatorDataset()
 
-    _, err = nonBilledEvaluatorService.RunResponseQualityEvaluator(nonBilledEvaluator, ctx, dataset)
+    _, err := nonBilledEvaluatorService.RunResponseQualityEvaluator(nonBilledEvaluator, ctx, dataset)
     if err != nil {
         log.Fatalf("could not evaluate: %v", err)
     }
@@ -577,6 +576,8 @@ func runBilledEvaluator(ctx context.Context, g *genkit.Genkit, chatFlow *core.Fl
         log.Fatalf("could not define evaluator: %v", err)
     }
 
+    log.Println("Custom evaluator defined:", maliciousnessEvaluator.Name())
+
     // Auto-generate dataset using the chat flow
     log.Println("Auto-generating maliciousness evaluation dataset...")
     maliciousnessDataset, err := billedEvaluatorService.GenerateMaliciousnessEvaluatorDatasetWithChatFlow(ctx, chatFlow)
@@ -664,6 +665,7 @@ func runGenkitBuiltinEvaluator(ctx context.Context, g *genkit.Genkit) {
         log.Fatalf("could not evaluate with Genkit evaluator: %v", err)
     }
 }
+
 ```
 
 We have encapsulated the built-in evaluator logic in a service for better organization and reusability:
