@@ -23,7 +23,7 @@ func NewGenkitEvaluatorService(g *genkit.Genkit) *GenkitEvaluatorService {
 
 // GetDeepEqualEvaluator gets the built-in deep equal evaluator
 func (ges *GenkitEvaluatorService) GetDeepEqualEvaluator() (ai.Evaluator, error) {
-	genkitEvaluator := genkit.LookupEvaluator(ges.genkit, "genkitEval", "deep_equal")
+	genkitEvaluator := genkit.LookupEvaluator(ges.genkit, "genkitEval/deep_equal")
 	if genkitEvaluator == nil {
 		return nil, fmt.Errorf("deep_equal evaluator not found")
 	}

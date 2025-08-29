@@ -80,6 +80,10 @@ npm run word-count     # Count words and estimate reading time
 npm run lint           # Check Markdown formatting
 npm run clean          # Clean build artifacts
 npm run setup          # Install all dependencies
+
+# Genkit-specific utilities
+./scripts/update-genkit-version.sh <version>  # Update Genkit version in all examples
+./scripts/test-update-script.sh              # Test what would be updated (dry run)
 ```
 
 ## 📚 Publishing
@@ -127,6 +131,27 @@ This script automatically installs:
 - 🔍 SEO optimization for web version
 - 📝 Markdown linting for consistency
 
+## 🔧 Genkit Utilities
+
+This book includes specialized scripts for working with Firebase Genkit Go examples:
+
+### Update Genkit Version Script
+Automatically update the Firebase Genkit Go version across all example projects:
+
+```bash
+# Update to latest version
+./scripts/update-genkit-version.sh v0.7.0
+
+# Update to pre-release version  
+./scripts/update-genkit-version.sh v0.7.0-beta.1
+```
+
+**Features:**
+- 🔍 Auto-discovers all Go modules in `src/examples`
+- 📦 Updates `github.com/firebase/genkit/go` dependency
+- 🧹 Runs `go mod tidy` to clean dependencies
+- 🔨 Builds each project to verify compatibility
+- 📊 Provides detailed progress and error reporting
 
 ## Dependencies Overview
 

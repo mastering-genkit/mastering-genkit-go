@@ -21,20 +21,16 @@ func main() {
 	}
 
 	// Initialize Genkit with Ollama plugin first
-	g, err := genkit.Init(ctx,
+	g := genkit.Init(ctx,
 		genkit.WithPlugins(ollamaPlugin),
 	)
-
-	if err != nil {
-		log.Fatalf("could not initialize Genkit: %v", err)
-	}
 
 	model := ollamaPlugin.DefineModel(g,
 		ollama.ModelDefinition{
 			Name: "gemma3n:e4b",
 			Type: "chat", // "chat" or "generate"
 		},
-		&ai.ModelInfo{
+		&ai.ModelOptions{
 			Supports: &ai.ModelSupports{
 				Media:      false,
 				Multiturn:  true,

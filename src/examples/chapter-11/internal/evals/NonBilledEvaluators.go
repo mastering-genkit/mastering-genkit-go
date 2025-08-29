@@ -22,9 +22,9 @@ func NewNonBilledEvaluatorService(g *genkit.Genkit) *NonBilledEvaluatorService {
 }
 
 // NewResponseQualityEvaluator creates a response quality evaluator
-func (es *NonBilledEvaluatorService) NewResponseQualityEvaluator() (ai.Evaluator, error) {
+func (es *NonBilledEvaluatorService) NewResponseQualityEvaluator() ai.Evaluator {
 	return genkit.DefineEvaluator(es.genkit,
-		"custom-non-billed", "response-quality",
+		"custom-non-billed/response-quality",
 		&ai.EvaluatorOptions{
 			Definition:  "Evaluates the quality of AI responses based on length, relevance, and coherence.",
 			IsBilled:    false,

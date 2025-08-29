@@ -14,10 +14,7 @@ func main() {
 	ctx := context.Background()
 
 	// Initialize Genkit.
-	g, err := genkit.Init(ctx)
-	if err != nil {
-		log.Fatalf("could not initialize Genkit: %v", err)
-	}
+	g := genkit.Init(ctx)
 
 	// Create the MCP server with the file system server
 	// This server will expose tools via the Model Context Protocol
@@ -29,7 +26,7 @@ func main() {
 	})
 	// Start the MCP server to expose tools via the Model Context Protocol
 	log.Println("Starting MCP server...")
-	err = mcpServer.ServeStdio(ctx)
+	err := mcpServer.ServeStdio(ctx)
 	if err != nil {
 		log.Fatalf("could not start MCP server: %v", err)
 	}

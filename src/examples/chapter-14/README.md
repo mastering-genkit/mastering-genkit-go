@@ -65,7 +65,7 @@ chapter-14/
    # Simple flow endpoint
    curl -X POST http://localhost:9091/simpleFlow \
      -H "Content-Type: application/json" \
-     -d '{"input": "Hello, world!"}'
+     -d '{"data": {"input": "Hello, world!"}}'
    ```
 
 ### Docker Deployment

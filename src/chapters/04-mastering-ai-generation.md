@@ -461,7 +461,7 @@ Use it in your code:
 
 ```go
 // Initialize with prompt directory
-g, err := genkit.Init(ctx, 
+g := genkit.Init(ctx, 
     genkit.WithPromptDir("prompts"),
     genkit.WithPlugins(&googlegenai.GoogleAI{}))
 
