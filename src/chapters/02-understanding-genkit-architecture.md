@@ -119,7 +119,7 @@ This simple interface hides powerful functionality. When you add any plugin to y
 
 ```go
 // Mix and match providers as needed
-g, err := genkit.Init(ctx,
+g := genkit.Init(ctx,
     genkit.WithPlugins(
         &openai.OpenAI{},           // OpenAI's GPT models
         &anthropic.Anthropic{},     // Anthropic's Claude models
