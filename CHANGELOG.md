@@ -1,3 +1,10 @@
+## [1.17.1](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.17.0...v1.17.1) (2025-08-29)
+
+
+### Bug Fixes
+
+* intial feedback ([#20](https://github.com/mastering-genkit/mastering-genkit-go/issues/20)) ([be05370](https://github.com/mastering-genkit/mastering-genkit-go/commit/be053708ea7f182a25f48278b57a4b97bf2ea7c6))
+
 # [1.17.0](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.16.0...v1.17.0) (2025-08-27)
 
 
