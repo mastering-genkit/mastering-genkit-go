@@ -92,9 +92,6 @@ func main() {
     // Get the MCPClient for file operations
     mcpFileSystem := mcpinternal.NewFilesystemServerConfig("file-system", "./")
 
-    // Configure MCP filesystem server
-    mcpFileSystem := mcpinternal.NewFilesystemServerConfig("file-system", "./")
-
     // Create MCP manager with filesystem server
     manager, err := mcpinternal.NewMCPManagerWrapper("my-manager", "1.0.0", []mcp.MCPServerConfig{
         mcpFileSystem,
