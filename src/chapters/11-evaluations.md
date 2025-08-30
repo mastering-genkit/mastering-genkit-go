@@ -282,13 +282,12 @@ Non-billed evaluators implement custom logic without using AI models, making the
 
 To create a custom evaluator you have to call `genkit.DefineEvaluator` with the appropriate parameters:
 
-1. **Provider Name**: A unique identifier for your evaluator plugin
-2. **Evaluator ID**: A unique identifier for the evaluator itself
-3. **Evaluator Options**: Metadata about the evaluator, such as display name and description
+1. **Evaluator ID**: A unique identifier for the evaluator
+2. **Evaluator Options**: Metadata about the evaluator, such as display name and description
    1. **Definition**: A human-readable description of what the evaluator does
    2. **IsBilled**: Set to `false` for non-billed evaluators
    3. **DisplayName**: A user-friendly name for the evaluator
-4. **Callback Function**: The logic that runs when the evaluator is executed
+3. **Callback Function**: The logic that runs when the evaluator is executed
 
 Here's a complete example of a response quality evaluator. This evaluator checks the length, relevance, and coherence of input and output texts coming from datasets:
 

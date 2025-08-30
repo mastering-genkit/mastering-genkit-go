@@ -110,5 +110,5 @@ curl -X POST http://127.0.0.1:9090/operatingSystemFlow \
 You can also invoke the flow using the Genkit CLI:
 
 ```bash
-genkit flow:run operatingSystemFlow '"List all directories in folder /"'
+genkit flow:run operatingSystemFlow '"List all directories in folder ./"'
 ```
