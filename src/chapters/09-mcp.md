@@ -14,7 +14,7 @@ Before diving into MCP, make sure you have the following prerequisites:
 1. A basic understanding of Genkit Go and how to create AI applications
 2. Familiarity with Go programming language
 3. An MCP server to connect to (we'll use the filesystem MCP server in our example)
-4. OpenAI API key for AI interactions (if using OpenAI plugin)
+4. AWS Account with access to Bedrock (if using Bedrock plugin)
 5. Node.js installed for MCP inspector tool and MCP filesystem server
 
 ## Understanding MCP
@@ -46,7 +46,7 @@ Our client application will connect to the filesystem MCP server and use its too
 
 These are the main steps to set up the MCP client:
 
-1. **Initialize Genkit with the OpenAI plugin** to handle AI interactions.
+1. **Initialize Genkit with the AWS Bedrock plugin** to handle AI interactions.
 2. **Configure the MCP filesystem server** to expose file system operations.
 3. **Create an MCP manager** that manages the MCP servers and retrieves available tools.
 4. **Use the tools from the MCP server** in a Genkit flow to perform file operations.
@@ -68,23 +68,28 @@ import (
     "os"
 
     "github.com/firebase/genkit/go/genkit"
-    "github.com/firebase/genkit/go/plugins/compat_oai/openai"
     "github.com/firebase/genkit/go/plugins/mcp"
     "github.com/firebase/genkit/go/plugins/server"
+    bedrock "github.com/xavidop/genkit-aws-bedrock-go"
 )
 
 func main() {
     ctx := context.Background()
 
-    // Initialize Genkit with OpenAI plugin
+    bedrockPlugin := &bedrock.Bedrock{
+        Region: "us-east-1",
+    }
+
+    // Initialize Genkit with the AWS Bedrock plugin and Haiku model.
     g := genkit.Init(ctx,
-        genkit.WithPlugins(&openai.OpenAI{
-            APIKey: os.Getenv("OPENAI_API_KEY"),
-        }),
-        genkit.WithDefaultModel("openai/gpt-4o"),
+        genkit.WithPlugins(bedrockPlugin),
+        genkit.WithDefaultModel("bedrock/anthropic.claude-3-haiku-20240307-v1:0"), // Set default model
+
     )
 
-    // Configure MCP filesystem server
+    bedrock.DefineCommonModels(bedrockPlugin, g)
+
+    // Get the MCPClient for file operations
     mcpFileSystem := mcpinternal.NewFilesystemServerConfig("file-system", "./")
 
     // Create MCP manager with filesystem server

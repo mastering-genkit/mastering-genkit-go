@@ -11,24 +11,29 @@ import (
 	"os"
 
 	"github.com/firebase/genkit/go/genkit"
-	"github.com/firebase/genkit/go/plugins/compat_oai/openai"
 	"github.com/firebase/genkit/go/plugins/mcp"
 	"github.com/firebase/genkit/go/plugins/server"
+	bedrock "github.com/xavidop/genkit-aws-bedrock-go"
 )
 
 func main() {
 	ctx := context.Background()
 
-	// Initialize Genkit with the OpenAI plugin and GPT-4o model.
+	bedrockPlugin := &bedrock.Bedrock{
+		Region: "us-east-1",
+	}
+
+	// Initialize Genkit with the AWS Bedrock plugin and Haiku model.
 	g := genkit.Init(ctx,
-		genkit.WithPlugins(&openai.OpenAI{
-			APIKey: os.Getenv("OPENAI_API_KEY"),
-		}),
-		genkit.WithDefaultModel("openai/gpt-4o"),
+		genkit.WithPlugins(bedrockPlugin),
+		genkit.WithDefaultModel("bedrock/anthropic.claude-3-haiku-20240307-v1:0"), // Set default model
+
 	)
 
+	bedrock.DefineCommonModels(bedrockPlugin, g)
+
 	// Get the MCPClient for file operations
-	mcpFileSystem := mcpinternal.NewFilesystemServerConfig("file-system", "/")
+	mcpFileSystem := mcpinternal.NewFilesystemServerConfig("file-system", "./")
 
 	// Create the MCP manager with the file system server
 	manager, err := mcpinternal.NewMCPManagerWrapper("my-manager", "1.0.0", []mcp.MCPServerConfig{
