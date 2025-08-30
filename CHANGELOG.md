@@ -1,3 +1,10 @@
+# [1.19.0](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.18.0...v1.19.0) (2025-08-30)
+
+
+### Features
+
+* Update MCP chapter to use AWS Bedrock plugin ([#22](https://github.com/mastering-genkit/mastering-genkit-go/issues/22)) ([eff2858](https://github.com/mastering-genkit/mastering-genkit-go/commit/eff28585321b601d8d7f2e75f8d3f94f7a043bdc))
+
 # [1.18.0](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.17.1...v1.18.0) (2025-08-29)
 
 
