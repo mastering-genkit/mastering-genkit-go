@@ -214,18 +214,39 @@ export function useRecipeQuestGame() {
     try {
       dispatch({ type: 'START_RECIPE_GENERATION' });
       let fullContent = '';
+      let chunkCount = 0;
+      
+      // Auto-scroll to recipe section
+      setTimeout(() => {
+        const recipeElement = document.querySelector('[data-recipe-section]');
+        if (recipeElement) {
+          recipeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 500);
       
       for await (const response of generateRecipeHook.generateRecipe({
         ingredients: state.selectedIngredients,
       })) {
+        chunkCount++;
+        
         if (response.type === 'content' && response.content) {
           fullContent += response.content;
           dispatch({ type: 'SET_RECIPE', payload: fullContent });
+          
+          // Auto-scroll during streaming to keep content visible
+          if (chunkCount % 3 === 0) { // Every 3rd chunk
+            setTimeout(() => {
+              const recipeDisplay = document.querySelector('[data-recipe-display]');
+              if (recipeDisplay) {
+                recipeDisplay.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+              }
+            }, 100);
+          }
         } else if (response.type === 'done') {
           // Auto advance to image generation
           setTimeout(() => {
             startImageGeneration(fullContent);
-          }, 1000);
+          }, 1500);
           break;
         } else if (response.type === 'error') {
           dispatch({ type: 'SET_ERROR', payload: response.error || 'Failed to generate recipe' });

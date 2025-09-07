@@ -23,7 +23,7 @@ const STEP_INFO = {
   [GameStep.Recipe]: {
     emoji: '🍳',
     title: 'Generating Recipe',
-    description: 'AI chef is creating your custom recipe...'
+    description: 'AI chef is creating your custom recipe... 📡 Streaming live updates...'
   },
   [GameStep.Image]: {
     emoji: '📸',
@@ -53,11 +53,20 @@ export default function GameProgress({ currentStep, progress, isLoading }: GameP
           <span>Progress</span>
           <span>{Math.round(progress)}%</span>
         </div>
-        <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+        <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden relative">
           <div 
-            className="bg-gradient-to-r from-orange-400 to-red-500 h-full rounded-full transition-all duration-1000 ease-out"
+            className={`
+              h-full rounded-full transition-all duration-1000 ease-out
+              ${isLoading && (currentStep === GameStep.Recipe || currentStep === GameStep.Image || currentStep === GameStep.Evaluation)
+                ? 'bg-gradient-to-r from-orange-400 via-red-500 to-orange-400 animate-pulse'
+                : 'bg-gradient-to-r from-orange-400 to-red-500'
+              }
+            `}
             style={{ width: `${progress}%` }}
           />
+          {isLoading && (currentStep === GameStep.Recipe || currentStep === GameStep.Image || currentStep === GameStep.Evaluation) && (
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-ping opacity-40" />
+          )}
         </div>
       </div>
 

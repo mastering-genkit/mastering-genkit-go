@@ -16,8 +16,8 @@ export default function RecipeDisplay({ recipe, isVisible }: RecipeDisplayProps)
   const recipeContent = lines.slice(1).join('\n');
 
   return (
-    <div className="w-full max-w-4xl mx-auto mb-8">
-      <div className="bg-white rounded-2xl shadow-xl p-8 border-l-4 border-orange-500">
+    <div className="w-full max-w-4xl mx-auto mb-8" data-recipe-section>
+      <div className="bg-white rounded-2xl shadow-xl p-8 border-l-4 border-orange-500" data-recipe-display>
         {/* Header */}
         <div className="text-center mb-6">
           <div className="text-4xl mb-3">📋</div>
