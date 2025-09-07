@@ -46,18 +46,37 @@ func main() {
 	}
 	defer firestoreClient.Close()
 
-	// Initialize flows with tools (passing the shared Firestore client)
-	tools := []ai.ToolRef{
-		tools.NewSearchRecipeDatabase(g, firestoreClient),
-		tools.NewCheckIngredientStock(g, firestoreClient),
-		tools.NewCalculateNutrition(g, firestoreClient),
+	// Define flows
+	recipeFlow := flows.NewCreateRecipeFlow(g, []ai.ToolRef{
+		tools.NewCheckIngredientCompatibility(g, firestoreClient),
+		tools.NewEstimateCookingDifficulty(g),
+	})
+	imageFlow := flows.NewCreateImageFlow(g)
+	evaluateFlow := flows.NewCookingEvaluateFlow(g)
+
+	// Helper function to wrap Genkit handlers with CORS
+	withCORS := func(handler http.HandlerFunc) http.HandlerFunc {
+		return func(w http.ResponseWriter, r *http.Request) {
+			// Set CORS headers
+			w.Header().Set("Access-Control-Allow-Origin", "*")
+			w.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS")
+			w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization, Accept")
+
+			// Handle preflight requests
+			if r.Method == "OPTIONS" {
+				w.WriteHeader(http.StatusOK)
+				return
+			}
+
+			// Call the Genkit handler
+			handler(w, r)
+		}
 	}
-	chatFlow := flows.NewCookingBattleChatFlow(g, tools)
-	actionFlow := flows.NewCookingBattleActionFlow(g, tools)
 
 	mux := http.NewServeMux()
-	mux.HandleFunc("POST /cookingBattleChat", genkit.Handler(chatFlow))
-	mux.HandleFunc("POST /cookingBattleAction", genkit.Handler(actionFlow))
+	mux.HandleFunc("/generateRecipe", withCORS(genkit.Handler(recipeFlow)))
+	mux.HandleFunc("/createImage", withCORS(genkit.Handler(imageFlow)))
+	mux.HandleFunc("/evaluateDish", withCORS(genkit.Handler(evaluateFlow)))
 
 	port := os.Getenv("PORT")
 	if port == "" {

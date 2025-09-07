@@ -1,5 +1,5 @@
-# Firestore document configuration for Chapter 15 Cooking Battle App
-# This creates sample recipe data in Firestore
+# Firestore document configuration for Recipe Quest App
+# Simple schema for educational Tool demonstration
 
 terraform {
   required_version = ">= 1.0"
@@ -16,359 +16,178 @@ provider "google" {
   region  = var.region
 }
 
-# Local variable to define recipe documents
+# Local variable to define ingredient compatibility combinations
 locals {
-  recipes = [
-    # Italian recipes
+  ingredient_combinations = [
+    # Perfect pairings (score 9-10)
     {
-      document_id = "recipe_001"
+      document_id = "combo_001"
       fields = jsonencode({
-        "name"       = { "stringValue" = "Classic Tomato Pasta" }
-        "category"   = { "stringValue" = "Italian" }
-        "difficulty" = { "stringValue" = "easy" }
-        "prepTime"   = { "integerValue" = "15" }
-        "cookTime"   = { "integerValue" = "20" }
         "ingredients" = {
           "arrayValue" = {
             "values" = [
-              {
-                "mapValue" = {
-                  "fields" = {
-                    "name"   = { "stringValue" = "pasta" }
-                    "amount" = { "integerValue" = "200" }
-                    "unit"   = { "stringValue" = "g" }
-                  }
-                }
-              },
-              {
-                "mapValue" = {
-                  "fields" = {
-                    "name"   = { "stringValue" = "tomato" }
-                    "amount" = { "integerValue" = "3" }
-                    "unit"   = { "stringValue" = "pieces" }
-                  }
-                }
-              },
-              {
-                "mapValue" = {
-                  "fields" = {
-                    "name"   = { "stringValue" = "garlic" }
-                    "amount" = { "integerValue" = "2" }
-                    "unit"   = { "stringValue" = "cloves" }
-                  }
-                }
-              },
-              {
-                "mapValue" = {
-                  "fields" = {
-                    "name"   = { "stringValue" = "olive_oil" }
-                    "amount" = { "integerValue" = "30" }
-                    "unit"   = { "stringValue" = "ml" }
-                  }
-                }
-              }
+              { "stringValue" = "chicken" },
+              { "stringValue" = "rice" }
             ]
           }
         }
-        "nutrition" = {
-          "mapValue" = {
-            "fields" = {
-              "calories" = { "integerValue" = "450" }
-              "protein"  = { "integerValue" = "15" }
-              "carbs"    = { "integerValue" = "65" }
-              "fat"      = { "integerValue" = "12" }
-            }
-          }
-        }
-        "tags" = {
-          "arrayValue" = {
-            "values" = [
-              { "stringValue" = "vegetarian" },
-              { "stringValue" = "quick" },
-              { "stringValue" = "budget-friendly" }
-            ]
-          }
-        }
+        "compatibility_score" = { "integerValue" = "9" }
+        "flavor_profile"      = { "stringValue" = "savory" }
+        "cuisine_style"       = { "stringValue" = "asian" }
+        "tips"               = { "stringValue" = "Perfect for comfort food and one-pot dishes" }
+        "difficulty_bonus"    = { "integerValue" = "1" }
       })
     },
 
-    # Japanese recipes
     {
-      document_id = "recipe_002"
+      document_id = "combo_002"  
       fields = jsonencode({
-        "name"       = { "stringValue" = "Grilled Chicken Teriyaki" }
-        "category"   = { "stringValue" = "Japanese" }
-        "difficulty" = { "stringValue" = "medium" }
-        "prepTime"   = { "integerValue" = "30" }
-        "cookTime"   = { "integerValue" = "25" }
         "ingredients" = {
           "arrayValue" = {
             "values" = [
-              {
-                "mapValue" = {
-                  "fields" = {
-                    "name"   = { "stringValue" = "chicken" }
-                    "amount" = { "integerValue" = "500" }
-                    "unit"   = { "stringValue" = "g" }
-                  }
-                }
-              },
-              {
-                "mapValue" = {
-                  "fields" = {
-                    "name"   = { "stringValue" = "soy_sauce" }
-                    "amount" = { "integerValue" = "50" }
-                    "unit"   = { "stringValue" = "ml" }
-                  }
-                }
-              },
-              {
-                "mapValue" = {
-                  "fields" = {
-                    "name"   = { "stringValue" = "mirin" }
-                    "amount" = { "integerValue" = "30" }
-                    "unit"   = { "stringValue" = "ml" }
-                  }
-                }
-              },
-              {
-                "mapValue" = {
-                  "fields" = {
-                    "name"   = { "stringValue" = "sugar" }
-                    "amount" = { "integerValue" = "15" }
-                    "unit"   = { "stringValue" = "g" }
-                  }
-                }
-              }
+              { "stringValue" = "salmon" },
+              { "stringValue" = "lemon" }
             ]
           }
         }
-        "nutrition" = {
-          "mapValue" = {
-            "fields" = {
-              "calories" = { "integerValue" = "380" }
-              "protein"  = { "integerValue" = "42" }
-              "carbs"    = { "integerValue" = "18" }
-              "fat"      = { "integerValue" = "15" }
-            }
-          }
-        }
-        "tags" = {
-          "arrayValue" = {
-            "values" = [
-              { "stringValue" = "protein-rich" },
-              { "stringValue" = "japanese" },
-              { "stringValue" = "grilled" }
-            ]
-          }
-        }
+        "compatibility_score" = { "integerValue" = "10" }
+        "flavor_profile"      = { "stringValue" = "fresh" }
+        "cuisine_style"       = { "stringValue" = "mediterranean" }
+        "tips"               = { "stringValue" = "Classic pairing with bright citrus notes" }
+        "difficulty_bonus"    = { "integerValue" = "0" }
       })
     },
 
-    # Quick & Easy recipes
     {
-      document_id = "recipe_003"
+      document_id = "combo_003"
       fields = jsonencode({
-        "name"       = { "stringValue" = "Egg Fried Rice" }
-        "category"   = { "stringValue" = "Asian" }
-        "difficulty" = { "stringValue" = "easy" }
-        "prepTime"   = { "integerValue" = "10" }
-        "cookTime"   = { "integerValue" = "15" }
         "ingredients" = {
           "arrayValue" = {
             "values" = [
-              {
-                "mapValue" = {
-                  "fields" = {
-                    "name"   = { "stringValue" = "rice" }
-                    "amount" = { "integerValue" = "300" }
-                    "unit"   = { "stringValue" = "g" }
-                  }
-                }
-              },
-              {
-                "mapValue" = {
-                  "fields" = {
-                    "name"   = { "stringValue" = "egg" }
-                    "amount" = { "integerValue" = "3" }
-                    "unit"   = { "stringValue" = "pieces" }
-                  }
-                }
-              },
-              {
-                "mapValue" = {
-                  "fields" = {
-                    "name"   = { "stringValue" = "green_onion" }
-                    "amount" = { "integerValue" = "2" }
-                    "unit"   = { "stringValue" = "stalks" }
-                  }
-                }
-              },
-              {
-                "mapValue" = {
-                  "fields" = {
-                    "name"   = { "stringValue" = "soy_sauce" }
-                    "amount" = { "integerValue" = "20" }
-                    "unit"   = { "stringValue" = "ml" }
-                  }
-                }
-              }
+              { "stringValue" = "pasta" },
+              { "stringValue" = "garlic" }
             ]
           }
         }
-        "nutrition" = {
-          "mapValue" = {
-            "fields" = {
-              "calories" = { "integerValue" = "420" }
-              "protein"  = { "integerValue" = "18" }
-              "carbs"    = { "integerValue" = "52" }
-              "fat"      = { "integerValue" = "14" }
-            }
-          }
-        }
-        "tags" = {
-          "arrayValue" = {
-            "values" = [
-              { "stringValue" = "quick" },
-              { "stringValue" = "leftover-friendly" },
-              { "stringValue" = "one-pan" }
-            ]
-          }
-        }
+        "compatibility_score" = { "integerValue" = "8" }
+        "flavor_profile"      = { "stringValue" = "aromatic" }
+        "cuisine_style"       = { "stringValue" = "italian" }
+        "tips"               = { "stringValue" = "Foundation of many Italian classics" }
+        "difficulty_bonus"    = { "integerValue" = "0" }
       })
     },
 
-    # Healthy options
+    # Good combinations (score 7-8)
     {
-      document_id = "recipe_004"
+      document_id = "combo_004"
       fields = jsonencode({
-        "name"       = { "stringValue" = "Greek Salad Bowl" }
-        "category"   = { "stringValue" = "Mediterranean" }
-        "difficulty" = { "stringValue" = "easy" }
-        "prepTime"   = { "integerValue" = "15" }
-        "cookTime"   = { "integerValue" = "0" }
         "ingredients" = {
           "arrayValue" = {
             "values" = [
-              {
-                "mapValue" = {
-                  "fields" = {
-                    "name"   = { "stringValue" = "cucumber" }
-                    "amount" = { "integerValue" = "1" }
-                    "unit"   = { "stringValue" = "piece" }
-                  }
-                }
-              },
-              {
-                "mapValue" = {
-                  "fields" = {
-                    "name"   = { "stringValue" = "tomato" }
-                    "amount" = { "integerValue" = "2" }
-                    "unit"   = { "stringValue" = "pieces" }
-                  }
-                }
-              },
-              {
-                "mapValue" = {
-                  "fields" = {
-                    "name"   = { "stringValue" = "feta_cheese" }
-                    "amount" = { "integerValue" = "100" }
-                    "unit"   = { "stringValue" = "g" }
-                  }
-                }
-              },
-              {
-                "mapValue" = {
-                  "fields" = {
-                    "name"   = { "stringValue" = "olives" }
-                    "amount" = { "integerValue" = "50" }
-                    "unit"   = { "stringValue" = "g" }
-                  }
-                }
-              }
+              { "stringValue" = "beef" },
+              { "stringValue" = "potatoes" }
             ]
           }
         }
-        "nutrition" = {
-          "mapValue" = {
-            "fields" = {
-              "calories" = { "integerValue" = "250" }
-              "protein"  = { "integerValue" = "12" }
-              "carbs"    = { "integerValue" = "15" }
-              "fat"      = { "integerValue" = "18" }
-            }
-          }
-        }
-        "tags" = {
+        "compatibility_score" = { "integerValue" = "8" }
+        "flavor_profile"      = { "stringValue" = "hearty" }
+        "cuisine_style"       = { "stringValue" = "western" }
+        "tips"               = { "stringValue" = "Great for stews and roasts" }
+        "difficulty_bonus"    = { "integerValue" = "1" }
+      })
+    },
+
+    {
+      document_id = "combo_005"
+      fields = jsonencode({
+        "ingredients" = {
           "arrayValue" = {
             "values" = [
-              { "stringValue" = "healthy" },
-              { "stringValue" = "vegetarian" },
-              { "stringValue" = "no-cook" }
+              { "stringValue" = "shrimp" },
+              { "stringValue" = "avocado" }
             ]
           }
         }
+        "compatibility_score" = { "integerValue" = "7" }
+        "flavor_profile"      = { "stringValue" = "light" }
+        "cuisine_style"       = { "stringValue" = "modern" }
+        "tips"               = { "stringValue" = "Perfect for fresh, healthy dishes" }
+        "difficulty_bonus"    = { "integerValue" = "0" }
       })
-    }
-  ]
+    },
 
-  # Ingredient stock data (for checkIngredientStock tool)
-  ingredient_stock = [
+    # Creative combinations (score 6-7)
     {
-      document_id = "stock_001"
+      document_id = "combo_006"
       fields = jsonencode({
-        "ingredient" = { "stringValue" = "pasta" }
-        "quantity"   = { "integerValue" = "1000" }
-        "unit"       = { "stringValue" = "g" }
-        "available"  = { "booleanValue" = true }
+        "ingredients" = {
+          "arrayValue" = {
+            "values" = [
+              { "stringValue" = "tofu" },
+              { "stringValue" = "ginger" }
+            ]
+          }
+        }
+        "compatibility_score" = { "integerValue" = "7" }
+        "flavor_profile"      = { "stringValue" = "umami" }
+        "cuisine_style"       = { "stringValue" = "asian" }
+        "tips"               = { "stringValue" = "Excellent for stir-fries and broths" }
+        "difficulty_bonus"    = { "integerValue" = "1" }
       })
     },
+
     {
-      document_id = "stock_002"
+      document_id = "combo_007"
       fields = jsonencode({
-        "ingredient" = { "stringValue" = "tomato" }
-        "quantity"   = { "integerValue" = "10" }
-        "unit"       = { "stringValue" = "pieces" }
-        "available"  = { "booleanValue" = true }
+        "ingredients" = {
+          "arrayValue" = {
+            "values" = [
+              { "stringValue" = "quinoa" },
+              { "stringValue" = "lime" }
+            ]
+          }
+        }
+        "compatibility_score" = { "integerValue" = "6" }
+        "flavor_profile"      = { "stringValue" = "zesty" }
+        "cuisine_style"       = { "stringValue" = "south_american" }
+        "tips"               = { "stringValue" = "Modern healthy pairing with bright flavors" }
+        "difficulty_bonus"    = { "integerValue" = "0" }
       })
     },
+
+    # Adventurous combinations (score 5-6)
     {
-      document_id = "stock_003"
+      document_id = "combo_008"
       fields = jsonencode({
-        "ingredient" = { "stringValue" = "chicken" }
-        "quantity"   = { "integerValue" = "2000" }
-        "unit"       = { "stringValue" = "g" }
-        "available"  = { "booleanValue" = true }
+        "ingredients" = {
+          "arrayValue" = {
+            "values" = [
+              { "stringValue" = "pork" },
+              { "stringValue" = "miso" }
+            ]
+          }
+        }
+        "compatibility_score" = { "integerValue" = "8" }
+        "flavor_profile"      = { "stringValue" = "rich" }
+        "cuisine_style"       = { "stringValue" = "japanese" }
+        "tips"               = { "stringValue" = "Deep umami flavors for sophisticated dishes" }
+        "difficulty_bonus"    = { "integerValue" = "2" }
       })
     }
   ]
 }
 
-# Create recipe documents in Firestore
-resource "google_firestore_document" "recipes" {
-  for_each    = { for recipe in local.recipes : recipe.document_id => recipe }
+# Create ingredient combination documents in Firestore
+resource "google_firestore_document" "ingredient_combinations" {
+  for_each    = { for combo in local.ingredient_combinations : combo.document_id => combo }
   project     = var.project_id
-  collection  = "recipes"
-  document_id = each.value.document_id
-  fields      = each.value.fields
-}
-
-# Create ingredient stock documents in Firestore
-resource "google_firestore_document" "ingredient_stock" {
-  for_each    = { for stock in local.ingredient_stock : stock.document_id => stock }
-  project     = var.project_id
-  collection  = "ingredient_stock"
+  collection  = "ingredient_combinations"
   document_id = each.value.document_id
   fields      = each.value.fields
 }
 
 # Output the created document IDs
-output "recipe_ids" {
-  value = [for doc in google_firestore_document.recipes : doc.document_id]
-  description = "List of created recipe document IDs"
-}
-
-output "stock_ids" {
-  value = [for doc in google_firestore_document.ingredient_stock : doc.document_id]
-  description = "List of created ingredient stock document IDs"
+output "combination_ids" {
+  value = [for doc in google_firestore_document.ingredient_combinations : doc.document_id]
+  description = "List of created ingredient combination document IDs"
 }
