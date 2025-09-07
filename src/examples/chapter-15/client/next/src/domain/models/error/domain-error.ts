@@ -13,10 +13,3 @@ export class NetworkError extends DomainError {
     this.name = 'NetworkError';
   }
 }
-
-export class AuthError extends DomainError {
-  constructor(message: string) {
-    super(message, 'AUTH_ERROR');
-    this.name = 'AuthError';
-  }
-}

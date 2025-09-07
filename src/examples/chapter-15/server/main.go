@@ -33,14 +33,8 @@ func main() {
 		genkit.WithDefaultModel("openai/gpt-5-nano"),
 	)
 
-	// Get project ID from environment (required)
-	projectID := os.Getenv("PROJECT_ID")
-	if projectID == "" {
-		log.Fatal("PROJECT_ID environment variable is required")
-	}
-
 	// Create Firestore client once
-	firestoreClient, err := firestore.NewClient(ctx, projectID)
+	firestoreClient, err := firestore.NewClient(ctx, "local-emulator")
 	if err != nil {
 		log.Fatalf("Failed to create Firestore client: %v", err)
 	}

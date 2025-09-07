@@ -1,223 +1,205 @@
-# Cooking Battle Client - Next.js 15
+# Recipe Quest - Cooking Battle Client
 
-Genkit Go サーバーと通信するクライアントアプリケーション。Onion Architecture を採用し、Next.js 15 で実装されています。
+A Next.js 15 client application for the Recipe Quest cooking battle game, communicating with a Genkit Go server. This app implements an Onion Architecture pattern for clean, maintainable code.
 
-## アーキテクチャ
+## 🎯 Features
+
+- **Interactive Cooking Game**: Select ingredients, generate recipes, create dish images, and get AI evaluations
+- **Real-time Streaming**: Watch recipes being generated in real-time with streaming responses
+- **Clean Architecture**: Built with Onion Architecture principles for maintainability
+- **Modern Tech Stack**: Next.js 15, React 19, TypeScript, and Tailwind CSS
+- **AI-Powered**: Integration with Genkit Go flows for recipe generation, image creation, and evaluation
+
+## 🏗️ Architecture
 
 ### Onion Architecture
 
-このプロジェクトは Onion Architecture に基づいて構成されています：
+This project follows Onion Architecture principles with clear separation of concerns:
 
-```
+```text
 src/
-├── domain/               # ドメイン層（最内層）
-│   ├── models/          # ドメインモデル
-│   │   ├── chat/        # チャット関連モデル
-│   │   ├── action/      # アクション関連モデル
-│   │   ├── recipe/      # レシピ関連モデル
-│   │   └── error/       # エラー関連モデル
-│   └── repositories.ts  # リポジトリインターフェース
+├── domain/                    # Domain Layer (Core)
+│   ├── models/               # Domain Models
+│   │   ├── game/            # Game state models
+│   │   ├── recipe/          # Recipe-related models
+│   │   ├── image/           # Image generation models
+│   │   ├── evaluate/        # Evaluation models
+│   │   └── error/           # Error handling models
+│   └── repositories.ts       # Repository Interfaces
 │
-├── usecases/            # ユースケース層
-│   ├── chat.ts         # チャットのユースケース
-│   └── action.ts       # アクションのユースケース
+├── usecases/                 # Use Case Layer
+│   ├── generate-recipe.ts    # Recipe generation use case
+│   ├── create-image.ts       # Image creation use case
+│   └── evaluate-dish.ts      # Dish evaluation use case
 │
-├── infrastructure/      # インフラストラクチャ層（最外層）
-│   ├── http/           # HTTP通信の実装
-│   │   ├── dto/        # Data Transfer Objects
-│   │   ├── mappers/    # DTO ↔ ドメインモデルのマッピング
-│   │   ├── client/     # HTTPクライアントユーティリティ
-│   │   ├── config/     # HTTP設定
-│   │   └── repository/ # リポジトリの実装
-│   └── auth/           # 認証関連
-│       └── firebase.ts # Firebase Anonymous Auth
+├── infrastructure/           # Infrastructure Layer
+│   ├── http/                # HTTP Communication
+│   │   ├── dto/            # Data Transfer Objects
+│   │   ├── mappers/        # DTO ↔ Domain mapping
+│   │   ├── client/         # HTTP client utilities
+│   │   ├── config/         # HTTP configuration
+│   │   └── repository/     # Repository implementations
+│   └── auth/               # Authentication
+│       └── firebase.ts     # Firebase setup (if needed)
 │
-├── app/                 # プレゼンテーション層
-│   ├── composition.ts   # DI（依存性注入）設定
-│   ├── hooks/          # React カスタムフック
-│   └── chat/           # チャットページ
+├── components/              # UI Components
+│   ├── GameProgress.tsx    # Game progress indicator
+│   ├── GameResult.tsx      # Game results display
+│   ├── IngredientCards.tsx # Ingredient selection
+│   ├── RecipeDisplay.tsx   # Recipe presentation
+│   └── ImageDisplay.tsx    # Generated image display
 │
-└── components/          # UIコンポーネント
-    ├── MessageList.tsx  # メッセージ一覧
-    ├── Composer.tsx     # メッセージ入力
-    └── ActionPanel.tsx  # アクションボタン
+└── app/                    # Next.js App Router
+    ├── page.tsx           # Home page
+    ├── quest/             # Game quest page
+    ├── hooks/             # Custom React hooks
+    └── composition.ts     # Dependency injection setup
 ```
 
-### 層の責務
+### Layer Responsibilities
 
-1. **ドメイン層**
-   - ビジネスロジックとドメインモデルを定義
-   - 外部依存を持たない純粋なTypeScript
-   - リポジトリインターフェースの定義
+1. **Domain Layer (Core)**
+   - Business logic and domain models
+   - No external dependencies - pure TypeScript
+   - Repository interface definitions
 
-2. **ユースケース層**
-   - アプリケーションのビジネスロジック
-   - ドメイン層のみに依存
-   - リポジトリインターフェースを通じてデータアクセス
+2. **Use Case Layer**
+   - Application business logic
+   - Depends only on domain layer
+   - Orchestrates domain models and repositories
 
-3. **インフラストラクチャ層**
-   - 外部システムとの通信実装
-   - HTTPクライアント、認証、DTOマッピング
-   - リポジトリインターフェースの実装
+3. **Infrastructure Layer**
+   - External system implementations
+   - HTTP clients, authentication, DTO mapping
+   - Repository interface implementations
 
-4. **プレゼンテーション層**
-   - UI コンポーネントとページ
-   - ユースケースを通じてビジネスロジックを実行
-   - React/Next.js 固有の実装
+4. **Presentation Layer**
+   - UI components and pages
+   - React/Next.js specific implementations
+   - Connects UI to use cases
 
-## セットアップ
+## 🚀 Quick Start
 
-### 前提条件
+### Prerequisites
 
-- Node.js 18以上
-- npm または yarn
-- Genkit Go サーバーが起動していること（http://127.0.0.1:9090）
+- **Node.js** 18.17 or later
+- **npm** or **yarn**
+- **Genkit Go Server** running on `http://127.0.0.1:9090`
 
-### インストール
+### Installation
 
 ```bash
-# 依存関係のインストール
+# Install dependencies
 npm install
-
-# 環境変数の設定
-cp .env.local.example .env.local
-# .env.local を編集して必要な設定を追加
 ```
 
-### 起動方法
+### Development Server
 
 ```bash
-# 開発サーバーの起動
+# Start the development server
+npm run build
 npm run dev
 
-# ブラウザで http://localhost:3000 を開く
+# Open http://localhost:3000 in your browser
 ```
 
-## 開発ガイド
+## 🔧 Development Guide
 
-### 新しい機能の追加
+### Adding New Features
 
-1. **ドメインモデルの追加**
+Follow these steps to add new functionality while maintaining clean architecture:
+
+1. **Define Domain Models**
+
    ```typescript
    // src/domain/models/[feature]/[model].ts
    export interface NewFeature {
      id: string;
-     // ... プロパティを定義
+     name: string;
+     // ... define domain properties
    }
    ```
 
-2. **リポジトリインターフェースの定義**
+2. **Create Repository Interface**
+
    ```typescript
    // src/domain/repositories.ts
    export interface NewFeatureRepository {
      getFeature(id: string): Promise<NewFeature>;
+     createFeature(data: CreateFeatureRequest): Promise<NewFeature>;
    }
    ```
 
-3. **ユースケースの実装**
+3. **Implement Use Case**
+
    ```typescript
    // src/usecases/new-feature.ts
    export class GetNewFeatureUseCase {
      constructor(private repository: NewFeatureRepository) {}
      
      async execute(id: string): Promise<NewFeature> {
-       return this.repository.getFeature(id);
+       return await this.repository.getFeature(id);
      }
    }
    ```
 
-4. **インフラストラクチャの実装**
+4. **Implement Infrastructure**
+
    ```typescript
    // src/infrastructure/http/repository/new-feature-repo.ts
    export class HttpNewFeatureRepository implements NewFeatureRepository {
+     constructor(private httpClient: HttpClient) {}
+     
      async getFeature(id: string): Promise<NewFeature> {
-       // HTTP通信の実装
+       // HTTP implementation
+       const response = await this.httpClient.get(`/feature/${id}`);
+       return mapDTOToDomain(response.data);
      }
    }
    ```
 
-5. **DIの設定**
+5. **Wire Dependencies**
+
    ```typescript
    // app/composition.ts
-   const newFeatureRepo = new HttpNewFeatureRepository();
+   const newFeatureRepo = new HttpNewFeatureRepository(httpClient);
    export const getNewFeature = new GetNewFeatureUseCase(newFeatureRepo);
    ```
 
-### Genkit Flow との通信
+### Genkit Flow Communication
 
-Genkit Flow は特別なリクエスト/レスポンス形式を使用します：
+This app communicates with Genkit Go flows using specific patterns:
 
-1. **リクエスト**：`{ data: <payload> }` でラップ
-2. **レスポンス**：
-   - 通常：`{ result: <data> }`
-   - ストリーミング：`{ message: <chunk> }` または `{ result: <final> }`
+#### Request Format
 
-### 環境変数
-
-`.env.local` で以下の変数を設定：
-
-```env
-# API設定
-NEXT_PUBLIC_API_BASE_URL=http://127.0.0.1:9090
-
-# Firebase設定（開発環境ではプレースホルダーでOK）
-NEXT_PUBLIC_FIREBASE_API_KEY=placeholder
-NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=placeholder
-NEXT_PUBLIC_FIREBASE_PROJECT_ID=placeholder
-# ... その他のFirebase設定
+```typescript
+// All requests are wrapped
+{ data: <your-payload> }
 ```
 
-### デバッグ
+#### Response Formats
 
-1. **ネットワークエラー**
-   - Genkit サーバーが起動しているか確認
-   - CORS設定が正しいか確認
-   - `.env.local` の API_BASE_URL が正しいか確認
+```typescript
+// Regular responses
+{ result: <response-data> }
 
-2. **認証エラー**
-   - 開発環境では自動的にモック認証が使用されます
-   - 本番環境では正しいFirebase設定が必要
-
-3. **ストリーミングエラー**
-   - SSE（Server-Sent Events）の形式を確認
-   - Genkit Flow のレスポンス形式を確認
-
-## テスト
-
-```bash
-# ユニットテストの実行
-npm test
-
-# E2Eテストの実行（Playwright）
-npm run test:e2e
+// Streaming responses (SSE)
+{ message: <streaming-chunk> }  // For intermediate chunks
+{ result: <final-result> }       // For completion
 ```
 
-## ビルドとデプロイ
+#### Example Usage
 
-```bash
-# プロダクションビルド
-npm run build
-
-# ビルドの確認
-npm run start
+```typescript
+// Streaming recipe generation
+const response = await fetch('/generateRecipe', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'text/event-stream',
+  },
+  body: JSON.stringify({
+    data: { ingredients: ['tomato', 'basil', 'mozzarella'] }
+  })
+});
 ```
-
-## トラブルシューティング
-
-### よくある問題
-
-1. **"Failed to fetch" エラー**
-   - Genkit サーバーが起動しているか確認
-   - ポート 9090 が使用されているか確認
-
-2. **CORS エラー**
-   - サーバー側の CORS 設定を確認
-   - `Access-Control-Allow-Origin` ヘッダーが設定されているか
-
-3. **ストリーミングが動作しない**
-   - `Accept: text/event-stream` ヘッダーが送信されているか
-   - サーバーが SSE 形式で応答しているか
-
-## ライセンス
-
-[ライセンス情報を記載]

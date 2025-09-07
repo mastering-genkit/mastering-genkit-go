@@ -17,7 +17,7 @@ import {
   mapEvaluateResponseToDomain,
 } from '../mappers';
 import {
-  authenticatedFetch,
+  httpFetch,
   checkResponseStatus,
 } from '../client/http-client';
 
@@ -32,8 +32,8 @@ export class HttpRecipeQuestRepository implements RecipeQuestRepository {
     const url = getEndpointUrl('generateRecipe');
     const dto = mapRecipeRequestToDTO(request);
 
-    // Make authenticated request with streaming headers
-    const response = await authenticatedFetch(url, {
+    // Make request with streaming headers
+    const response = await httpFetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -99,8 +99,8 @@ export class HttpRecipeQuestRepository implements RecipeQuestRepository {
     const url = getEndpointUrl('createImage');
     const dto = mapImageRequestToDTO(request);
 
-    // Make authenticated request
-    const response = await authenticatedFetch(url, {
+    // Make request
+    const response = await httpFetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -126,8 +126,8 @@ export class HttpRecipeQuestRepository implements RecipeQuestRepository {
     const url = getEndpointUrl('evaluateDish');
     const dto = mapEvaluateRequestToDTO(request);
 
-    // Make authenticated request
-    const response = await authenticatedFetch(url, {
+    // Make request
+    const response = await httpFetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

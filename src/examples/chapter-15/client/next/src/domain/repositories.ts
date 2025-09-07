@@ -19,7 +19,6 @@ export interface RecipeQuestRepository {
    * @param request The recipe generation request with ingredients
    * @returns An async generator for streaming recipe content
    * @throws {NetworkError} If the request fails
-   * @throws {AuthError} If authentication fails
    */
   generateRecipe(request: RecipeRequestDomain): AsyncGenerator<RecipeResponseDomain, void, unknown>;
 
@@ -29,7 +28,6 @@ export interface RecipeQuestRepository {
    * @param request The image creation request with dish details
    * @returns A promise resolving to the image response
    * @throws {NetworkError} If the request fails
-   * @throws {AuthError} If authentication fails
    */
   createImage(request: ImageRequestDomain): Promise<ImageResponseDomain>;
 
@@ -39,7 +37,6 @@ export interface RecipeQuestRepository {
    * @param request The evaluation request with dish details
    * @returns A promise resolving to the evaluation response
    * @throws {NetworkError} If the request fails
-   * @throws {AuthError} If authentication fails
    */
   evaluateDish(request: EvaluateRequestDomain): Promise<EvaluateResponseDomain>;
 }

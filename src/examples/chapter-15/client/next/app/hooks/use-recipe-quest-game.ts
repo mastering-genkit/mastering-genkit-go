@@ -150,7 +150,6 @@ export function useRecipeQuestGame() {
   const createImageHook = useCreateImage();
   const evaluateHook = useEvaluateDish();
 
-  // Evaluate dish function (最後に実行されるので最初に定義)
   const startDishEvaluation = useCallback(async (dishName: string, recipe: string) => {
     try {
       dispatch({ type: 'START_EVALUATION' });
