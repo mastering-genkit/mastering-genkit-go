@@ -1,8 +1,8 @@
-# Chapter 15: Client Integration Patterns - Cooking Battle App
+# Chapter 15: Client Integration Patterns - Recipe Quest App
 
 ## Overview
 
-This example demonstrates how to integrate Genkit Go applications with various client frameworks (Next.js, Angular, Flutter) using a unified API contract. The application theme is a "Cooking Battle" where users can compete by creating dishes based on given ingredients and constraints.
+This example demonstrates how to integrate Genkit Go applications with various client frameworks (Next.js, Angular, Flutter) using a unified API contract. The application theme is a "Recipe Quest" where users can discover new recipes by getting random ingredients and letting AI guide them through recipe creation, visualization, and evaluation with achievements and chef titles.
 
 ## Architecture
 
@@ -29,18 +29,18 @@ graph TB
     end
     
     subgraph "Genkit Flows"
-        CBChat[cookingBattleChat<br/>DefineStreamingFlow<br/>SSE]
-        CBAction[cookingBattleAction<br/>DefineFlow<br/>REST]
+        CreateRecipe[createRecipe<br/>DefineStreamingFlow<br/>SSE]
+        CreateImage[createImage<br/>DefineFlow<br/>REST]
+        CookingEvaluate[cookingEvaluate<br/>DefineFlow<br/>REST with Titles]
     end
     
-    subgraph "Tools (Chapter 8)"
-        T1[searchRecipeDatabase]
-        T2[checkIngredientStock]
-        T3[calculateNutrition]
+    subgraph "Educational Tools (Chapter 8)"
+        T1[checkIngredientCompatibility<br/>Firestore Tool]
+        T2[estimateCookingDifficulty<br/>Calculation Tool]
     end
     
     subgraph "Data Layer"
-        FS[Firestore<br/>recipes collection]
+        FS[Firestore<br/>ingredient_combinations collection]
     end
     
     subgraph "AI Models"
@@ -56,31 +56,28 @@ graph TB
     CR --> FA
     FA -->|Verify Anonymous Token| CORS
     CORS --> OT
-    OT --> CBChat
-    OT --> CBAction
+    OT --> CreateRecipe
+    OT --> CreateImage
+    OT --> CookingEvaluate
     
-    CBChat -->|Stream Response| Gemini
-    CBChat -.->|Tool Calling| T1
-    CBChat -.->|Tool Calling| T2
-    CBChat -.->|Tool Calling| T3
+    CreateRecipe -->|Stream Response| Gemini
+    CreateRecipe -.->|Tool Calling| T1
+    CreateRecipe -.->|Tool Calling| T2
     
-    CBAction -->|Generate Image| Imagen
-    CBAction -->|Generate Image| GeminiImg
-    CBAction -->|Analyze Image| Gemini
-    CBAction -.->|Tool Calling| T1
-    CBAction -.->|Tool Calling| T2
-    CBAction -.->|Tool Calling| T3
+    CreateImage -->|Generate Image| Imagen
+    CreateImage -->|Generate Image| GeminiImg
+    
+    CookingEvaluate -->|Analyze Recipe| Gemini
     
     T1 -->|Query| FS
-    T2 -->|Query| FS
     
     OT -->|Export| GCM
     
-    style CBChat fill:#e1f5fe
-    style CBAction fill:#fff3e0
+    style CreateRecipe fill:#e1f5fe
+    style CreateImage fill:#fff3e0
+    style CookingEvaluate fill:#f3e5f5
     style T1 fill:#f3e5f5
     style T2 fill:#f3e5f5
-    style T3 fill:#f3e5f5
     style FS fill:#fff8e1
     style OT fill:#e8f5e9
 ```
@@ -93,19 +90,20 @@ graph TB
 - All API requests include `Authorization: Bearer <token>` header
 - Server validates `sign_in_provider == "anonymous"`
 
-### 2. Cooking Battle Flow
+### 2. Recipe Quest Flow
 
-1. **Ingredient Selection**: Users choose ingredients through chat interaction
-2. **Recipe Generation**: AI generates recipes based on constraints
-3. **Cooking Simulation**: Step-by-step guidance via streaming chat
-4. **Dish Completion**: Image generation using Imagen4 or Gemini-2.5-flash-image
-5. **Evaluation**: Image analysis using Gemini-2.5-flash
-6. **Battle Result**: Winner determination based on evaluation
+1. **Random Ingredient Challenge**: System randomly selects 3-4 ingredients from predefined pools
+2. **Recipe Generation** (Streaming): AI creates custom recipe using ingredient compatibility and difficulty tools
+3. **Dish Visualization**: Image generation using Imagen3 (googleai/imagen-3.0-generate-002)
+4. **AI Judge Evaluation**: Recipe analysis with detailed feedback and scoring
+5. **Quest Complete**: Final score, chef title, and achievements awarded
+   - Titles: "🏆 Legendary Quest Master", "⭐ Elite Recipe Explorer", "📚 Recipe Student", etc.
+   - Achievements: "Innovation Master", "Technique Virtuoso", "Triple Crown Winner"
 
 ### 3. Response Types
 
-- **Streaming (SSE)**: `cookingBattleChat` returns `text/event-stream`
-- **REST (JSON)**: `cookingBattleAction` returns `application/json`
+- **Streaming (SSE)**: `createRecipe` returns `text/event-stream` with progressive recipe generation
+- **REST (JSON)**: `createImage` and `cookingEvaluate` return `application/json`
 - Client automatically handles response based on `Content-Type` header
 
 ## Directory Structure
@@ -115,41 +113,31 @@ chapter-15/
 ├── server/                      # Genkit Go Server
 │   ├── internal/
 │   │   ├── flows/              # Flow definitions
-│   │   │   ├── chat.go         # Streaming chat flow
-│   │   │   └── action.go       # Non-streaming action flow
-│   │   ├── handlers/           # HTTP handlers
-│   │   │   ├── flow.go         # Main flow handler
-│   │   │   └── middleware.go   # Auth & CORS middleware
-│   │   ├── tools/              # Tool implementations (Chapter 8)
-│   │   │   ├── recipe.go       # Recipe database search
-│   │   │   ├── ingredients.go  # Ingredient stock check
-│   │   │   └── nutrition.go    # Nutrition calculator
+│   │   │   ├── generate_recipe.go  # Streaming recipe generation flow
+│   │   │   ├── create_image.go     # Image generation flow
+│   │   │   └── evaluate.go         # Evaluation flow (with titles & achievements)
+│   │   ├── tools/              # Educational tool implementations
+│   │   │   ├── compatibility.go    # Ingredient compatibility checker (Firestore)
+│   │   │   └── difficulty.go       # Cooking difficulty estimator (Calculation)
 │   │   └── structs/            # Data structures
 │   │       ├── client/
-│   │       │   ├── chat_input.go    # Chat flow request DTOs
-│   │       │   ├── chat_output.go   # Chat flow response DTOs
-│   │       │   ├── action_input.go  # Action flow request DTOs
-│   │       │   └── action_output.go # Action flow response DTOs
-│   │       ├── domain/
-│   │       │   ├── recipe.go        # Recipe domain model
-│   │       │   ├── stock.go         # Ingredient stock model
-│   │       │   └── battle.go        # Battle result model
+│   │       │   ├── recipe_input.go     # Recipe flow request DTOs
+│   │       │   ├── recipe_output.go    # Recipe flow response DTOs
+│   │       │   ├── image_input.go      # Image flow request DTOs
+│   │       │   ├── image_output.go     # Image flow response DTOs
+│   │       │   ├── evaluate_input.go   # Evaluate flow request DTOs
+│   │       │   └── evaluate_output.go  # Evaluate flow response DTOs (with titles)
 │   │       ├── tools/
-│   │       │   ├── recipe.go        # Recipe tool input structs
-│   │       │   ├── ingredients.go   # Ingredient tool input structs
-│   │       │   └── nutrition.go     # Nutrition tool input structs
+│   │       │   ├── compatibility.go    # Compatibility tool input/output structs
+│   │       │   └── difficulty.go       # Difficulty tool input/output structs
 │   │       └── error.go        # Error responses
-│   ├── prompts/                # Dotprompt templates
-│   │   └── chat.prompt
+│   ├── firestore-data/         # Firestore configuration
+│   │   ├── local/              # Local emulator data
+│   │   └── remote/
+│   │       └── firestore.tf    # Terraform Firestore configuration
 │   ├── main.go                 # Entry point
 │   ├── go.mod
-│   ├── go.sum
-│   └── README.md               # Server setup guide
-│
-├── terraform/                   # Infrastructure as Code
-│   ├── firestore.tf            # Firestore document definitions
-│   ├── variables.tf            # Terraform variables
-│   └── README.md               # Terraform setup guide
+│   └── go.sum
 │
 ├── client/                      # Client Applications
 │   ├── next/                   # Next.js implementation
@@ -196,80 +184,45 @@ chapter-15/
 
 ## Firestore Schema
 
-### Collection: `recipes`
+### Collection: `ingredient_combinations`
 
-The application uses a single Firestore collection to store recipe data and ingredient information:
+Recipe Quest uses a simplified educational schema focused on ingredient compatibility analysis:
 
 ```json
 {
-  "collection": "recipes",
+  "collection": "ingredient_combinations",
   "documents": [
     {
-      "document_id": "recipe_001",
+      "document_id": "combo_001",
       "fields": {
-        "name": "Classic Tomato Pasta",
-        "category": "Italian",
-        "difficulty": "easy",
-        "prepTime": 15,
-        "cookTime": 20,
-        "ingredients": [
-          {
-            "name": "pasta",
-            "amount": 200,
-            "unit": "g"
-          },
-          {
-            "name": "tomato",
-            "amount": 3,
-            "unit": "pieces"
-          },
-          {
-            "name": "garlic",
-            "amount": 2,
-            "unit": "cloves"
-          }
-        ],
-        "nutrition": {
-          "calories": 450,
-          "protein": 15,
-          "carbs": 65,
-          "fat": 12
-        },
-        "tags": ["vegetarian", "quick", "budget-friendly"]
+        "ingredients": ["chicken", "rice"],
+        "compatibility_score": 9,
+        "flavor_profile": "savory",
+        "cuisine_style": "asian",
+        "tips": "Perfect for comfort food and one-pot dishes",
+        "difficulty_bonus": 1
       }
     },
     {
-      "document_id": "recipe_002",
+      "document_id": "combo_002",
       "fields": {
-        "name": "Grilled Chicken Teriyaki",
-        "category": "Japanese",
-        "difficulty": "medium",
-        "prepTime": 30,
-        "cookTime": 25,
-        "ingredients": [
-          {
-            "name": "chicken",
-            "amount": 500,
-            "unit": "g"
-          },
-          {
-            "name": "soy_sauce",
-            "amount": 50,
-            "unit": "ml"
-          },
-          {
-            "name": "mirin",
-            "amount": 30,
-            "unit": "ml"
-          }
-        ],
-        "nutrition": {
-          "calories": 380,
-          "protein": 42,
-          "carbs": 18,
-          "fat": 15
-        },
-        "tags": ["protein-rich", "japanese", "grilled"]
+        "ingredients": ["salmon", "lemon"],
+        "compatibility_score": 10,
+        "flavor_profile": "fresh",
+        "cuisine_style": "mediterranean",
+        "tips": "Classic pairing with bright citrus notes",
+        "difficulty_bonus": 0
+      }
+    },
+    {
+      "document_id": "combo_003",
+      "fields": {
+        "ingredients": ["pasta", "garlic"],
+        "compatibility_score": 8,
+        "flavor_profile": "aromatic",
+        "cuisine_style": "italian",
+        "tips": "Foundation of many Italian classics",
+        "difficulty_bonus": 0
       }
     }
   ]
@@ -280,14 +233,12 @@ The application uses a single Firestore collection to store recipe data and ingr
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `name` | string | Recipe name |
-| `category` | string | Cuisine category (Italian, Japanese, etc.) |
-| `difficulty` | string | Difficulty level (easy, medium, hard) |
-| `prepTime` | number | Preparation time in minutes |
-| `cookTime` | number | Cooking time in minutes |
-| `ingredients` | array | List of ingredients with amount and unit |
-| `nutrition` | object | Nutritional information per serving |
-| `tags` | array | Search tags for filtering |
+| `ingredients` | array | Ingredient combination (2-4 ingredients) |
+| `compatibility_score` | number | Compatibility rating (1-10) |
+| `flavor_profile` | string | Flavor characteristic (savory, fresh, aromatic, etc.) |
+| `cuisine_style` | string | Cuisine style (asian, mediterranean, italian, etc.) |
+| `tips` | string | Cooking tips and recommendations |
+| `difficulty_bonus` | number | Bonus points for difficulty estimation (0-3) |
 
 ### Terraform Configuration
 
@@ -296,10 +247,10 @@ The Firestore data is provisioned using Terraform. The configuration uses the fo
 - [`google_firestore_document`](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/firestore_document) - Creates Firestore documents
 - [`google_firestore_field`](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/firestore_field) - Configures field-level settings (if needed)
 
-See `terraform/firestore.tf` for the complete configuration. To apply:
+See `server/firestore-data/remote/firestore.tf` for the complete configuration. To apply:
 
 ```bash
-cd terraform/
+cd server/firestore-data/remote/
 terraform init
 terraform plan -var="project_id=your-project-id"
 terraform apply -var="project_id=your-project-id"
@@ -307,10 +258,14 @@ terraform apply -var="project_id=your-project-id"
 
 ## API Contract
 
-### Endpoint
+### Endpoints
+
+Recipe Quest uses dedicated endpoints for each flow:
 
 ```text
-POST /{flowName}
+POST /generateRecipe      # Streaming recipe generation
+POST /createImage         # Image generation
+POST /evaluateDish        # Evaluation with titles & achievements
 ```
 
 ### Request Headers
@@ -320,36 +275,70 @@ Authorization: Bearer <ID_TOKEN>
 Content-Type: application/json
 ```
 
-### Request Body
+### Request Bodies
 
+#### Recipe Generation (Streaming)
 ```json
 {
-  "messages": [...],
-  "ingredients": [...],
-  "constraints": {...},
-  "action": "generate_recipe|create_image|evaluate"
+  "ingredients": ["chicken", "rice", "garlic", "soy sauce"],
+  "constraints": {"difficulty": "medium", "time": "quick"}
+}
+```
+
+#### Image Generation
+```json
+{
+  "dishName": "One-Pan Garlic-Soy Chicken with Rice",
+  "description": "A delicious one-pan dish perfect for weeknight dinner"
+}
+```
+
+#### Recipe Evaluation
+```json
+{
+  "dishName": "One-Pan Garlic-Soy Chicken with Rice",
+  "description": "A delicious one-pan dish...",
+  "constraints": {"difficulty": "medium", "time": "quick"}
 }
 ```
 
 ### Response Types
 
-#### Streaming (SSE)
+#### Streaming (SSE) - Recipe Generation
 
 ```text
 Content-Type: text/event-stream
 
-data: {"type": "content", "content": "..."}
+data: {"type": "content", "content": "🍳 Starting recipe creation..."}
+data: {"type": "content", "content": "👨‍🍳 Analyzing ingredients..."}
+data: {"type": "content", "content": "Recipe name: One-Pan Garlic-Soy..."}
 data: {"type": "done"}
 ```
 
-#### Non-Streaming (JSON)
+#### Non-Streaming (JSON) - Image Generation
 
-```text
-Content-Type: application/json
-
+```json
 {
-  "result": {...},
-  "metadata": {...}
+  "success": true,
+  "imageUrl": "data:image/png;base64,iVBORw0KG...",
+  "dishName": "One-Pan Garlic-Soy Chicken with Rice",
+  "error": ""
+}
+```
+
+#### Non-Streaming (JSON) - Recipe Evaluation
+
+```json
+{
+  "success": true,
+  "score": 60,
+  "feedback": "Detailed professional feedback...",
+  "creativityScore": 5,
+  "techniqueScore": 6,
+  "appealScore": 7,
+  "title": "📚 Recipe Student",
+  "achievement": "Completed Recipe Quest",
+  "error": ""
 }
 ```
 
@@ -487,17 +476,66 @@ genkit start -- go run .
 ### Run flows from CLI (flow:run)
 
 ```bash
-# Streaming chat
-genkit flow:run cookingBattleChat --input='{"messages":[{"role":"user","content":"What can I cook with tomato and pasta?"}],"ingredients":["tomato","pasta"],"constraints":{"diet":"vegetarian"}}'
+# Streaming recipe generation (note: -s flag for streaming)
+genkit flow:run createRecipe -s --input='{"ingredients":["chicken","rice","garlic","soy sauce"],"constraints":{"difficulty":"medium","time":"quick"}}'
 
-# Generate recipe (non-streaming)
-genkit flow:run cookingBattleAction --input='{"action":"generate_recipe","ingredients":["tomato","pasta"]}'
+# Generate dish image
+genkit flow:run createImage --input='{"dishName":"One-Pan Garlic-Soy Chicken with Rice","description":"A delicious one-pan dish perfect for weeknight dinner"}'
 
-# Create image (optional)
-genkit flow:run cookingBattleAction --input='{"action":"create_image","dishName":"Tomato Pasta","description":"Light pasta with fresh tomatoes and basil"}'
+# Evaluate recipe with chef titles and achievements
+genkit flow:run cookingEvaluate --input='{"dishName":"One-Pan Garlic-Soy Chicken with Rice","description":"A delicious one-pan dish with chicken, rice, garlic and soy sauce. Perfect for quick weeknight dinner.","constraints":{"difficulty":"medium","time":"quick"}}'
+```
 
-# Evaluate dish (optional)
-genkit flow:run cookingBattleAction --input='{"action":"evaluate","dishName":"Tomato Pasta","description":"Contest plating","imageUrl":"data:image/png;base64,...."}'
+## Educational Tools Implementation
+
+Recipe Quest features two carefully designed tools that serve as educational examples:
+
+### 1. checkIngredientCompatibility (Firestore Tool)
+
+**Purpose**: Analyzes ingredient combinations using Firestore database
+**Educational Value**: Demonstrates Firestore queries and complex data operations
+
+**Features**:
+- Searches `ingredient_combinations` collection for matching pairs
+- Returns compatibility scores (1-10), flavor profiles, and cuisine styles
+- Provides cooking tips and difficulty bonuses
+- Handles partial matches and fallback estimates
+
+**Example Response**:
+```json
+{
+  "ingredients": ["chicken", "rice"],
+  "compatibilityScore": 9,
+  "flavorProfile": "savory", 
+  "cuisineStyle": "asian",
+  "tips": "Perfect for comfort food and one-pot dishes",
+  "difficultyBonus": 1,
+  "overallRating": "Perfect Match"
+}
+```
+
+### 2. estimateCookingDifficulty (Calculation Tool)
+
+**Purpose**: Calculates cooking difficulty based on multiple factors
+**Educational Value**: Shows complex business logic and conditional calculations
+
+**Features**:
+- Analyzes ingredient count, cooking steps, and cooking methods
+- Estimates preparation time and required equipment
+- Determines skill requirements and provides helpful tips
+- Returns structured difficulty assessment
+
+**Example Response**:
+```json
+{
+  "level": "Medium",
+  "score": 6,
+  "reasoning": "Medium difficulty (score 6/10): Using 4 ingredients, 5 cooking steps required, Involves fry, simmer",
+  "timeEstimate": 35,
+  "skillsRequired": ["basic knife skills", "heat control"],
+  "equipmentRequired": ["cutting board", "knife", "frying pan", "pot"],
+  "tips": "Good challenge for developing skills. Prep all ingredients before cooking and watch your timing."
+}
 ```
 
 ## Security Considerations
