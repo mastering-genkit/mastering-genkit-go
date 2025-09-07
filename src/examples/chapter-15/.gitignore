@@ -1,0 +1,7 @@
+# Firebase Emulator debug logs (Chapter 15 specific)
+firestore-debug.log
+ui-debug.log
+database-debug.log
+pubsub-debug.log
+firebase-debug.log
+.firebase/
