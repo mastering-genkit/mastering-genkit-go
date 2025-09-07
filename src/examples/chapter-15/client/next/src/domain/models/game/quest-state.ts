@@ -25,6 +25,9 @@ export interface GameState {
   achievement?: string;
   isLoading: boolean;
   error?: string;
+  // Image generation specific states
+  isGeneratingImage?: boolean;
+  imageGenerationProgress?: number; // 0-100
 }
 
 /**
@@ -36,6 +39,8 @@ export type GameAction =
   | { type: 'REMOVE_INGREDIENT'; payload: string }
   | { type: 'START_RECIPE_GENERATION' }
   | { type: 'SET_RECIPE'; payload: string }
+  | { type: 'START_IMAGE_GENERATION' }
+  | { type: 'SET_IMAGE_PROGRESS'; payload: number }
   | { type: 'SET_IMAGE'; payload: string }
   | { type: 'START_EVALUATION' }
   | { type: 'SET_EVALUATION'; payload: { score: number; feedback: string; title?: string; achievement?: string } }

@@ -25,42 +25,82 @@ export default function RecipeQuestPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50">
       {/* Fixed Progress Bar (only visible during processing) */}
-      {(state.currentStep !== GameStep.Ready && state.currentStep !== GameStep.SelectIngredients) && (
-        <div className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-sm shadow-md z-50 border-b-2 border-orange-200">
-          <div className="max-w-4xl mx-auto px-4 py-3">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="text-2xl">{stepInfo.emoji}</div>
-                <div>
-                  <div className="font-bold text-gray-800">{stepInfo.title}</div>
-                  <div className="text-sm text-gray-600">
-                    {state.selectedIngredients.map(ing => {
-                      const data = availableIngredients.find(a => a.name === ing);
-                      return data?.emoji;
-                    }).join(' ')} • {state.selectedIngredients.join(', ')}
+      {(state.currentStep !== GameStep.Ready && state.currentStep !== GameStep.SelectIngredients && state.currentStep !== GameStep.Result) && (
+        <div className="fixed top-0 left-0 right-0 bg-white/98 backdrop-blur-md shadow-lg z-50 border-b-4 border-orange-300">
+          <div className="max-w-5xl mx-auto px-4 py-4">
+            {/* Main Progress Bar */}
+            <div className="mb-3">
+              <div className="flex justify-between items-center mb-2">
+                <div className="flex items-center gap-3">
+                  <div className="text-3xl animate-pulse">{stepInfo.emoji}</div>
+                  <div>
+                    <div className="font-bold text-lg text-gray-800">{stepInfo.title}</div>
+                    <div className="text-sm text-gray-600">
+                      {state.selectedIngredients.map(ing => {
+                        const data = availableIngredients.find(a => a.name === ing);
+                        return data?.emoji;
+                      }).join(' ')} • {state.selectedIngredients.join(', ')}
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-4">
+                  {state.isLoading && (
+                    <div className="flex items-center gap-2">
+                      <div className="w-6 h-6 border-2 border-orange-400 border-t-transparent rounded-full animate-spin" />
+                      <span className="text-sm text-gray-600">Processing...</span>
+                    </div>
+                  )}
+                  <div className="text-right">
+                    <div className="font-bold text-xl text-orange-600">{Math.round(state.progress)}%</div>
                   </div>
                 </div>
               </div>
-              <div className="flex items-center gap-3">
-                {state.isLoading && (
-                  <div className="w-5 h-5 border-2 border-orange-400 border-t-transparent rounded-full animate-spin" />
-                )}
-                <div className="text-right">
-                  <div className="font-bold text-lg text-orange-600">{Math.round(state.progress)}%</div>
-                  <div className="w-24 bg-gray-200 rounded-full h-2">
+              <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                <div
+                  className={`
+                    h-full rounded-full transition-all duration-700 ease-out
+                    ${state.isLoading 
+                      ? 'bg-gradient-to-r from-orange-400 via-red-500 to-orange-400 animate-gradient'
+                      : 'bg-gradient-to-r from-orange-400 to-red-500'
+                    }
+                  `}
+                  style={{ width: `${state.progress}%` }}
+                />
+              </div>
+            </div>
+            
+            {/* Step Indicators */}
+            <div className="flex justify-center items-center gap-2">
+              {Object.values(GameStep).filter(step => 
+                step !== GameStep.Ready && step !== GameStep.SelectIngredients
+              ).map((step, index) => {
+                const isActive = step === state.currentStep;
+                const isCompleted = Object.values(GameStep).indexOf(state.currentStep) > Object.values(GameStep).indexOf(step);
+                
+                return (
+                  <div key={step} className="flex items-center">
                     <div
                       className={`
-                        h-full rounded-full transition-all duration-500
-                        ${state.isLoading 
-                          ? 'bg-gradient-to-r from-orange-400 via-red-500 to-orange-400 animate-pulse'
-                          : 'bg-gradient-to-r from-orange-400 to-red-500'
+                        w-3 h-3 rounded-full border-2 transition-all duration-300
+                        ${isActive 
+                          ? 'bg-orange-500 border-orange-500 scale-150 animate-pulse' 
+                          : isCompleted 
+                            ? 'bg-green-500 border-green-500' 
+                            : 'bg-gray-300 border-gray-400'
                         }
                       `}
-                      style={{ width: `${state.progress}%` }}
                     />
+                    {index < 3 && (
+                      <div
+                        className={`
+                          w-12 h-0.5 mx-1 transition-colors duration-300
+                          ${isCompleted ? 'bg-green-500' : 'bg-gray-300'}
+                        `}
+                      />
+                    )}
                   </div>
-                </div>
-              </div>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -77,14 +117,8 @@ export default function RecipeQuestPage() {
       </header>
 
       <div className={`container mx-auto px-4 pb-8 ${
-        (state.currentStep !== GameStep.Ready && state.currentStep !== GameStep.SelectIngredients) ? 'pt-20' : ''
+        (state.currentStep !== GameStep.Ready && state.currentStep !== GameStep.SelectIngredients) ? 'pt-24' : ''
       }`}>
-        {/* Game Progress */}
-        <GameProgress 
-          currentStep={state.currentStep}
-          progress={state.progress}
-          isLoading={state.isLoading}
-        />
 
         {/* Processing Status Card */}
         {state.isLoading && state.currentStep !== GameStep.SelectIngredients && (
@@ -324,6 +358,7 @@ export default function RecipeQuestPage() {
             recipe={state.recipe || ''}
             isVisible={state.currentStep === GameStep.Recipe || 
                       (!!state.recipe && state.currentStep !== GameStep.Ready && state.currentStep !== GameStep.Result)}
+            isStreaming={state.currentStep === GameStep.Recipe && state.isLoading}
           />
 
           {/* Image Display */}
@@ -332,6 +367,8 @@ export default function RecipeQuestPage() {
             dishName={state.recipe?.split('\n')[0]?.replace(/Recipe name:\s*/i, '') || 'Your Dish'}
             isVisible={state.currentStep === GameStep.Image || 
                       (!!state.imageUrl && state.currentStep !== GameStep.Ready && state.currentStep !== GameStep.Result)}
+            isGenerating={state.isGeneratingImage}
+            generationProgress={state.imageGenerationProgress}
           />
 
           {/* Game Result */}

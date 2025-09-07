@@ -91,6 +91,22 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         isLoading: false,
       };
       
+    case 'START_IMAGE_GENERATION':
+      return {
+        ...state,
+        currentStep: GameStep.Image,
+        progress: 50,
+        isLoading: true,
+        isGeneratingImage: true,
+        imageGenerationProgress: 0,
+      };
+      
+    case 'SET_IMAGE_PROGRESS':
+      return {
+        ...state,
+        imageGenerationProgress: action.payload,
+      };
+      
     case 'SET_IMAGE':
       return {
         ...state,
@@ -98,6 +114,8 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         progress: 60,
         imageUrl: action.payload,
         isLoading: false,
+        isGeneratingImage: false,
+        imageGenerationProgress: 100,
       };
       
     case 'SET_EVALUATION':
@@ -131,6 +149,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         ...state,
         error: action.payload,
         isLoading: false,
+        isGeneratingImage: false,
       };
       
     case 'RESET_GAME':
@@ -180,13 +199,32 @@ export function useRecipeQuestGame() {
   // Generate image function (startDishEvaluationを呼ぶので2番目)
   const startImageGeneration = useCallback(async (recipe: string) => {
     try {
-      dispatch({ type: 'SET_LOADING', payload: true });
+      dispatch({ type: 'START_IMAGE_GENERATION' });
       const dishName = recipe.split('\n')[0]?.replace(/Recipe name:\s*/i, '') || 'Delicious Dish';
+      
+      // Auto-scroll to image section
+      setTimeout(() => {
+        const imageSection = document.querySelector('[data-image-section]');
+        if (imageSection) {
+          imageSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 500);
+      
+      // Simulate progress while generating
+      let currentProgress = 0;
+      const progressInterval = setInterval(() => {
+        currentProgress += 15;
+        if (currentProgress <= 90) {
+          dispatch({ type: 'SET_IMAGE_PROGRESS', payload: currentProgress });
+        }
+      }, 300);
       
       const response = await createImageHook.createImage({
         dishName,
         description: `A beautiful dish made with: ${state.selectedIngredients.join(', ')}`,
       });
+
+      clearInterval(progressInterval);
 
       if (response && response.success && response.imageUrl) {
         dispatch({ type: 'SET_IMAGE', payload: response.imageUrl });
@@ -215,13 +253,13 @@ export function useRecipeQuestGame() {
       let fullContent = '';
       let chunkCount = 0;
       
-      // Auto-scroll to recipe section
+      // Auto-scroll to recipe section at the start
       setTimeout(() => {
         const recipeElement = document.querySelector('[data-recipe-section]');
         if (recipeElement) {
           recipeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
-      }, 500);
+      }, 300);
       
       for await (const response of generateRecipeHook.generateRecipe({
         ingredients: state.selectedIngredients,
@@ -231,16 +269,6 @@ export function useRecipeQuestGame() {
         if (response.type === 'content' && response.content) {
           fullContent += response.content;
           dispatch({ type: 'SET_RECIPE', payload: fullContent });
-          
-          // Auto-scroll during streaming to keep content visible
-          if (chunkCount % 3 === 0) { // Every 3rd chunk
-            setTimeout(() => {
-              const recipeDisplay = document.querySelector('[data-recipe-display]');
-              if (recipeDisplay) {
-                recipeDisplay.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-              }
-            }, 100);
-          }
         } else if (response.type === 'done') {
           // Auto advance to image generation
           setTimeout(() => {
