@@ -545,6 +545,53 @@ Recipe Quest features two carefully designed tools that serve as educational exa
 - CORS configured for specific origins in production
 - Rate limiting can be added via middleware
 
+## Connecting to Production Firestore
+
+While this chapter focuses on local development with the Firestore emulator, you can deploy the ingredient compatibility data to a production Firestore instance using the provided Terraform configuration.
+
+### Prerequisites
+
+- A Google Cloud Project with Firebase enabled
+- Terraform 1.0 or later installed
+- Google Cloud CLI (`gcloud`) authenticated
+
+### Deploying Master Data with Terraform
+
+Navigate to the Terraform configuration directory:
+
+```bash
+cd src/examples/chapter-15/server/firestore-data/remote
+```
+
+Initialize and apply the Terraform configuration:
+
+```bash
+# Initialize Terraform
+terraform init
+
+# Plan the deployment (replace with your project ID)
+terraform plan -var="project_id=your-project-id"
+
+# Apply the configuration
+terraform apply -var="project_id=your-project-id"
+```
+
+This will create the `ingredient_combinations` collection with all the master data for ingredient compatibility.
+
+### Updating Your Go Server
+
+To connect to the production Firestore instead of the emulator, update the Firestore client initialization in `main.go`:
+
+```go
+// Change from:
+firestoreClient, err := firestore.NewClient(ctx, "local-emulator")
+
+// To:
+firestoreClient, err := firestore.NewClient(ctx, "your-project-id")
+```
+
+Also, ensure the `FIRESTORE_EMULATOR_HOST` environment variable is NOT set when running in production mode.
+
 ## Resources
 
 - [Genkit Documentation](https://genkit.dev)

@@ -83,6 +83,7 @@ Before diving into this chapter, ensure you have:
 - Node.js 20+ and npm for web clients
 - Flutter 3.8+ SDK for mobile development
 - Firebase CLI for Firestore emulator
+- Terraform 1.5+ (optional, for production Firestore deployment)
 - IDE Support: IDE with Go/Flutter/TypeScript extensions
 
 ### API Keys
