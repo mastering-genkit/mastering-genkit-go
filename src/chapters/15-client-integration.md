@@ -12,7 +12,7 @@ You'll discover how different client architectures handle the same backend API, 
 
 Throughout this chapter, we'll create Recipe Quest - a gamified cooking application that demonstrates real-world client-server integration patterns. Recipe Quest challenges players to create recipes with randomly selected ingredients, visualize their dishes through AI-generated images, and receive professional evaluations of their culinary creativity.
 
-![Recipe Quest Application Overview](../images/chapter-15/app-overview.png)
+![](../images/chapter-15/app-overview.png)
 
 ### Application Features
 
@@ -131,7 +131,7 @@ Let's begin by exploring the overall architecture of our Recipe Quest system.
 
 Recipe Quest follows a clean client-server architecture where multiple frontend applications connect to a single Genkit Go API server. This design ensures consistency across platforms while leveraging each client framework's strengths.
 
-![Recipe Quest System Architecture](../images/chapter-15/architecture.png)
+![](../images/chapter-15/architecture.png)
 
 The architecture demonstrates several key principles:
 
@@ -196,7 +196,7 @@ type ImageResponse struct {
 }
 ```
 
-This flow uses Google's Imagen 3.0 model (`googleai/imagen-3.0-generate-002`) to create photorealistic, appetizing dish images. The generated images are returned as base64-encoded data URIs with specific configuration for aspect ratio (1:1), safety filtering, and PNG output format.
+This flow uses Google's Gemini 2.5 Flash Image (aka Nano Banana) model (`googleai/gemini-2.5-flash-image-preview`) to create photorealistic, appetizing dish images. The generated images are returned as base64-encoded data URIs with image modality configuration.
 
 #### cookingEvaluate Flow
 
@@ -292,7 +292,7 @@ This schema enables fast lookups for ingredient combinations while providing ric
 
 Understanding how these components interact helps in debugging and optimization:
 
-![Recipe Quest Flow Sequence](../images/chapter-15/sequence.png)
+![](../images/chapter-15/sequence.png)
 
 The sequence diagram illustrates the complete request-response cycle, showing how tools integrate with flows and when external services are called. This visualization helps developers understand timing, dependencies, and potential optimization points.
 
@@ -303,8 +303,6 @@ Building three different clients for Recipe Quest provides valuable insights int
 ### Architecture Layers
 
 All three clients implement a layered architecture, but with framework-specific adaptations:
-
-![Recipe Quest Client Architectures](../images/chapter-15/client-architectures.png)
 
 #### Flutter Architecture
 
