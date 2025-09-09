@@ -1,4 +1,4 @@
-# Recipe Quest - Cooking Battle Client
+# Recipe Quest - Next Client
 
 A Next.js 15 client application for the Recipe Quest cooking battle game, communicating with a Genkit Go server. This app implements an Onion Architecture pattern for clean, maintainable code.
 
