@@ -1,0 +1,63 @@
+.quest-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #fef3e2 0%, #fde8e8 100%);
+  padding: 2rem;
+}
+
+.whitespace-pre-line { white-space: pre-line; }
+.animate-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
+.animate-spin { animation: spin 1s linear infinite; }
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+button { transition: all 0.2s ease-in-out; }
+button:hover { transform: translateY(-2px); }
+button:active { transform: translateY(0); }
+button:hover.shadow-lg { box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.08); }
+button:hover.shadow-md { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.15), 0 4px 6px -2px rgba(0, 0, 0, 0.08); }
+
+/* Grid */
+.grid { display: grid; gap: 1rem; }
+.grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (min-width: 768px) {
+  .md\:grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .md\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (min-width: 1024px) { .lg\:grid-cols-6 { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
+@media (max-width: 767px) { .max-w-md { max-width: 20rem; } .max-w-sm { max-width: 18rem; } }
+
+/* Core */
+.max-w-4xl { max-width: 56rem; } .mx-auto { margin: 0 auto; } .text-center { text-align: center; }
+.rounded-lg { border-radius: 0.5rem; } .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
+.p-4 { padding: 1rem; } .p-5 { padding: 1.25rem; } .p-6 { padding: 1.5rem; } .mb-4 { margin-bottom: 1rem; } .mb-8 { margin-bottom: 2rem; }
+
+/* Colors */
+.bg-orange-50 { background: #fff7ed; } .bg-orange-500 { background: #f97316; } .bg-orange-600 { background: #ea580c; }
+.bg-white { background: white; } .bg-gray-50 { background: #f9fafb; } .bg-gray-300 { background: #d1d5db; }
+.text-white { color: white; } .text-gray-500 { color: #6b7280; } .text-gray-600 { color: #4b5563; } .text-gray-800 { color: #1f2937; }
+.border-2 { border-width: 2px; } .border-gray-200 { border-color: #e5e7eb; } .border-orange-400 { border-color: #fb923c; }
+
+/* Progress Bar */
+.z-50 { z-index: 50; } .bg-opacity-95 { background-color: rgba(255, 255, 255, 0.95); } .backdrop-blur-md { backdrop-filter: blur(12px); }
+.border-b-4 { border-bottom-width: 4px; } .border-orange-300 { border-color: #fdba74; } .max-w-5xl { max-width: 64rem; }
+.pt-32 { padding-top: 8rem; }
+
+/* Utilities */
+.scale-150 { transform: scale(1.5); } .bg-green-500 { background: #22c55e; } .border-green-500 { border-color: #22c55e; }
+.bg-blue-400 { background: #60a5fa; } .bg-purple-500 { background: #a855f7; } .border-purple-400 { border-color: #c084fc; }
+.text-gray-700 { color: #374151; } .text-sm { font-size: 0.875rem; } .object-cover { object-fit: cover; } .flex { display: flex; }
+.shadow-md { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); } .shadow-xl { box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
+.justify-center { justify-content: center; } .overflow-y-auto { overflow-y: auto; }
+.font-bold { font-weight: 700; } .text-orange-600 { color: #ea580c; } .text-purple-600 { color: #9333ea; } .text-red-500 { color: #ef4444; }
+.bg-red-50 { background: #fef2f2; } .bg-red-500 { background: #ef4444; } .bg-red-600 { background: #dc2626; } .bg-blue-50 { background: #eff6ff; }
+.border-red-200 { border-color: #fecaca; }
+
+/* Sizes & Spacing */
+.max-w-32 { max-width: 8rem; } .max-w-48 { max-width: 12rem; } .max-w-md { max-width: 28rem; } .max-w-sm { max-width: 24rem; } .max-w-xs { max-width: 20rem; }
+.w-12 { width: 3rem; } .w-16 { width: 4rem; } .h-12 { height: 3rem; } .h-16 { height: 4rem; } .h-2 { height: 0.5rem; } .h-px { height: 1px; }
+.max-h-32 { max-height: 8rem; } .mb-6 { margin-bottom: 1.5rem; } .mt-4 { margin-top: 1rem; } .py-16 { padding: 4rem 0; }
+.gap-3 { gap: 0.75rem; } .gap-4 { gap: 1rem; } .gap-6 { gap: 1.5rem; } .mb-2 { margin-bottom: 0.5rem; }
+.text-sm { font-size: 0.875rem; } .text-lg { font-size: 1.125rem; } .text-xl { font-size: 1.25rem; } .text-2xl { font-size: 1.5rem; }
+.text-3xl { font-size: 1.875rem; } .text-4xl { font-size: 2.25rem; } .text-5xl { font-size: 3rem; } .text-6xl { font-size: 3.75rem; }
+.font-medium { font-weight: 500; } .font-semibold { font-weight: 600; } .capitalize { text-transform: capitalize; }
+.transform { transform: translateZ(0); } .scale-105 { transform: scale(1.05); } .cursor-not-allowed { cursor: not-allowed; }
