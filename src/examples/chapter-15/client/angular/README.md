@@ -7,19 +7,19 @@ An Angular 20 client application for the Recipe Quest cooking battle game, commu
 - **Interactive Cooking Game**: Select ingredients, generate recipes, create dish images, and get AI evaluations
 - **Real-time Streaming**: Watch recipes being generated in real-time with streaming responses
 - **Clean Architecture**: Built with Onion Architecture principles for maintainability
-- **Modern Tech Stack**: Angular 20.2.2, TypeScript 5.8, RxJS 7.8, and standalone components
+- **Tech Stack**: Angular 20.2.2, TypeScript 5.8, RxJS 7.8, and standalone components
 - **AI-Powered**: Integration with Genkit Go flows for recipe generation, image creation, and evaluation
-- **Enhanced Performance**: Optimized build process and runtime performance with Angular 20
+- **Better Performance**: Optimized build process and runtime performance with Angular 20
 - **Zero Vulnerabilities**: Security-focused dependency management
 
 ## 🆕 Angular 20 Highlights
 
-This project leverages the latest Angular 20.2.2 features:
+This project uses Angular 20.2.2 features:
 
 - **Improved Bundle Optimization**: Faster build times and smaller bundle sizes
-- **Enhanced Type Safety**: Better TypeScript integration with stricter type checking
+- **Improved Type Safety**: Better TypeScript integration with stricter type checking
 - **Latest Dependencies**: Up-to-date ecosystem with security patches
-- **Modern Development Tools**: Advanced CLI and build tooling
+- **Updated Development Tools**: Latest CLI and build tooling
 - **Better Performance**: Optimized change detection and rendering
 
 ## 🏗️ Architecture

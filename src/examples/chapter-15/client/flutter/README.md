@@ -7,7 +7,7 @@ A Flutter client application for the Recipe Quest cooking battle game, communica
 - **Interactive Cooking Game**: Select ingredients, generate recipes, create dish images, and get AI evaluations
 - **Real-time Streaming**: Watch recipes being generated in real-time using Dart client for Genkit
 - **Clean Architecture**: Built with Clean Architecture principles for maintainability
-- **Modern Tech Stack**: Flutter 3.8+, Material 3, Riverpod, and JSON serialization
+- **Tech Stack**: Flutter 3.8+, Material 3, Riverpod, and JSON serialization
 - **AI-Powered**: Integration with Genkit Go flows for recipe generation, image creation, and evaluation
 - **Cross-Platform**: Native iOS and Android apps with consistent UX
 
@@ -33,7 +33,7 @@ lib/
 - **Dart client for Genkit**: Type-safe remote action definitions
 - **Riverpod**: State management with dependency injection
 - **JSON Serialization**: Auto-generated with `build_runner`
-- **Material 3**: Modern Google design system
+- **Material 3**: Google's latest design system
 
 ## 🚀 Quick Start
 

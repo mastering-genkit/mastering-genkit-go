@@ -7,7 +7,7 @@ A Next.js 15 client application for the Recipe Quest cooking battle game, commun
 - **Interactive Cooking Game**: Select ingredients, generate recipes, create dish images, and get AI evaluations
 - **Real-time Streaming**: Watch recipes being generated in real-time with streaming responses
 - **Clean Architecture**: Built with Onion Architecture principles for maintainability
-- **Modern Tech Stack**: Next.js 15, React 19, TypeScript, and Tailwind CSS
+- **Tech Stack**: Next.js 15, React 19, TypeScript, and Tailwind CSS
 - **AI-Powered**: Integration with Genkit Go flows for recipe generation, image creation, and evaluation
 
 ## 🏗️ Architecture
