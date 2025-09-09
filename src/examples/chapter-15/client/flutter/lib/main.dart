@@ -57,6 +57,7 @@ class RecipeQuestApp extends StatelessWidget {
           ),
         ),
       ),
+      debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.system,
       home: const RecipeQuestPage(),
     );
