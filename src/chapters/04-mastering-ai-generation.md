@@ -185,9 +185,9 @@ According to the official documentation, Gemini 2.5 Flash can process: <https://
 - **Audio**: Up to 8.4 hours of audio content
 - **Video**: Approximately 45 minutes
 
-#### Imagen 3 - Text-to-Image Generation
+#### Gemini 2.5 Flash Image (aka Nano Banana) - Text-to-Image Generation
 
-Imagen 3 is Google's image generation model: <https://ai.google.dev/gemini-api/docs/imagen#imagen-3>
+Gemini 2.5 Flash Image is Google's latest multimodal model that supports image generation through response modalities: <https://ai.google.dev/gemini-api/docs/image-generation>
 
 - **Input**: Text
 - **Output**: High-quality images in various aspect ratios
@@ -293,21 +293,17 @@ resp, err := genkit.Generate(ctx, g,
     ))
 ```
 
-### Image Generation with Imagen 3
+### Image Generation with Gemini 2.5 Flash Image (aka Nano Banana)
 
-Generate images from text descriptions using Google's Imagen 3:
+Generate images from text descriptions using Gemini's image generation capabilities:
 
 ```go
 // Generate an image
 resp, err := genkit.Generate(ctx, g,
-    ai.WithModelName("googleai/imagen-3.0-generate-002"),
+    ai.WithModelName("googleai/gemini-2.5-flash-image-preview"),
     ai.WithPrompt("A minimalist logo for a coffee shop called 'Morning Brew', incorporating a coffee cup and sunrise elements, modern flat design style"),
-    ai.WithConfig(&genai.GenerateImagesConfig{
-        NumberOfImages:    1,
-        AspectRatio:       "1:1",
-        SafetyFilterLevel: genai.SafetyFilterLevelBlockLowAndAbove,
-        PersonGeneration:  genai.PersonGenerationAllowAll,
-        OutputMIMEType:    "image/png",
+    ai.WithConfig(&genai.GenerateContentConfig{
+        ResponseModalities: []string{"IMAGE"},
     }))
 
 // The image is returned as a base64-encoded data URI in the response
@@ -355,13 +351,13 @@ func analyzeAndExpand(ctx context.Context, g *genkit.Generator, imageURL string)
 
     // Step 2: Generate a creative variation
     variation, err := genkit.Generate(ctx, g,
-        ai.WithModelName("googleai/imagen-3"),
+        ai.WithModelName("googleai/gemini-2.5-flash-image-preview"),
         ai.WithPrompt(fmt.Sprintf(
             "Create an artistic interpretation: %s, but in a surrealist style",
             analysis.Text(),
         )),
-        ai.WithConfig(map[string]interface{}{
-            "output": "media",
+        ai.WithConfig(&genai.GenerateContentConfig{
+            ResponseModalities: []string{"IMAGE"},
         }))
     if err != nil {
         return "", err
@@ -687,7 +683,7 @@ Testing the **audioTranscriptionFlow`**:
 
 ![](../images/chapter-04/test-audio-transcription-flow.png)
 
-The **imageGenerationFlow** uses Google's Imagen 3 model to generate images from text descriptions. The flow returns base64-encoded image data that the Developer UI automatically renders.
+The **imageGenerationFlow** uses Google's Gemini 2.5 Flash Image (aka Nano Banana) model to generate images from text descriptions. The flow returns base64-encoded image data that the Developer UI automatically renders.
 
 Testing the flow:
 

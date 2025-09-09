@@ -14,14 +14,10 @@ import (
 func NewImageGenerationFlow(g *genkit.Genkit) *core.Flow[string, string, struct{}] {
 	return genkit.DefineFlow(g, "imageGenerationFlow", func(ctx context.Context, description string) (string, error) {
 		resp, err := genkit.Generate(ctx, g,
-			ai.WithModelName("googleai/imagen-3.0-generate-002"),
+			ai.WithModelName("googleai/gemini-2.5-flash-image-preview"),
 			ai.WithPrompt(description),
-			ai.WithConfig(&genai.GenerateImagesConfig{
-				NumberOfImages:    1,
-				AspectRatio:       "1:1",
-				SafetyFilterLevel: genai.SafetyFilterLevelBlockLowAndAbove,
-				PersonGeneration:  genai.PersonGenerationAllowAll,
-				OutputMIMEType:    "image/png",
+			ai.WithConfig(&genai.GenerateContentConfig{
+				ResponseModalities: []string{"IMAGE"},
 			}),
 		)
 		if err != nil {

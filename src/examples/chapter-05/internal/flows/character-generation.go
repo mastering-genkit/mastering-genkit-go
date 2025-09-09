@@ -15,20 +15,16 @@ import (
 // It generates an anime character image and returns structured character information.
 func NewCharacterGenerationFlow(g *genkit.Genkit) *core.Flow[generation.CharacterRequest, generation.CharacterResult, struct{}] {
 	return genkit.DefineFlow(g, "characterGenerationFlow", func(ctx context.Context, input generation.CharacterRequest) (generation.CharacterResult, error) {
-		// Step 1: Generate the image using Imagen
+		// Step 1: Generate the image using Gemini 2.5 Flash Image (aka Nano Banana)
 		imagePrompt := fmt.Sprintf("%s style: %s",
 			input.Style,
 			input.Description)
 
 		imageResp, err := genkit.Generate(ctx, g,
-			ai.WithModelName("googleai/imagen-3.0-generate-002"),
+			ai.WithModelName("googleai/gemini-2.5-flash-image-preview"),
 			ai.WithPrompt(imagePrompt),
-			ai.WithConfig(&genai.GenerateImagesConfig{
-				NumberOfImages:    1,
-				AspectRatio:       "1:1",
-				SafetyFilterLevel: genai.SafetyFilterLevelBlockLowAndAbove,
-				PersonGeneration:  genai.PersonGenerationAllowAll,
-				OutputMIMEType:    "image/png",
+			ai.WithConfig(&genai.GenerateContentConfig{
+				ResponseModalities: []string{"IMAGE"},
 			}),
 		)
 		if err != nil {
