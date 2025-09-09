@@ -32,16 +32,12 @@ The image should be:
 - With good lighting and composition`,
 				input.DishName, input.Description)
 
-			// Generate image using Imagen3
+			// Generate image using Gemini 2.5 Flash Image Preview
 			resp, err := genkit.Generate(ctx, g,
-				ai.WithModelName("googleai/imagen-3.0-generate-002"),
+				ai.WithModelName("googleai/gemini-2.5-flash-image-preview"),
 				ai.WithPrompt(prompt),
-				ai.WithConfig(&genai.GenerateImagesConfig{
-					NumberOfImages:    1,
-					AspectRatio:       "1:1",
-					SafetyFilterLevel: genai.SafetyFilterLevelBlockLowAndAbove,
-					PersonGeneration:  genai.PersonGenerationAllowAll,
-					OutputMIMEType:    "image/png",
+				ai.WithConfig(&genai.GenerateContentConfig{
+					ResponseModalities: []string{"IMAGE"},
 				}),
 			)
 			if err != nil {
