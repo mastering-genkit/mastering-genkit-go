@@ -19,7 +19,7 @@ sequenceDiagram
         Tool->>DB: Query master data
         DB-->>Tool: Return validation
         Tool-->>Flow: Compatibility result
-        Flow->>AI: Generate recipe (OpenAI)
+        Flow->>AI: Generate recipe (GPT 5 Nano)
         
         loop Streaming chunks
             AI-->>Flow: Recipe chunk
@@ -34,7 +34,7 @@ sequenceDiagram
         Note over Client,AI: Image Generation
         Client->>API: POST /createImage<br/>{dishName, description}
         API->>Flow: Execute createImage flow
-        Flow->>AI: Generate image (Gemini)
+        Flow->>AI: Generate image (Nano Banana)
         AI-->>Flow: Image URL
         Flow-->>API: Process result
         API-->>Client: {success: true, imageUrl}
@@ -44,7 +44,7 @@ sequenceDiagram
         Note over Client,AI: Dish Evaluation
         Client->>API: POST /evaluateDish<br/>{dishName, description, imageUrl}
         API->>Flow: Execute cookingEvaluate flow
-        Flow->>AI: Evaluate dish (OpenAI)
+        Flow->>AI: Evaluate dish (GPT 5 Nano)
         AI-->>Flow: Score & feedback
         Flow-->>API: Process evaluation
         API-->>Client: {score, feedback, achievement}

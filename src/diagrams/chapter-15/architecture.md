@@ -34,8 +34,8 @@ graph LR
     
     subgraph "External Services"
         E1[Firestore<br/>Master Data]
-        E2[OpenAI]
-        E3[Gemini]
+        E2[GPT 5 Nano]
+        E3[Nano Banana]
     end
     
     A1 -->|HTTP/SSE| B1
