@@ -1,3 +1,10 @@
+# [1.20.0](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.19.0...v1.20.0) (2025-09-10)
+
+
+### Features
+
+* update to genkit 1.0.0 ([#24](https://github.com/mastering-genkit/mastering-genkit-go/issues/24)) ([e63377a](https://github.com/mastering-genkit/mastering-genkit-go/commit/e63377ae97c7c31fe3ad353d0e23a8fd6bec3330))
+
 # [1.19.0](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.18.0...v1.19.0) (2025-08-30)
 
 
