@@ -3,7 +3,7 @@ module examples/chapter-04
 go 1.24.5
 
 require (
-	github.com/firebase/genkit/go v0.7.0
+	github.com/firebase/genkit/go v1.0.0
 	google.golang.org/genai v1.20.0
 )
 

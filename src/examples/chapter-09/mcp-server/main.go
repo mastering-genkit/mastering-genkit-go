@@ -26,7 +26,7 @@ func main() {
 	})
 	// Start the MCP server to expose tools via the Model Context Protocol
 	log.Println("Starting MCP server...")
-	err := mcpServer.ServeStdio(ctx)
+	err := mcpServer.ServeStdio()
 	if err != nil {
 		log.Fatalf("could not start MCP server: %v", err)
 	}

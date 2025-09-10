@@ -2,7 +2,7 @@ module example/chapter-03
 
 go 1.24.5
 
-require github.com/firebase/genkit/go v0.7.0
+require github.com/firebase/genkit/go v1.0.0
 
 require (
 	cloud.google.com/go v0.120.0 // indirect

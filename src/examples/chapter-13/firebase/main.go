@@ -3,11 +3,11 @@ package main
 import (
 	"context"
 	"log"
-	"mastering-genkit-go/example/chapter-13/cloud/internal/flows"
+	"mastering-genkit-go/example/chapter-13/firebase/internal/flows"
 	"net/http"
 	"os"
 
-	"github.com/firebase/genkit/go/plugins/googlecloud"
+	"github.com/firebase/genkit/go/plugins/firebase"
 	"github.com/firebase/genkit/go/plugins/server"
 	bedrock "github.com/xavidop/genkit-aws-bedrock-go"
 
@@ -28,8 +28,8 @@ func main() {
 		genkit.WithDefaultModel("bedrock/anthropic.claude-3-haiku-20240307-v1:0"), // Set default model
 	)
 
-	googlecloud.EnableGoogleCloudTelemetry(&googlecloud.GoogleCloudTelemetryOptions{
-		ProjectID:      "my-project-id", // Replace with your Google Cloud project ID
+	firebase.EnableFirebaseTelemetry(&firebase.FirebaseTelemetryOptions{
+		ProjectID:      "my-project-id", // Replace with your Firebase project ID
 		ForceDevExport: true,
 	})
 
