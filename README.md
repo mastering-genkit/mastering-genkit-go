@@ -3,7 +3,7 @@
 **Build Production-Ready AI Applications with Go and Genkit**
 
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)]()
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![License](https://img.shields.io/badge/license-CC%20BY--NC--ND%204.0-blue.svg)](LICENSE)
 [![Go](https://img.shields.io/badge/Go-1.24+-00ADD8?logo=go)](https://golang.org)
 [![Genkit](https://img.shields.io/badge/Genkit-v1.0.0-4285F4?logo=firebase)](https://firebase.google.com/products/genkit)
 [![Star this repo](https://img.shields.io/github/stars/mastering-genkit/mastering-genkit-go?style=social)](https://github.com/mastering-genkit/mastering-genkit-go)
@@ -101,9 +101,17 @@ You can get these formats from the [Releases](https://github.com/mastering-genki
 
 ## 📄 License
 
-This book content is released under the MIT License. See [LICENSE](LICENSE) for details.
+This book content is licensed under the [Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License](LICENSE). 
 
-Individual code examples may have their own licenses as specified in their respective directories.
+This means you are free to:
+- **Share** — copy and redistribute the material in any medium or format
+
+Under the following terms:
+- **Attribution** — You must give appropriate credit, provide a link to the license, and indicate if changes were made
+- **NonCommercial** — You may not use the material for commercial purposes
+- **NoDerivatives** — If you remix, transform, or build upon the material, you may not distribute the modified material
+
+Individual code examples may have the same licenses.
 
 ---
 
