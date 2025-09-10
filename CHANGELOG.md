@@ -1,3 +1,10 @@
+# [1.21.0](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.20.0...v1.21.0) (2025-09-10)
+
+
+### Features
+
+* use depth 2 ([#25](https://github.com/mastering-genkit/mastering-genkit-go/issues/25)) ([7ab56b2](https://github.com/mastering-genkit/mastering-genkit-go/commit/7ab56b29b44073f2c2fef6150dc9ba83b7078192))
+
 # [1.20.0](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.19.0...v1.20.0) (2025-09-10)
 
 
