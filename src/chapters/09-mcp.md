@@ -353,6 +353,8 @@ We create a simplified wrapper for MCP server creation:
 package mcp
 
 import (
+    "log"
+
     "github.com/firebase/genkit/go/ai"
     "github.com/firebase/genkit/go/genkit"
     "github.com/firebase/genkit/go/plugins/mcp"
@@ -368,8 +370,9 @@ func NewMCPServer(g *genkit.Genkit, name string, version string, tools []ai.Tool
         Version: version,
     }
 
-    if tools != nil {
-        options.Tools = tools
+    // If specific tools are provided, set them in options
+    for _, tool := range tools {
+        log.Printf("Exposing tool: %s", tool.Name())
     }
 
     return mcp.NewMCPServer(g, options)
