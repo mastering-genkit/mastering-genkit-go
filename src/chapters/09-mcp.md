@@ -92,15 +92,15 @@ func main() {
     // Get the MCPClient for file operations
     mcpFileSystem := mcpinternal.NewFilesystemServerConfig("file-system", "./")
 
-    // Create MCP manager with filesystem server
-    manager, err := mcpinternal.NewMCPManagerWrapper("my-manager", "1.0.0", []mcp.MCPServerConfig{
+    // Create the MCP manager with the file system server
+    manager, err := mcpinternal.NewMCPHostWrapper(g, "my-manager", "1.0.0", []mcp.MCPServerConfig{
         mcpFileSystem,
     })
     if err != nil {
         log.Fatalf("Failed to create MCP manager: %v", err)
     }
 
-    // Get all available tools from MCP servers
+    // Get all active tools from the MCP manager
     toolList, err := manager.GetActiveTools(ctx, g)
     if err != nil {
         log.Fatalf("Failed to get active tools: %v", err)
@@ -162,18 +162,18 @@ import (
     "github.com/firebase/genkit/go/plugins/mcp"
 )
 
-func NewMCPManagerWrapper(name string, version string, mcpServers []mcp.MCPServerConfig) (*mcp.MCPManager, error) {
+func NewMCPHostWrapper(g *genkit.Genkit, name string, version string, mcpServers []mcp.MCPServerConfig) (*mcp.MCPHost, error) {
     if version == "" {
         version = "1.0.0"
     }
 
-    options := mcp.MCPManagerOptions{
+    options := mcp.MCPHostOptions{
         Name:       name,
         Version:    version,
         MCPServers: mcpServers,
     }
 
-    manager, err := mcp.NewMCPManager(options)
+    manager, err := mcp.NewMCPHost(g, options)
     if err != nil {
         return nil, fmt.Errorf("failed to create MCP manager: %w", err)
     }
@@ -183,9 +183,9 @@ func NewMCPManagerWrapper(name string, version string, mcpServers []mcp.MCPServe
 }
 ```
 
-As You can see above, we create a `NewMCPManagerWrapper` function that initializes the MCP manager with the provided servers. This allows us to easily manage multiple MCP servers in our application. It needs:
+As You can see above, we create a `NewMCPHostWrapper` function that initializes the MCP host with the provided servers. This allows us to easily manage multiple MCP servers in our application. It needs:
 
-1. A name for the manager
+1. A name for the host
 2. A version string (defaulting to "1.0.0")
 3. A list of MCP server configurations
 
@@ -327,7 +327,7 @@ func main() {
 
     // Start the MCP server
     log.Println("Starting MCP server...")
-    err := mcpServer.ServeStdio(ctx)
+    err := mcpServer.ServeStdio()
     if err != nil {
         log.Fatalf("could not start MCP server: %v", err)
     }

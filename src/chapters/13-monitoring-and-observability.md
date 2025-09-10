@@ -54,13 +54,13 @@ This is what you can do with the Genkit UI in terms of observability:
 // Example from src/examples/chapter-13/otel/main.go
 func main() {
     ctx := context.Background()
-    bedrock := &bedrock.Bedrock{
+    bedrockPlugin := &bedrock.Bedrock{
         Region: "us-east-1",
     }
     // Initialize Genkit with OpenTelemetry support
     g := genkit.Init(ctx,
         genkit.WithPlugins(
-            bedrock,
+            bedrockPlugin,
         ),
     )
     bedrock.DefineCommonModels(bedrockPlugin, g)
@@ -80,17 +80,91 @@ You can also inspect any individual flow execution, view the trace spans, and se
 
 ## Firebase AI Monitoring
 
-Firebase offers an AI monitoring solution with built-in dashboards and performance tracking. While Firebase monitoring provides excellent integration with Google's ecosystem, **it is not currently supported in Genkit Go but will be available in future releases**.
+Firebase offers an AI monitoring solution with built-in dashboards and performance tracking, providing excellent integration with Google's ecosystem. Genkit Go now supports Firebase monitoring through the Firebase plugin.
 
 ![](../images/chapter-13/firebase-ai-monitoring.png)
 
+### Setting Up Firebase Monitoring
+
+To use Firebase monitoring with Genkit Go, you need to configure the Firebase plugin:
+
+```go
+// Example from src/examples/chapter-13/firebase/main.go
+import (
+    "github.com/firebase/genkit/go/plugins/firebase"
+)
+
+func main() {
+    ctx := context.Background()
+    bedrockPlugin := &bedrock.Bedrock{
+        Region: "us-east-1",
+    }
+    
+    // Initialize Genkit
+    g := genkit.Init(ctx,
+        genkit.WithPlugins(
+            bedrockPlugin,
+        ),
+        genkit.WithDefaultModel("bedrock/anthropic.claude-3-haiku-20240307-v1:0"),
+    )
+
+    // Enable Firebase telemetry
+    firebase.EnableFirebaseTelemetry(&firebase.FirebaseTelemetryOptions{
+        ProjectID:      "my-project-id", // Replace with your Firebase project ID
+        ForceDevExport: true,           // Export even in dev environment
+    })
+
+    bedrock.DefineCommonModels(bedrockPlugin, g)
+    
+    // Your flows and handlers here...
+}
+```
+
+### Firebase Telemetry Configuration
+
+The `FirebaseTelemetryOptions` allows you to configure various aspects of the Firebase monitoring integration:
+
+```go
+type FirebaseTelemetryOptions struct {
+    // ProjectID is the Firebase/Google Cloud project ID.
+    // If empty, will be read from FIREBASE_PROJECT_ID or GOOGLE_CLOUD_PROJECT environment variables.
+    ProjectID string
+
+    // ForceDevExport forces telemetry export even in development environment.
+    // Defaults to false (only exports in production unless forced).
+    ForceDevExport bool
+
+    // DisableLoggingInputAndOutput disables input/output logging.
+    // Defaults to false (input/output logging enabled).
+    DisableLoggingInputAndOutput bool
+}
+```
+
+### Firebase Monitoring Features
+
+Firebase monitoring provides several key capabilities:
+
+- **AI Flow Traces**: Track the execution of your AI flows with detailed timing information
+- **Model Performance Metrics**: Monitor model response times, token usage, and success rates
+- **Error Tracking**: Automatic detection and reporting of errors in your AI workflows
+- **Cost Analytics**: Track token consumption and associated costs across different models
+
 ### Required APIs for Firebase Integration
 
-When Firebase monitoring becomes available for Genkit Go, you'll need to enable these APIs in your Google Cloud Console:
+To use Firebase monitoring with Genkit Go, you'll need to enable these APIs in your Google Cloud Console (Firebase projects are automatically linked to Google Cloud):
 
 - **Cloud Logging API**: For centralized log collection and analysis
 - **Cloud Trace API**: For distributed tracing across services
 - **Cloud Monitoring API**: For metrics collection and alerting
+
+### Prerequisites for Firebase Monitoring
+
+Before using Firebase monitoring, ensure you have:
+
+1. **Firebase Project**: A Firebase project set up with your Google account
+2. **Google Cloud Authentication**: Proper authentication configured using `gcloud auth application-default login`
+3. **Project Permissions**: Appropriate permissions to write monitoring data to your Firebase project
+4. **APIs Enabled**: The required APIs listed above enabled in your Google Cloud Console
 
 ## Google Cloud Monitoring
 
@@ -98,7 +172,7 @@ Google Cloud provides a robust monitoring and observability platform that integr
 
 ### Setting Up Google Cloud Monitoring
 
-To use Google Cloud monitoring with Genkit Go, you need to configure the Google Cloud plugin `googlecloud`:
+To use Google Cloud monitoring with Genkit Go, you need to configure the Google Cloud telemetry:
 
 ```go
 // Example from src/examples/chapter-13/cloud/main.go
@@ -108,19 +182,73 @@ import (
 
 func main() {
     ctx := context.Background()
-
-    g = genkit.Init(ctx,
+    bedrockPlugin := &bedrock.Bedrock{
+        Region: "us-east-1",
+    }
+    
+    // Initialize Genkit
+    g := genkit.Init(ctx,
         genkit.WithPlugins(
-            &googlecloud.GoogleCloud{
-                ProjectID:      "my-project-id", // Replace with your project ID
-                ForceExport:    true,           // Export even in dev environment
-                MetricInterval: 60 * time.Second, // Metric export interval (default: 60s)
-                LogLevel:       slog.LevelInfo,   // Minimum log level (default: Info)
-            },
-            // Other plugins...
+            bedrockPlugin,
         ),
+        genkit.WithDefaultModel("bedrock/anthropic.claude-3-haiku-20240307-v1:0"),
     )
-    // ... rest of initialization
+
+    // Enable Google Cloud telemetry
+    googlecloud.EnableGoogleCloudTelemetry(&googlecloud.GoogleCloudTelemetryOptions{
+        ProjectID:      "my-project-id", // Replace with your Google Cloud project ID
+        ForceDevExport: true,           // Export even in dev environment
+    })
+
+    bedrock.DefineCommonModels(bedrockPlugin, g)
+    
+    // Your flows and handlers here...
+}
+```
+
+### Google Cloud Telemetry Configuration
+
+The `GoogleCloudTelemetryOptions` allows you to configure various aspects of the Google Cloud monitoring integration:
+
+```go
+type GoogleCloudTelemetryOptions struct {
+    // ProjectID is the Google Cloud project ID.
+    // If empty, will be auto-detected from environment.
+    ProjectID string
+
+    // Credentials for authenticating with Google Cloud.
+    // If nil, uses Application Default Credentials (ADC).
+    // Primarily intended for use in environments outside of GCP.
+    // On GCP, credentials will typically be inferred from the environment via ADC.
+    Credentials *google.Credentials
+
+    // Sampler controls trace sampling. If nil, uses AlwaysOnSampler.
+    // Examples: AlwaysOnSampler, AlwaysOffSampler, TraceIdRatioBasedSampler
+    Sampler sdktrace.Sampler
+
+    // MetricExportIntervalMillis controls metrics export frequency.
+    // Google Cloud requires minimum 5000ms. Defaults to 5000 (dev) or 300000 (prod).
+    MetricExportIntervalMillis *int
+
+    // MetricExportTimeoutMillis controls metrics export timeout.
+    // Defaults to match MetricExportIntervalMillis.
+    MetricExportTimeoutMillis *int
+
+    // DisableMetrics disables metric export to Google Cloud.
+    // Traces and logs may still be exported. Defaults to false.
+    DisableMetrics bool
+
+    // DisableTraces disables trace export to Google Cloud.
+    // Metrics and logs may still be exported. Defaults to false.
+    DisableTraces bool
+
+    // DisableLoggingInputAndOutput disables input/output logging.
+    // Defaults to false (input/output logging enabled).
+    DisableLoggingInputAndOutput bool
+
+    // ForceDevExport forces telemetry export even in development environment.
+    // Defaults to false (only exports in production unless forced).
+    ForceDevExport bool
 }
 ```
 

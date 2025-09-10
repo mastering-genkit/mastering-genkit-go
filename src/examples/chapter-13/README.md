@@ -4,13 +4,19 @@ This directory contains examples demonstrating different monitoring and observab
 
 ## Examples Overview
 
-### 1. Google Cloud Monitoring (`cloud/`)
+### 1. Firebase Monitoring (`firebase/`)
+Shows integration with Firebase's AI monitoring services:
+- Firebase plugin configuration
+- Firebase telemetry and analytics integration
+- AI-specific monitoring and cost tracking
+
+### 2. Google Cloud Monitoring (`cloud/`)
 Shows integration with Google Cloud's monitoring services:
 - Google Cloud plugin configuration
 - Cloud Trace, Logging, and Monitoring integration
 - Required API setup and authentication
 
-### 2. OpenTelemetry Integration (`otel/`)
+### 3. OpenTelemetry Integration (`otel/`)
 Demonstrates using OpenTelemetry for flexible monitoring:
 - OTLP exporter configuration
 - Integration with various backends (Jaeger, Prometheus)
@@ -27,12 +33,30 @@ Demonstrates using OpenTelemetry for flexible monitoring:
    export AWS_REGION=us-east-1
    ```
 
-2. **Google Cloud (for cloud example)**:
+2. **Google Cloud (for cloud and firebase examples)**:
    ```bash
    export GOOGLE_CLOUD_PROJECT=your-project-id
    # Ensure you have authenticated with gcloud
    gcloud auth application-default login
    ```
+
+3. **Firebase Project (for firebase example)**:
+   ```bash
+   # Ensure your Firebase project is linked to the Google Cloud project above
+   # and that Firebase APIs are enabled
+   ```
+
+### Firebase Example
+
+```bash
+cd firebase/
+go mod tidy
+# Set your Firebase project ID
+export GOOGLE_CLOUD_PROJECT=your-firebase-project-id
+go run main.go
+```
+
+View AI monitoring data, traces, and analytics in the Firebase Console under the Genkit section.
 
 ### Google Cloud Example
 
