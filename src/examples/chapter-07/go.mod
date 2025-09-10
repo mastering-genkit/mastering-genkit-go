@@ -2,7 +2,7 @@ module mastering-genkit-go/example/chapter-07
 
 go 1.25.0
 
-require github.com/firebase/genkit/go v0.7.0
+require github.com/firebase/genkit/go v1.0.0
 
 require (
 	github.com/bahlo/generic-list-go v0.2.0 // indirect

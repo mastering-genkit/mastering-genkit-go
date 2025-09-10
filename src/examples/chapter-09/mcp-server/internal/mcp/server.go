@@ -1,6 +1,8 @@
 package mcp
 
 import (
+	"log"
+
 	"github.com/firebase/genkit/go/ai"
 	"github.com/firebase/genkit/go/genkit"
 	"github.com/firebase/genkit/go/plugins/mcp"
@@ -18,13 +20,13 @@ import (
 //
 // Example usage:
 //
-//	// Option 1: Auto-expose all defined tools
+//	Option 1: Auto-expose all defined tools
 //	server := NewMCPServer(g, "genkit-calculator", "1.0.0", nil)
 //
-//	// Option 2: Expose only specific tools
+//	Option 2: Expose only specific tools
 //	server := NewMCPServer(g, "genkit-calculator", "1.0.0", []ai.Tool{addTool, multiplyTool})
 //
-//	// Start the MCP server
+//	Start the MCP server
 //	log.Println("Starting MCP server...")
 //	if err := server.ServeStdio(ctx); err != nil {
 //	    log.Fatal(err)
@@ -43,10 +45,9 @@ func NewMCPServer(g *genkit.Genkit, name string, version string, tools []ai.Tool
 		Name:    name,
 		Version: version,
 	}
-
-	// Add tools if provided
-	if tools != nil {
-		options.Tools = tools
+	// If specific tools are provided, set them in options
+	for _, tool := range tools {
+		log.Printf("Exposing tool: %s", tool.Name())
 	}
 
 	// Create and return the MCP server

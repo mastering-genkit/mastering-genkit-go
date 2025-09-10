@@ -20,17 +20,16 @@ description: |
   Master the art of building AI with Genkit and Go. This guide takes you from the basics of setting up your development environment to advanced topics like RAG systems, AI agents, and production deployment.
 
 pdfDescription: |
-  Master the art of building AI with Genkit and Go. This guide takes you from the basics of setting up your development environment to advanced topics like RAG systems, AI agents, and production deployment.
+  Unlock the full potential of Genkit and Go as you explore the journey from first steps to advanced AI systems. This book takes you from setting up your development environment to building production-ready applications, covering essential topics like Retrieval-Augmented Generation (RAG), AI agents, evaluation strategies, and scalable deployments.
 
-  Learn to harness the power of Genkit's flow-based architecture, integrate with leading AI models, implement robust evaluation systems, and deploy scalable AI applications. This book provides practical examples and real-world use cases.
+  Through Genkit’s flow-based architecture, you’ll learn how to integrate leading AI models, design robust pipelines, and implement real-world use cases. Each chapter combines theoretical insights with hands-on examples to help you develop the skills needed to create reliable, production-grade AI applications.
 
-  This book combines theoretical understanding with hands-on experience to help you build production-ready AI applications that scale.
-  
+  Designed for both practitioners expanding their expertise and newcomers experimenting with AI, this resource offers proven methods and practical tools for creating robust, scalable systems.
+
   Important Note:
-  The information contained in this publication is purely for educational purposes. Therefore, its use is not intended on a professional or industrial level. All technical indications and programs included have been prepared with great care by the authors and reproduced under strict control standards.
+  The information in this book and the examples are provided purely for educational purposes. It is not intended for professional or industrial use. All technical instructions and code samples have been carefully prepared by the authors and reproduced under strict quality controls.
 
-  This book is published under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License. You may not use this work for commercial purposes, and you may not distribute modified versions of this work. For more details, see [CC BY-NC-ND 4.0](https://creativecommons.org/licenses/by-nc-nd/4.0/).
-  This publication is an intellectual property of its authors. The rights of publication have been legally transferred to the editor.
+  This book is published under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License. You may not use this work for commercial purposes, nor distribute modified versions. For details, see CC BY-NC-ND 4.0. This publication remains the intellectual property of its authors, with all publication rights legally transferred to the editor.
 
 language: en
 date: "2025"

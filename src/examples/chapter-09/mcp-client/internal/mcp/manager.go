@@ -4,16 +4,17 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/firebase/genkit/go/genkit"
 	"github.com/firebase/genkit/go/plugins/mcp"
 )
 
-// NewMCPManagerWrapper creates a new MCP manager with the provided configuration parameters.
-// This is a convenience wrapper around mcp.NewMCPManager that accepts individual parameters
-// instead of requiring a full MCPManagerOptions struct.
+// NewMCPHostWrapper creates a new MCP host with the provided configuration parameters.
+// This is a convenience wrapper around mcp.NewMCPHost that accepts individual parameters
+// instead of requiring a full MCPHostOptions struct.
 //
 // Parameters:
-//   - name: A string identifier for your MCP manager instance
-//   - version: Version number for this manager (defaults to "1.0.0" if empty)
+//   - name: A string identifier for your MCP host instance
+//   - version: Version number for this host (defaults to "1.0.0" if empty)
 //   - mcpServers: An array of MCPServerConfig configurations
 //
 // Example usage:
@@ -41,7 +42,7 @@ import (
 //	    },
 //	}
 //
-//	manager, err := NewMCPManagerWrapper("my-app", "1.0.0", servers)
+//	manager, err := NewMCPHostWrapper(g, "my-app", "1.0.0", servers)
 //	if err != nil {
 //	    log.Fatal(err)
 //	}
@@ -51,21 +52,21 @@ import (
 // - Get prompts from specific servers: manager.GetPrompt(ctx, g, serverName, promptName, args)
 // - Connect to additional servers: manager.Connect(name, options)
 // - Disconnect from servers: manager.Disconnect(name)
-func NewMCPManagerWrapper(name string, version string, mcpServers []mcp.MCPServerConfig) (*mcp.MCPManager, error) {
+func NewMCPHostWrapper(g *genkit.Genkit, name string, version string, mcpServers []mcp.MCPServerConfig) (*mcp.MCPHost, error) {
 	// Set default version if empty
 	if version == "" {
 		version = "1.0.0"
 	}
 
 	// Create MCPManagerOptions from the parameters
-	options := mcp.MCPManagerOptions{
+	options := mcp.MCPHostOptions{
 		Name:       name,
 		Version:    version,
 		MCPServers: mcpServers,
 	}
 
 	// Create the MCP manager with the constructed configuration
-	manager, err := mcp.NewMCPManager(options)
+	manager, err := mcp.NewMCPHost(g, options)
 
 	if err != nil {
 		return nil, fmt.Errorf("failed to create MCP manager: %w", err)

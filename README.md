@@ -1,176 +1,121 @@
-# Book Writing Template
+# Mastering Genkit: Go Edition
 
-A comprehensive setup for writing books in Markdown with multi-format publishing support.
+**Build Production-Ready AI Applications with Go and Genkit**
 
-> 📚 **New to this template?** Check out [DOCS.md](DOCS.md) for a complete documentation overview, or jump to [GETTING_STARTED.md](GETTING_STARTED.md) for a quick start guide.
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)]()
+[![License](https://img.shields.io/badge/license-CC%20BY--NC--ND%204.0-blue.svg)](LICENSE)
+[![Go](https://img.shields.io/badge/Go-1.24+-00ADD8?logo=go)](https://golang.org)
+[![Genkit](https://img.shields.io/badge/Genkit-v1.0.0-4285F4?logo=firebase)](https://firebase.google.com/products/genkit)
+[![Star this repo](https://img.shields.io/github/stars/mastering-genkit/mastering-genkit-go?style=social)](https://github.com/mastering-genkit/mastering-genkit-go)
 
-## 📋 Formats Supported
+![cover](./src/images/cover.jpg)
 
-- ✅ **Leanpub** - Direct Markdown publishing
-- ✅ **Amazon Kindle** - EPUB/MOBI via Pandoc  
-- ✅ **Web** - Static site with GitHub Pages
-- ✅ **PDF** - Via Pandoc with WeasyPrint/Puppeteer
+A comprehensive guide to building AI applications with Firebase Genkit and Go. This book takes you from the basics of setting up your development environment to advanced topics like RAG systems, AI agents, and production deployment.
 
-## 📁 Directory Structure
+## About This Book
+
+Master the art of building AI applications with Genkit and Go. Learn to harness the power of Genkit's flow-based architecture, integrate with leading AI models, implement robust evaluation systems, and deploy scalable AI applications.
+
+### 👥 Authors
+
+- **Xavier Portilla Edo** - Google Developer Expert in AI and Cloud, Microsoft MVP, GitHub Star
+- **Nozomi Koborinai** - Google Cloud Partner Top Engineer, Genkit Dart Client Developer
+
+## What You'll Learn
+
+- **Foundation**: Understanding Genkit architecture and Go integration
+- **Development Environment**: Setting up your Go development environment for AI
+- **AI Generation**: Mastering structured output and AI model integration
+- **Flows**: Building robust, scalable AI workflows
+- **Streaming**: Implementing real-time AI responses
+- **Tools**: Creating and integrating custom tools
+- **MCP**: Model Context Protocol implementation
+- **RAG**: Retrieval-Augmented Generation systems
+- **Evaluations**: Testing and validating AI applications
+- **Agents**: Building autonomous AI agents
+- **Monitoring**: Observability and performance tracking
+- **Deployment**: Production-ready deployment strategies
+
+## 📁 Repository Structure
 
 ```
 src/
-├── chapters/           # Your book chapters
-├── images/            # Book images and diagrams  
-└── metadata/          # Book information
-
-manuscript/            # Generated Leanpub files
-build/                # Generated output files
-docs/                 # Generated website
-scripts/              # Build automation
-config/               # Configuration files
+├── chapters/           # Book chapters in Markdown
+├── examples/          # Go code examples and projects
+├── images/            # Book images and diagrams
+├── diagrams/          # Technical diagrams
+└── metadata/          # Book metadata and configuration
 ```
 
 ## 🚀 Quick Start
 
-1. **Install dependencies:**
+### Prerequisites
+
+- Go 1.24 or later
+- Git for version control
+
+### Getting Started
+
+1. **Clone the repository:**
+
    ```bash
-   npm install
-   # For complete setup with all tools:
-   npm run setup
+   git clone https://github.com/mastering-genkit/mastering-genkit-go.git
+   cd mastering-genkit-go
    ```
 
-2. **Update book information:**
-   Edit `src/metadata/book.yaml` with your book details
+2. **Explore the examples:**
 
-3. **Write your content:**
-   Add chapters in `src/chapters/` as `01-chapter-name.md` files
-
-4. **Build your book:**
    ```bash
-   npm run build        # Build all formats
-   npm run build:web    # Build website only
-   npm run dev          # Start development server
+   cd src/examples
+   # Each chapter has its own example directory
    ```
 
-## � Writing Guidelines
+3. **Read the book:**
 
-### Chapter Files
-- Name with numbers: `01-introduction.md`, `02-getting-started.md`
-- Start with level 1 header: `# Chapter Title`
-- Use levels 2-4 for sections: `## Section`, `### Subsection`
+   - Online: [https://mastering-genkit.github.io/mastering-genkit-go](https://mastering-genkit.github.io/mastering-genkit-go)
 
-### Images
-- Store in `src/images/`
-- Reference with: `![Description](../images/filename.png)`
-- Include a `cover.jpg` for book cover
-- Supported formats: PNG, JPG, SVG
+## 📋 Available Formats
 
-### Cross-references
-- Link chapters: `[See Chapter 2](02-getting-started.md)`
-- Reference sections: `[Advanced Topics](#advanced-topics)`
+- 🌐 **Web** - Interactive online version with code examples
+- 📖 **EPUB** - For e-readers and tablets
+- 📱 **MOBI** - For Amazon Kindle devices
+- 📄 **PDF** - For printing and offline reading
+- 📚 **Leanpub** - Direct markdown publishing platform
 
+You can get these formats from the [Releases](https://github.com/mastering-genkit/mastering-genkit-go/releases).
 
-## 🔧 Available Commands
+## Resources
 
-```bash
-npm run build          # Build all formats
-npm run build:leanpub  # Build Leanpub format
-npm run build:kindle   # Build Kindle format (EPUB + MOBI)
-npm run build:web      # Build web format
-npm run build:pdf      # Build PDF format
-npm run dev            # Start development server with auto-rebuild
-npm run validate       # Check book structure
-npm run word-count     # Count words and estimate reading time
-npm run lint           # Check Markdown formatting
-npm run clean          # Clean build artifacts
-npm run setup          # Install all dependencies
+### Official Links
+- [Firebase Genkit Documentation](https://genkit.dev)
+- [Genkit Go SDK](https://pkg.go.dev/github.com/firebase/genkit/go)
+- [Genkit Examples](https://github.com/firebase/genkit/tree/main/go/samples)
 
-# Genkit-specific utilities
-./scripts/update-genkit-version.sh <version>  # Update Genkit version in all examples
-./scripts/test-update-script.sh              # Test what would be updated (dry run)
-```
+### Community
+- [Genkit Discord](https://discord.gg/qXt5zzQKpc)
+- [Stack Overflow](https://stackoverflow.com/questions/tagged/genkit)
 
-## 📚 Publishing
-
-### Leanpub
-1. Connect GitHub repo to Leanpub
-2. Set manuscript directory to `manuscript/`
-3. Use Leanpub's Preview/Publish buttons
-
-### Kindle (Amazon KDP)
-1. Use generated EPUB: `build/kindle/book.epub`
-2. Upload to Amazon KDP
-3. Or use MOBI if generated: `build/kindle/book.mobi`
-
-### Web (GitHub Pages)
-1. Enable Pages in repo settings
-2. Set source to `docs/` folder  
-3. Access at: `https://username.github.io/repo-name`
-
-## 🛠️ Setup & Requirements
-
-### Quick Setup
-Run the automated setup script:
-```bash
-npm run setup
-# or directly:
-./scripts/setup-all.sh
-```
-
-This script automatically installs:
-- ✅ Node.js and npm dependencies
-- ✅ Python 3 and pip
-- ✅ Pandoc (for PDF and Kindle generation)
-- ✅ WeasyPrint (for high-quality PDF generation)
-- ✅ Puppeteer (PDF generation via Chrome headless)
-- ✅ Calibre (for MOBI generation)
-- ✅ markdownlint-cli (for linting)
-
-## 🎨 Advanced Features
-
-- 📊 Word count and reading time estimation
-- 🔍 Content validation and structure checking
-- 🎨 Customizable web themes via templates
-- 📱 Mobile-responsive web version
-- 🔍 SEO optimization for web version
-- 📝 Markdown linting for consistency
-
-## 🔧 Genkit Utilities
-
-This book includes specialized scripts for working with Firebase Genkit Go examples:
-
-### Update Genkit Version Script
-Automatically update the Firebase Genkit Go version across all example projects:
-
-```bash
-# Update to latest version
-./scripts/update-genkit-version.sh v0.7.0
-
-# Update to pre-release version  
-./scripts/update-genkit-version.sh v0.7.0-beta.1
-```
-
-**Features:**
-- 🔍 Auto-discovers all Go modules in `src/examples`
-- 📦 Updates `github.com/firebase/genkit/go` dependency
-- 🧹 Runs `go mod tidy` to clean dependencies
-- 🔨 Builds each project to verify compatibility
-- 📊 Provides detailed progress and error reporting
-
-## Dependencies Overview
-
-| Tool | Purpose | Required |
-|------|---------|----------|
-| Node.js | JavaScript runtime for build scripts | ✅ Yes |
-| Pandoc | Document converter | ✅ Yes |
-| Python 3 | Runtime for WeasyPrint | ✅ Yes |
-| WeasyPrint | High-quality PDF generation | Recommended |
-| Puppeteer | PDF generation via Chrome headless | Recommended |
-| Calibre | MOBI generation for Kindle | Optional |
-| markdownlint-cli | Markdown linting | Optional |
-
----
+### Authors
+- Xavier Portilla Edo: [Website](https://xavidop.me) | [LinkedIn](https://www.linkedin.com/in/xavierportillaedo/) | [GitHub](https://github.com/xavidop)
+- Nozomi Koborinai: [Medium](https://medium.com/@nozomi-koborinai) | [LinkedIn](https://www.linkedin.com/in/nozomi-koborinai/) | [GitHub](https://github.com/nozomi-koborinai)
 
 ## 📄 License
 
-This template is released under the MIT License. Your book content retains your chosen license.
+This book content is licensed under the [Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License](LICENSE). 
+
+This means you are free to:
+- **Share** — copy and redistribute the material in any medium or format
+
+Under the following terms:
+- **Attribution** — You must give appropriate credit, provide a link to the license, and indicate if changes were made
+- **NonCommercial** — You may not use the material for commercial purposes
+- **NoDerivatives** — If you remix, transform, or build upon the material, you may not distribute the modified material
+
+Individual code examples may have the same licenses.
 
 ---
 
-Happy writing! 📚✍️
+**Ready to master AI development with Genkit and Go?** 
+Dive into the [first chapter](src/chapters/01-introduction-genkit-go.md)!
+
+[![Star this repo](https://img.shields.io/github/stars/mastering-genkit/mastering-genkit-go?style=social)](https://github.com/mastering-genkit/mastering-genkit-go)

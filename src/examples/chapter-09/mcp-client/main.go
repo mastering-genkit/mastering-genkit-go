@@ -36,7 +36,7 @@ func main() {
 	mcpFileSystem := mcpinternal.NewFilesystemServerConfig("file-system", "./")
 
 	// Create the MCP manager with the file system server
-	manager, err := mcpinternal.NewMCPManagerWrapper("my-manager", "1.0.0", []mcp.MCPServerConfig{
+	manager, err := mcpinternal.NewMCPHostWrapper(g, "my-manager", "1.0.0", []mcp.MCPServerConfig{
 		mcpFileSystem,
 	})
 	if err != nil {
