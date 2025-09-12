@@ -6,91 +6,11 @@ This example demonstrates how to integrate Genkit Go applications with various c
 
 ## Architecture
 
-```mermaid
-graph TB
-    subgraph "Client Applications"
-        NC[Next.js Client]
-        AC[Angular Client]
-        FC[Flutter Client]
-    end
-    
-    subgraph "API Gateway"
-        CR[Cloud Run / Local Server<br/>:9090]
-    end
-    
-    subgraph "Security Layer"
-        FA[Firebase Authentication<br/>Anonymous Auth]
-        CORS[CORS Middleware]
-    end
-    
-    subgraph "Monitoring"
-        OT[OpenTelemetry<br/>Traces & Metrics]
-        GCM[Google Cloud Monitoring<br/>Logs & Dashboards]
-    end
-    
-    subgraph "Genkit Flows"
-        CreateRecipe[createRecipe<br/>DefineStreamingFlow<br/>SSE]
-        CreateImage[createImage<br/>DefineFlow<br/>REST]
-        CookingEvaluate[cookingEvaluate<br/>DefineFlow<br/>REST with Titles]
-    end
-    
-    subgraph "Educational Tools (Chapter 8)"
-        T1[checkIngredientCompatibility<br/>Firestore Tool]
-        T2[estimateCookingDifficulty<br/>Calculation Tool]
-    end
-    
-    subgraph "Data Layer"
-        FS[Firestore<br/>ingredient_combinations collection]
-    end
-    
-    subgraph "AI Models"
-        Gemini[Gemini-2.5-flash<br/>Text Generation & Analysis]
-        Imagen[Imagen4<br/>Image Generation]
-        GeminiImg[Gemini-2.5-flash-image<br/>Image Generation]
-    end
-    
-    NC -->|POST /{flowName}<br/>Bearer Token| CR
-    AC -->|POST /{flowName}<br/>Bearer Token| CR
-    FC -->|genkit package<br/>Bearer Token| CR
-    
-    CR --> FA
-    FA -->|Verify Anonymous Token| CORS
-    CORS --> OT
-    OT --> CreateRecipe
-    OT --> CreateImage
-    OT --> CookingEvaluate
-    
-    CreateRecipe -->|Stream Response| Gemini
-    CreateRecipe -.->|Tool Calling| T1
-    CreateRecipe -.->|Tool Calling| T2
-    
-    CreateImage -->|Generate Image| Imagen
-    CreateImage -->|Generate Image| GeminiImg
-    
-    CookingEvaluate -->|Analyze Recipe| Gemini
-    
-    T1 -->|Query| FS
-    
-    OT -->|Export| GCM
-    
-    style CreateRecipe fill:#e1f5fe
-    style CreateImage fill:#fff3e0
-    style CookingEvaluate fill:#f3e5f5
-    style T1 fill:#f3e5f5
-    style T2 fill:#f3e5f5
-    style FS fill:#fff8e1
-    style OT fill:#e8f5e9
-```
+![Recipe Quest Application Architecture](../../images/chapter-15/architecture.png)
 
 ## Application Flow
 
-### 1. Authentication Flow
-
-- Clients obtain anonymous authentication token from Firebase Authentication
-- All API requests include `Authorization: Bearer <token>` header
-- Server validates `sign_in_provider == "anonymous"`
-
-### 2. Recipe Quest Flow
+### 1. Recipe Quest Flow
 
 1. **Random Ingredient Challenge**: System randomly selects 3-4 ingredients from predefined pools
 2. **Recipe Generation** (Streaming): AI creates custom recipe using ingredient compatibility and difficulty tools
@@ -100,7 +20,7 @@ graph TB
    - Titles: "🏆 Legendary Quest Master", "⭐ Elite Recipe Explorer", "📚 Recipe Student", etc.
    - Achievements: "Innovation Master", "Technique Virtuoso", "Triple Crown Winner"
 
-### 3. Response Types
+### 2. Response Types
 
 - **Streaming (SSE)**: `createRecipe` returns `text/event-stream` with progressive recipe generation
 - **REST (JSON)**: `createImage` and `cookingEvaluate` return `application/json`
@@ -169,7 +89,6 @@ chapter-15/
 
 - **Framework**: Genkit Go
 - **Runtime**: Cloud Run (production) / Local server (development)
-- **Authentication**: Firebase Authentication (anonymous auth)
 - **Database**: Firestore (recipe storage)
 - **Monitoring**: OpenTelemetry, Google Cloud Monitoring
 - **AI Models**:
@@ -271,7 +190,6 @@ POST /evaluateDish        # Evaluation with titles & achievements
 ### Request Headers
 
 ```text
-Authorization: Bearer <ID_TOKEN>
 Content-Type: application/json
 ```
 
@@ -352,40 +270,6 @@ data: {"type": "done"}
 - **Google Cloud CLI** (`gcloud`) - For Cloud Run deployment
 - **Firebase CLI** - For Firebase project management
 
-### Firebase Project Setup
-
-1. **Create Firebase Project**
-   ```bash
-   firebase projects:create your-project-id
-   firebase projects:use your-project-id
-   ```
-
-2. **Enable Firebase Authentication**
-   - Go to Firebase Console > Authentication
-   - Enable "Anonymous" sign-in method
-   - This allows users to authenticate without credentials
-
-3. **Initialize Firestore Database**
-   - Go to Firebase Console > Firestore Database
-   - Create database in production mode
-   - Select location: `asia-northeast1` (or your preferred region)
-   - Database will be populated via Terraform
-
-### Google Cloud Setup
-
-1. **Enable Required APIs**
-   ```bash
-   gcloud services enable \
-     cloudrun.googleapis.com \
-     firestore.googleapis.com \
-     generativelanguage.googleapis.com \
-     firebase.googleapis.com
-   ```
-
-2. **Obtain API Keys**
-   - Create Google AI API key: https://aistudio.google.com/apikey
-   - Store securely (will be used as `GOOGLE_GENAI_API_KEY`)
-
 ### Terraform Setup
 
 1. **Install Terraform CLI**
@@ -408,13 +292,9 @@ data: {"type": "done"}
 ```bash
 cd server/
 go mod init chapter-15/server
-go get github.com/firebase/genkit/go@latest
 
 # Development mode
 genkit start -- go run .
-
-# Production deployment
-gcloud run deploy --source . --port 9090
 ```
 
 ### Client Setup
@@ -430,17 +310,8 @@ See individual README files in each client directory:
 ### Server
 
 ```bash
-PROJECT_ID=firebase-genkit-sample
 OPENAI_API_KEY=your-openai-api-key
 GEMINI_API_KEY=your-gemini-api-key
-PORT=9090
-```
-
-### Client
-
-```bash
-NEXT_PUBLIC_API_URL=http://localhost:9090  # or Cloud Run URL
-NEXT_PUBLIC_FIREBASE_CONFIG='{...}'        # Firebase config JSON
 ```
 
 ## Development Workflow
@@ -448,7 +319,6 @@ NEXT_PUBLIC_FIREBASE_CONFIG='{...}'        # Firebase config JSON
 1. Start the server in development mode with Genkit Developer UI
 2. Test flows using Developer UI at http://localhost:4000
 3. Run client applications pointing to local server
-4. Deploy to Cloud Run for production testing
 
 ### Local Development with Firestore Emulator
 
@@ -463,11 +333,10 @@ firebase emulators:start --only firestore --import=./firestore-data/local
 **Terminal 2: Genkit Go Server (development mode)**
 ```bash
 cd src/examples/chapter-15/server
-export PROJECT_ID=firebase-genkit-sample
 export FIRESTORE_EMULATOR_HOST=127.0.0.1:8080
 # Add your API keys if needed:
-# export GEMINI_API_KEY=your-gemini-api-key
-# export OPENAI_API_KEY=your-openai-api-key
+export GEMINI_API_KEY=your-gemini-api-key
+export OPENAI_API_KEY=your-openai-api-key
 genkit start -- go run .
 ```
 
@@ -538,13 +407,6 @@ Recipe Quest features two carefully designed tools that serve as educational exa
 }
 ```
 
-## Security Considerations
-
-- API keys are managed server-side only (never exposed to clients)
-- Anonymous authentication prevents abuse while maintaining easy access
-- CORS configured for specific origins in production
-- Rate limiting can be added via middleware
-
 ## Connecting to Production Firestore
 
 While this chapter focuses on local development with the Firestore emulator, you can deploy the ingredient compatibility data to a production Firestore instance using the provided Terraform configuration.
@@ -595,7 +457,4 @@ Also, ensure the `FIRESTORE_EMULATOR_HOST` environment variable is NOT set when 
 ## Resources
 
 - [Genkit Documentation](https://genkit.dev)
-- [Firebase Authentication](https://firebase.google.com/docs/auth)
-- [Cloud Run Documentation](https://cloud.google.com/run/docs)
 - [Terraform Google Provider](https://registry.terraform.io/providers/hashicorp/google/latest/docs)
-- [OpenTelemetry Go](https://opentelemetry.io/docs/languages/go/)
