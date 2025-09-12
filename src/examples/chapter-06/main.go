@@ -23,7 +23,7 @@ func main() {
 		genkit.WithPromptDir("prompts"),
 	)
 
-	// Create flow orchestrater
+	// Create flow orchestrator
 	recommendationFlow := flows.NewRecommendationFlow(g,
 		flows.NewAnalyzeGenreFlow(g),
 		flows.NewAcousticInstrumentFlow(g),
