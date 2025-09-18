@@ -1,6 +1,6 @@
 # Introduction
 
-![](../images/cover.jpg)
+![](../images/genkit.jpg)
 
 ## About this book
 

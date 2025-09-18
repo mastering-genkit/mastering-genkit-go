@@ -140,6 +140,7 @@ jobs:
         tag_name: ${{ needs.release.outputs.tag }}
         files: |
           dist/book.pdf
+          dist/book-with-cover.pdf
           build/kindle/book.epub
           build/kindle/book.mobi
         name: Release ${{ needs.release.outputs.version }}
@@ -148,6 +149,7 @@ jobs:
           
           This release includes:
           - 📖 PDF version (dist/book.pdf)
+          - 📖 PDF version with cover (dist/book-with-cover.pdf)
           - 📱 EPUB version (build/kindle/book.epub)
           - 📱 MOBI version (build/kindle/book.mobi)
           - 🌐 Web version deployed to GitHub Pages

@@ -254,7 +254,41 @@ async function buildPDF() {
         const stats = await fs.stat(outputPath);
         const fileSizeInKB = Math.round(stats.size / 1024);
         console.log(`📊 File size: ${fileSizeInKB} KB`);
-        
+
+        // Creating book with cover and back cover using pdfjam if available
+        try {
+            execSync('pdfjam --version', { stdio: 'ignore' });
+            console.log('🔧 Adding cover and back cover using pdfjam...');
+        } catch (error) {
+            console.log('⚠️  pdfjam not installed. Skipping cover addition.');
+            return;
+        }
+
+        const coverPath = 'src/images/cover.pdf';
+        const backCoverPath = 'src/images/back.pdf';
+        const finalOutputPath = `dist/book-with-cover.pdf`;
+        let pdfjamCommand = `pdfjam --outfile "${finalOutputPath}" -- "${outputPath}"`;
+
+        if (await fs.pathExists(coverPath)) {
+            pdfjamCommand = `pdfjam --outfile "${finalOutputPath}" -- "${coverPath}" "${outputPath}"`;
+        }
+
+        if (await fs.pathExists(backCoverPath)) {
+            pdfjamCommand += ` "${backCoverPath}"`;
+        }
+
+        if (await fs.pathExists(coverPath) || await fs.pathExists(backCoverPath)) {
+            execSync(pdfjamCommand, { stdio: 'inherit' });
+            console.log('✅ Final PDF with cover created successfully!');
+            console.log(`📄 Final PDF created: ${finalOutputPath}`);
+            
+            // Display final file info
+            const finalStats = await fs.stat(finalOutputPath);
+            const finalFileSizeInKB = Math.round(finalStats.size / 1024);
+            console.log(`📊 Final file size: ${finalFileSizeInKB} KB`);
+        } else {
+            console.log('ℹ️  No cover or back cover found. Skipping pdfjam step.');
+        }
     } catch (error) {
         console.error('❌ Error building PDF format:', error.message);
         

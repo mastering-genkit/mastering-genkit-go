@@ -344,7 +344,61 @@ fi
 
 echo ""
 
-# 6. Install Calibre (optional, for MOBI generation)
+# 6. Install pdfjam (for PDF manipulation)
+echo -e "${BLUE}${PACKAGE} Installing pdfjam (for PDF manipulation)...${NC}"
+
+if command_exists pdfjam; then
+    print_status 0 "pdfjam is already installed"
+else
+    print_info "pdfjam not found. Installing..."
+    case $OS in
+        "macos")
+            if command_exists brew; then
+                # Install TeX Live via BasicTeX (smaller) or MacTeX (full)
+                print_info "Installing BasicTeX (includes pdfjam)..."
+                brew install basictex
+                
+                # Add TeX Live to PATH
+                export PATH="/usr/local/texlive/2025basic/bin/universal-darwin:$PATH"
+                
+                # Update tlmgr and install pdfjam if not included
+                if command_exists tlmgr; then
+                    sudo tlmgr update --self
+                    sudo tlmgr install pdfjam
+                fi
+            else
+                print_warning "Homebrew not found. Please install BasicTeX manually from:"
+                print_info "https://www.tug.org/mactex/morepackages.html"
+                print_info "Or install full MacTeX from: https://www.tug.org/mactex/"
+            fi
+            ;;
+        "linux")
+            print_info "Installing TeX Live and pdfjam..."
+            sudo apt-get update && sudo apt-get install -y texlive-extra-utils
+            ;;
+        "windows")
+            print_info "Please install MiKTeX or TeX Live for Windows:"
+            print_info "https://miktex.org/ or https://www.tug.org/texlive/"
+            ;;
+        *)
+            print_info "Please install TeX Live or MiKTeX for your system:"
+            print_info "https://www.tug.org/texlive/"
+            ;;
+    esac
+    
+    # Check if pdfjam is now available (may need PATH update)
+    if command_exists pdfjam; then
+        print_status 0 "pdfjam installed successfully"
+    else
+        print_warning "pdfjam installation failed or not in PATH."
+        print_info "You may need to restart your terminal or update your PATH."
+        print_info "pdfjam is typically located in your TeX Live bin directory."
+    fi
+fi
+
+echo ""
+
+# 7. Install Calibre (optional, for MOBI generation)
 echo -e "${BLUE}${PACKAGE} Installing Calibre (optional, for MOBI generation)...${NC}"
 
 if command_exists ebook-convert; then
@@ -379,7 +433,7 @@ fi
 
 echo ""
 
-# 7. Install markdownlint-cli globally (for linting)
+# 8. Install markdownlint-cli globally (for linting)
 echo -e "${BLUE}${PACKAGE} Installing markdownlint-cli globally...${NC}"
 
 if command_exists markdownlint; then
@@ -397,7 +451,7 @@ fi
 
 echo ""
 
-# 8. Final summary and test
+# 9. Final summary and test
 echo -e "${GREEN}${ROCKET} Setup Complete! Summary:${NC}"
 echo ""
 
@@ -420,6 +474,8 @@ elif npm list puppeteer &>/dev/null; then
 else
     echo -e "${YELLOW}${WARNING} PDF generators: Limited (use browser print-to-PDF)${NC}"
 fi
+
+command_exists pdfjam && echo -e "${GREEN}${CHECK} pdfjam: Available${NC}" || echo -e "${YELLOW}${WARNING} pdfjam: Not installed (PDF manipulation will be limited)${NC}"
 
 command_exists ebook-convert && echo -e "${GREEN}${CHECK} Calibre: Available${NC}" || echo -e "${YELLOW}${WARNING} Calibre: Not installed (MOBI generation will be skipped)${NC}"
 command_exists markdownlint && echo -e "${GREEN}${CHECK} markdownlint-cli: Available${NC}" || echo -e "${YELLOW}${WARNING} markdownlint-cli: Not installed${NC}"
