@@ -1,3 +1,10 @@
+# [1.22.0](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.21.0...v1.22.0) (2025-09-18)
+
+
+### Features
+
+* add cover and back for pdf ([#27](https://github.com/mastering-genkit/mastering-genkit-go/issues/27)) ([ab1214c](https://github.com/mastering-genkit/mastering-genkit-go/commit/ab1214c5de3d1b5011d5c7df31b31be8b36d2d98))
+
 # [1.21.0](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.20.0...v1.21.0) (2025-09-10)
 
 
