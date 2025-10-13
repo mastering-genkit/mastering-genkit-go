@@ -375,9 +375,10 @@ Flutter uses Genkit's Dart client for clean streaming:
 ```dart
 Stream<RecipeResponse> generateRecipe(RecipeRequest request) {
   final action = RecipeQuestActions.generateRecipe;
-  final (:stream, :response) = action.stream(input: request);
-  
-  return stream.handleError((error) {
+  final actionStream = action.stream(input: request);
+
+  // Treat ActionStream purely as Stream<RecipeResponse>; callers only need chunks.
+  return actionStream.handleError((error, stackTrace) {
     return RecipeResponse.error('Failed to generate recipe: $error');
   });
 }
@@ -387,7 +388,8 @@ Benefits:
 
 - Type-safe streaming with automatic serialization
 - Built-in error handling and retry logic
-- No manual SSE parsing required
+- Optional access to `onResult`/`result` if you ever need the final payload, while
+  keeping domain layers focused on the chunked stream by default
 
 #### Angular & Next.js: Manual SSE Handling
 
