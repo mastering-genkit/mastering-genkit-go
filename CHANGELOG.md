@@ -1,3 +1,10 @@
+# [1.23.0](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.22.0...v1.23.0) (2025-10-13)
+
+
+### Features
+
+* Dart Client version updated from 0.5.1 to 0.8.0 ([#28](https://github.com/mastering-genkit/mastering-genkit-go/issues/28)) ([882deba](https://github.com/mastering-genkit/mastering-genkit-go/commit/882deba752198ddd49aa1b2cf962bc9847e1d5d9))
+
 # [1.22.0](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.21.0...v1.22.0) (2025-09-18)
 
 
