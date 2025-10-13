@@ -16,7 +16,9 @@ class GenerateRecipeUseCase {
   Stream<RecipeResponse> execute(RecipeRequest request) async* {
     try {
       // Delegate to repository for streaming execution
-      await for (final response in _repository.generateRecipe(request)) {
+      final stream = _repository.generateRecipe(request);
+
+      await for (final response in stream) {
         yield response;
       }
     } on DomainError {

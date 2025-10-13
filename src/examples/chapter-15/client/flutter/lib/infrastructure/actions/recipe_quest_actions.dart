@@ -1,4 +1,4 @@
-import 'package:genkit/genkit.dart';
+import 'package:genkit/client.dart';
 import '../../domain/models/recipe/response.dart';
 import '../../domain/models/image/response.dart';
 import '../../domain/models/evaluate/response.dart';
@@ -18,7 +18,10 @@ class RecipeQuestConfig {
 class RecipeQuestActions {
   /// Generate recipe action (streaming)
   ///
-  /// Uses Genkit streaming flow to receive recipe content in real-time
+  /// Uses Genkit streaming flow to receive recipe content in real-time. The
+  /// returned action emits an [ActionStream] when invoked, which is both a
+  /// [Stream] of intermediate chunks and a [Future] via `result` for the final
+  /// response payload.
   static RemoteAction<RecipeResponse, RecipeResponse> get generateRecipe {
     return defineRemoteAction<RecipeResponse, RecipeResponse>(
       url: RecipeQuestConfig.generateRecipeUrl,
