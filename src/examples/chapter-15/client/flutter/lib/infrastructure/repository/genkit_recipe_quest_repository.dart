@@ -15,21 +15,15 @@ class GenkitRecipeQuestRepository implements RecipeQuestRepository {
   @override
   Stream<RecipeResponse> generateRecipe(RecipeRequest request) {
     try {
-      // Get the streaming remote action
       final action = RecipeQuestActions.generateRecipe;
+      final actionStream = action.stream(input: request);
 
-      // Execute streaming flow
-      final (:stream, :response) = action.stream(input: request);
-
-      // Return the stream of recipe responses
-      // Note: The final response from :response can be ignored for streaming use case
-      // or could be used for completion notification if needed
-      return stream.handleError((error) {
-        // Convert any Genkit errors to RecipeResponse.error
+      // Treat ActionStream purely as Stream<RecipeResponse>; callers do not
+      // depend on onResult/result because they only need chunked updates.
+      return actionStream.handleError((error, stackTrace) {
         return RecipeResponse.error('Failed to generate recipe: $error');
       });
     } catch (e) {
-      // Return error stream if action creation fails
       return Stream.fromIterable([
         RecipeResponse.error('Failed to initialize recipe generation: $e'),
       ]);

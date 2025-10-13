@@ -36,7 +36,7 @@ dependencies:
   cupertino_icons: ^1.0.8
 
   # Genkit client for AI flows
-  genkit: ^0.5.1
+  genkit: ^0.8.0
   
   # HTTP client for API calls
   http: ^1.1.0
