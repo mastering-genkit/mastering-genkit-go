@@ -223,10 +223,10 @@ packages:
     dependency: "direct main"
     description:
       name: genkit
-      sha256: "78e56b4f06a8bf930a175037d3150bb2b47d6f021c8674081f445d3cf6dbc4d6"
+      sha256: e901b2059bfbdf5e1251076e64714beb6e7a6c29207277397f0974564f930b10
       url: "https://pub.dev"
     source: hosted
-    version: "0.5.1"
+    version: "0.8.0"
   glob:
     dependency: transitive
     description:
