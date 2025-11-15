@@ -132,7 +132,25 @@ Beyond traditional AI frameworks, specialized agent development platforms have e
 
 **Mastra**, created by the Gatsby team, brings TypeScript-native agent development to the JavaScript ecosystem. With built-in memory persistence, workflow orchestration, and type-safe integrations, it allows web developers to build sophisticated AI agents without leaving their familiar toolchain. Its deployment flexibility makes it particularly attractive for teams already using React or Next.js.
 
-**Agent Development Kit (ADK)** represents Google's vision for enterprise-grade agent development. Launched in 2025, this code-first framework supports both Python and Java, offering sophisticated multi-agent orchestration capabilities. Its integration with Google Cloud's Agent Engine provides a fully managed runtime, while the Agent2Agent protocol enables cross-platform agent collaboration - a crucial feature for complex enterprise systems.
+**Agent Development Kit (ADK)** represents Google's vision for enterprise-grade agent development. Launched in 2025, this code-first framework supports Python, Java, and Go, offering sophisticated multi-agent orchestration capabilities. Its integration with Google Cloud's Agent Engine provides a fully managed runtime, while the Agent2Agent protocol enables cross-platform agent collaboration - a crucial feature for complex enterprise systems.
+
+### Genkit and ADK: Complementary Layers
+
+Within the Genkit community, there has been a lot of discussion about how Genkit relates to Google's Agent Development Kit (ADK). One engineer working on Genkit at Google summarized Genkit's role this way:
+
+> Genkit focuses on “low-level” AI APIs: models, tools, prompts, MCP, and developer tools such as o11y tooling and playgrounds.  
+> Genkit lets you interact directly with LLMs, ships without hardcoded prompts by default, and its o11y tooling lets you see exactly what your agent is doing. No surprises.
+
+In November 2025, Google also introduced the Agent Development Kit (ADK) for Go, an open-source, code-first toolkit for building, evaluating, and deploying sophisticated AI agents with flexibility and control (ADK for Go: <https://github.com/google/adk-go>). In the broader Vertex AI Agent Builder ecosystem, you build agents with ADK and run and scale them on Vertex AI Agent Engine Runtime, a fully managed service for deploying and operating agents in production. For more details, see ADK overview: <https://docs.cloud.google.com/agent-builder/agent-development-kit/overview> and Vertex AI Agent Builder overview: <https://docs.cloud.google.com/agent-builder/overview>.
+
+A useful mental model in the Genkit community — one we also share — is to think in terms of **complementary layers** rather than "which one is better":
+
+- **ADK** is a higher-level *agent framework* for orchestrating sophisticated, often multi-agent systems, with batteries-included features such as session management, memory, evaluation, and first-class integration with Google Cloud's Vertex AI Agent Engine Runtime and Agent Builder. If your requirements include managed scaling, production-grade observability, and long-lived, session-aware agents on Google Cloud, ADK is a natural fit.
+- **Genkit** is a more general-purpose, lower-level *AI framework* that focuses on models, tools, prompts, MCP, and o11y. You can use it on its own to build agents (as we do in this book), to power other types of AI services, or even as the foundation beneath higher-level frameworks.
+
+In a rapidly changing AI ecosystem, this separation of concerns matters. A common recommendation in the Genkit community — which we also agree with — is to follow Anthropic's guidance in "Building effective agents – When and how to use frameworks": <https://www.anthropic.com/engineering/building-effective-agents#when-and-how-to-use-frameworks>. Especially when you are starting out or learning, it often makes sense to begin with a lower-level toolkit like Genkit to deeply understand models, tools, prompts, and o11y, and then adopt an agent framework such as ADK based on your application's requirements.
+
+That is why this book focuses on Genkit as a low-level foundation for Go developers: once you master these building blocks, you can confidently evaluate, choose, and combine agent frameworks — such as ADK on Google Cloud or other AI agent frameworks from different vendors — based on your application's requirements, or even build your own custom framework on top of Genkit when your architecture calls for it.
 
 ### The Framework Selection Challenge
 
