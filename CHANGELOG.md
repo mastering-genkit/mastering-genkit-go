@@ -1,3 +1,10 @@
+## [1.23.1](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.23.0...v1.23.1) (2025-11-15)
+
+
+### Bug Fixes
+
+* clarify `Genkit for Go` and `ADK for Go` positioning in Chapter 1 ([#29](https://github.com/mastering-genkit/mastering-genkit-go/issues/29)) ([7f3ddd6](https://github.com/mastering-genkit/mastering-genkit-go/commit/7f3ddd6e90578dbb70c40da6f4539fed2d2b7829))
+
 # [1.23.0](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.22.0...v1.23.0) (2025-10-13)
 
 
