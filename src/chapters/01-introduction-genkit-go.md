@@ -132,7 +132,7 @@ Beyond traditional AI frameworks, specialized agent development platforms have e
 
 **Mastra**, created by the Gatsby team, brings TypeScript-native agent development to the JavaScript ecosystem. With built-in memory persistence, workflow orchestration, and type-safe integrations, it allows web developers to build sophisticated AI agents without leaving their familiar toolchain. Its deployment flexibility makes it particularly attractive for teams already using React or Next.js.
 
-**Agent Development Kit (ADK)** represents Google's vision for enterprise-grade agent development. Launched in 2025, this code-first framework supports both Python and Java, offering sophisticated multi-agent orchestration capabilities. Its integration with Google Cloud's Agent Engine provides a fully managed runtime, while the Agent2Agent protocol enables cross-platform agent collaboration - a crucial feature for complex enterprise systems.
+**Agent Development Kit (ADK)** represents Google's vision for enterprise-grade agent development. Launched in 2025, this code-first framework supports Python, Java, and Go, offering sophisticated multi-agent orchestration capabilities. Its integration with Google Cloud's Agent Engine provides a fully managed runtime, while the Agent2Agent protocol enables cross-platform agent collaboration - a crucial feature for complex enterprise systems.
 
 ### Genkit and ADK: Complementary Layers
 
