@@ -3,7 +3,7 @@ module mastering-genkit-go/example/chapter-13/firebase
 go 1.24.5
 
 require (
-	github.com/firebase/genkit/go v1.0.0
+	github.com/firebase/genkit/go v1.1.0
 	github.com/xavidop/genkit-aws-bedrock-go v1.5.0
 )
 
@@ -54,7 +54,7 @@ require (
 	github.com/goccy/go-yaml v1.17.1 // indirect
 	github.com/golang-jwt/jwt/v4 v4.5.2 // indirect
 	github.com/golang/protobuf v1.5.4 // indirect
-	github.com/google/dotprompt/go v0.0.0-20250611200215-bb73406b05ca // indirect
+	github.com/google/dotprompt/go v0.0.0-20251014011017-8d056e027254 // indirect
 	github.com/google/s2a-go v0.1.9 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.3.6 // indirect

@@ -3,7 +3,7 @@ module mastering-genkit-go/example/chapter-13/otel
 go 1.24.5
 
 require (
-	github.com/firebase/genkit/go v1.0.0
+	github.com/firebase/genkit/go v1.1.0
 	github.com/xavidop/genkit-aws-bedrock-go v1.5.0
 	github.com/xavidop/genkit-opentelemetry-go v1.5.0
 )
@@ -32,7 +32,7 @@ require (
 	github.com/go-logr/logr v1.4.3 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/goccy/go-yaml v1.17.1 // indirect
-	github.com/google/dotprompt/go v0.0.0-20250611200215-bb73406b05ca // indirect
+	github.com/google/dotprompt/go v0.0.0-20251014011017-8d056e027254 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/grafana/regexp v0.0.0-20240518133315-a468a5bfb3bc // indirect
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.27.2 // indirect
