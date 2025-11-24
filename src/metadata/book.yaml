@@ -60,7 +60,7 @@ kindle:
 web:
   base_url: "https://mastering-genkit.github.io/mastering-genkit-go"
   theme: "default"
-  google_analytics: "G-XXXXXXXXXX"  # Replace with your actual Google Analytics ID
+  google_analytics: "G-783W47YJB1"  # Replace with your actual Google Analytics ID
 
 social:
   github: "https://github.com/mastering-genkit/mastering-genkit-go"
