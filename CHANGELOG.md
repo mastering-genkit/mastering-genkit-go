@@ -1,3 +1,10 @@
+## [1.24.1](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.24.0...v1.24.1) (2025-11-24)
+
+
+### Bug Fixes
+
+* add google search console ([144a026](https://github.com/mastering-genkit/mastering-genkit-go/commit/144a026508fed6e5c0fd396928e5d40e9bab1100))
+
 # [1.24.0](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.23.1...v1.24.0) (2025-11-18)
 
 
