@@ -1,3 +1,10 @@
+## [1.24.2](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.24.1...v1.24.2) (2025-11-24)
+
+
+### Bug Fixes
+
+* add GA Analytics ([24b8a45](https://github.com/mastering-genkit/mastering-genkit-go/commit/24b8a45289780b749147e7691fb3ff8d029156b8))
+
 ## [1.24.1](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.24.0...v1.24.1) (2025-11-24)
 
 
