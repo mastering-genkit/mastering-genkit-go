@@ -1,3 +1,10 @@
+## [1.24.3](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.24.2...v1.24.3) (2025-11-25)
+
+
+### Bug Fixes
+
+* Changed Genkit links from http to https ([#31](https://github.com/mastering-genkit/mastering-genkit-go/issues/31)) ([b956b3f](https://github.com/mastering-genkit/mastering-genkit-go/commit/b956b3f1dbd4edf1ad6bc661897ab6568f7d5614))
+
 ## [1.24.2](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.24.1...v1.24.2) (2025-11-24)
 
 
