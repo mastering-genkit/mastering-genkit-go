@@ -6,7 +6,7 @@ Here you can find a list of resources that has been used in this book and will h
 
 ### Genkit
 
-- **Genkit Official Documentation**: [http://genkit.dev/](http://genkit.dev/)
+- **Genkit Official Documentation**: [https://genkit.dev/](https://genkit.dev/)
   - The primary source for all Genkit documentation, tutorials, and guides
   - Latest feature announcements and updates
 
