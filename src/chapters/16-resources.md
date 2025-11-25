@@ -8,7 +8,12 @@ Here you can find a list of resources that has been used in this book and will h
 
 - **Genkit Official Documentation**: [https://genkit.dev/](https://genkit.dev/)
   - The primary source for all Genkit documentation, tutorials, and guides
+  - For Go documentation [https://genkit.dev/docs/get-started/?lang=go](https://genkit.dev/docs/get-started/?lang=go)
+
+- **Genkit Official X Account**: [@GenkitFramework](https://x.com/GenkitFramework)
   - Latest feature announcements and updates
+  - Latest tutorials and samples
+  - Latest news and tips
 
 - **Genkit GitHub Repository**: [https://github.com/firebase/genkit](https://github.com/firebase/genkit)
   - Source code for Genkit across all supported languages
