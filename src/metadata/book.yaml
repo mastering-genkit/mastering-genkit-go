@@ -14,7 +14,7 @@ authors:
     email: "kobofender@gmail.com"
     linkedin: "https://www.linkedin.com/in/nozomi-koborinai/"
     twitter: "@fender_kn"
-    website: "https://medium.com/@nozomi-koborinai"
+    website: "https://koborin.ai"
     github: "https://github.com/nozomi-koborinai"
 description: |
   Master the art of building AI with Genkit and Go. This guide takes you from the basics of setting up your development environment to advanced topics like RAG systems, AI agents, and production deployment.
