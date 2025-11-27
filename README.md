@@ -97,7 +97,7 @@ You can get these formats from the [Releases](https://github.com/mastering-genki
 
 ### Authors
 - Xavier Portilla Edo: [Website](https://xavidop.me) | [LinkedIn](https://www.linkedin.com/in/xavierportillaedo/) | [GitHub](https://github.com/xavidop)
-- Nozomi Koborinai: [Medium](https://medium.com/@nozomi-koborinai) | [LinkedIn](https://www.linkedin.com/in/nozomi-koborinai/) | [GitHub](https://github.com/nozomi-koborinai)
+- Nozomi Koborinai: [Website](https://koborin.ai) | [LinkedIn](https://www.linkedin.com/in/nozomi-koborinai/) | [GitHub](https://github.com/nozomi-koborinai)
 
 ## 📄 License
 
