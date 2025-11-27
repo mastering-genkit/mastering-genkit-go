@@ -1,6 +1,6 @@
 {
   "name": "book-writing-template",
-  "version": "1.24.3",
+  "version": "1.24.4",
   "description": "A multi-format book writing template supporting Leanpub, Kindle, and web publishing",
   "scripts": {
     "setup": "./scripts/setup-all.sh",

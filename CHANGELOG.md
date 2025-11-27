@@ -1,3 +1,10 @@
+## [1.24.4](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.24.3...v1.24.4) (2025-11-27)
+
+
+### Bug Fixes
+
+* Update Genkit resources with additional links ([#32](https://github.com/mastering-genkit/mastering-genkit-go/issues/32)) ([e24c9fa](https://github.com/mastering-genkit/mastering-genkit-go/commit/e24c9fa6745d1043358dc245270fa6a646350242))
+
 ## [1.24.3](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.24.2...v1.24.3) (2025-11-25)
 
 
