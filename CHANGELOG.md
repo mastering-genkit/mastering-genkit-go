@@ -1,3 +1,10 @@
+# [1.25.0](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.24.4...v1.25.0) (2025-11-29)
+
+
+### Features
+
+* bump versions ([#34](https://github.com/mastering-genkit/mastering-genkit-go/issues/34)) ([f0d4f3a](https://github.com/mastering-genkit/mastering-genkit-go/commit/f0d4f3af00e3d2ee185e09a11f6107bbff7b0493))
+
 ## [1.24.4](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.24.3...v1.24.4) (2025-11-27)
 
 
