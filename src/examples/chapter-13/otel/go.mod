@@ -3,7 +3,7 @@ module mastering-genkit-go/example/chapter-13/otel
 go 1.24.5
 
 require (
-	github.com/firebase/genkit/go v1.2.0
+	github.com/firebase/genkit/go v1.4.0
 	github.com/xavidop/genkit-aws-bedrock-go v1.10.0
 	github.com/xavidop/genkit-opentelemetry-go v1.10.0
 )
