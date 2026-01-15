@@ -3,7 +3,7 @@ module mastering-genkit-go/example/chapter-11
 go 1.24.5
 
 require (
-	github.com/firebase/genkit/go v1.2.0
+	github.com/firebase/genkit/go v1.4.0
 	github.com/openai/openai-go v1.8.2
 )
 
