@@ -4,7 +4,7 @@ go 1.25.0
 
 require (
 	cloud.google.com/go/firestore v1.18.0
-	github.com/firebase/genkit/go v1.4.0
+	github.com/firebase/genkit/go v1.6.0
 	google.golang.org/genai v1.41.0
 )
 
