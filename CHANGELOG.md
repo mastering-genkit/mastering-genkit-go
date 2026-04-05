@@ -1,3 +1,10 @@
+# [1.27.0](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.26.0...v1.27.0) (2026-04-05)
+
+
+### Features
+
+* update genkit ([#36](https://github.com/mastering-genkit/mastering-genkit-go/issues/36)) ([a5e78e3](https://github.com/mastering-genkit/mastering-genkit-go/commit/a5e78e3dd3c7884f48963d5ec53c0866eb989244))
+
 # [1.26.0](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.25.0...v1.26.0) (2026-01-15)
 
 
