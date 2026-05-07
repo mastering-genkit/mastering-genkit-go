@@ -1,9 +1,9 @@
 module mastering-genkit-go/example/chapter-11
 
-go 1.24.5
+go 1.26.2
 
 require (
-	github.com/firebase/genkit/go v1.6.0
+	github.com/firebase/genkit/go v1.7.0
 	github.com/openai/openai-go v1.8.2
 )
 
@@ -11,6 +11,7 @@ require (
 	github.com/bahlo/generic-list-go v0.2.0 // indirect
 	github.com/blues/jsonata-go v1.5.4 // indirect
 	github.com/buger/jsonparser v1.1.1 // indirect
+	github.com/coder/websocket v1.8.14 // indirect
 	github.com/go-logr/logr v1.4.3 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/goccy/go-yaml v1.17.1 // indirect

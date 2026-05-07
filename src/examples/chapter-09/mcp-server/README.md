@@ -70,7 +70,7 @@ The server is built using Genkit's MCP plugin and follows these patterns:
 
 ### Prerequisites
 
-1. Ensure Go 1.24.5 or later is installed
+1. Ensure Go 1.26 or later is installed
 
 ### Starting the Server
 

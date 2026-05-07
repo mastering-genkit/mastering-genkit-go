@@ -10,7 +10,7 @@ This chapter guides you through setting up a production-ready Genkit Go developm
 
 Before setting up your Genkit Go environment, ensure you have:
 
-- **Go 1.24 or later**: Genkit Go leverages modern Go features for type safety and performance
+- **Go 1.26 or later**: Genkit Go leverages modern Go features for type safety and performance
 - **Node.js 20+ and npm**: Required for the Genkit CLI and Developer UI
 - **Git**: For version control and accessing example repositories
 - **Basic understanding of Go modules**: Familiarity with `go mod` commands and dependency management
@@ -581,7 +581,7 @@ The combination of static documentation (llms.txt) and dynamic interaction (MCP)
 
 ## Key Takeaways
 
-- **Go 1.24+ and Node.js 20+** are required for Genkit Go development
+- **Go 1.26+ and Node.js 20+** are required for Genkit Go development
 - **Genkit CLI is essential** for development, providing the Developer UI and testing utilities
 - **Production-ready from the start**: Server with HTTP endpoints and testable Flows
 - **Developer UI integration**: Real-time testing without deploying to cloud or building frontends

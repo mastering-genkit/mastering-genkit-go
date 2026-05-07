@@ -97,7 +97,7 @@ The foundation of modern deployment is containerization. Our example includes a 
 
 ```dockerfile
 # Build stage
-FROM golang:1.24-alpine AS builder
+FROM golang:1.26-alpine AS builder
 
 # Set working directory
 WORKDIR /app

@@ -71,7 +71,7 @@ curl -X POST http://localhost:9090/retrievalFlow \
 ## Setup and Running
 
 ### Prerequisites
-- Go 1.24 or later
+- Go 1.26 or later
 - OpenAI API key
 
 ### 1. Environment Setup

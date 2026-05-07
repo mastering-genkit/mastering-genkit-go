@@ -14,7 +14,7 @@ This example demonstrates how to build an AI agent with conversation history. Th
 
 Before running this example, ensure you have:
 
-1. **Go 1.24+** installed
+1. **Go 1.26+** installed
 2. **Ollama** installed and running locally
 3. **gemma3n:e4b model** downloaded in Ollama
 
