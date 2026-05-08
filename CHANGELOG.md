@@ -1,3 +1,10 @@
+# [1.28.0](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.27.0...v1.28.0) (2026-05-08)
+
+
+### Features
+
+* bump to go 1.26 + dependencies to latest ([#37](https://github.com/mastering-genkit/mastering-genkit-go/issues/37)) ([0a074b3](https://github.com/mastering-genkit/mastering-genkit-go/commit/0a074b30617bd7034659cf56fb724b6ead7cd04e))
+
 # [1.27.0](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.26.0...v1.27.0) (2026-04-05)
 
 
