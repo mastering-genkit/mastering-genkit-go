@@ -1,3 +1,10 @@
+# [1.29.0](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.28.0...v1.29.0) (2026-05-08)
+
+
+### Features
+
+* update Chapter 4 middleware section to Middleware V2 ([#38](https://github.com/mastering-genkit/mastering-genkit-go/issues/38)) ([8804fab](https://github.com/mastering-genkit/mastering-genkit-go/commit/8804fab0f8581d3dc7fb3194942c85298f6d2740))
+
 # [1.28.0](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.27.0...v1.28.0) (2026-05-08)
 
 
