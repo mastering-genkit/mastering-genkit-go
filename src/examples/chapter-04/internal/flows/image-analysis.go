@@ -20,7 +20,7 @@ func NewImageAnalysisFlow(g *genkit.Genkit) *core.Flow[string, string, struct{}]
 					ai.NewMediaPart("", imageURL),
 				),
 			),
-			ai.WithMiddleware(LoggingMiddleware),
+			ai.WithUse(CostTracker{InputUSDPer1M: 0.075, OutputUSDPer1M: 0.30}),
 		)
 		if err != nil {
 			return "", fmt.Errorf("failed to analyze image: %w", err)

@@ -108,40 +108,137 @@ The `Generate` function returns a `ModelResponse` with full metadata access, inc
 
 ### Middleware: Extending Without Modifying
 
-Genkit's middleware system lets you add functionality without changing core code:
+Genkit's middleware system lets you add cross-cutting concerns—cost tracking, retries, authentication, custom validation—without changing the code that calls `Generate`. Starting in genkit Go v1.7.0, middleware is built around the **Middleware V2** API, which can hook in at three different points during a generation:
+
+- **`WrapGenerate`** wraps each iteration of the tool-call loop. Use it when you need to see (or alter) the accumulated request as the model iterates over tool responses.
+- **`WrapModel`** wraps each model API call. Retry, fallback, and caching middleware typically hook here.
+- **`WrapTool`** wraps each tool execution. Useful for auditing tool usage or adding human-in-the-loop approval.
+
+Each hook is optional: a `nil` field is treated as a pass-through, so a middleware only implements the hook points it actually cares about.
+
+Before showing examples, a note on what middleware is *for*. Genkit already does a lot of cross-cutting work for you—every model is automatically wrapped with built-in telemetry that records `LatencyMs` on the response and emits an OpenTelemetry span for the call. So you don't need to write a "logging middleware" just to get latency or token counts in your traces; that's free. Middleware shines for the things Genkit *doesn't* already do—and a great example is **dollar cost tracking**, since pricing is application-specific (the rates depend on which model you use, your provider contract, and so on).
+
+#### Inline middleware with `MiddlewareFunc`
+
+The simplest way to write a one-off middleware is `ai.MiddlewareFunc`, which adapts a closure to the `Middleware` interface. Here's a per-call token reporter that prints how many tokens each model call consumed:
 
 ```go
-// Define logging middleware
-loggingMiddleware := func(fn ai.ModelFunc) ai.ModelFunc {
-    return func(ctx context.Context, req *ai.ModelRequest, cb ai.ModelStreamCallback) (*ai.ModelResponse, error) {
-        start := time.Now()
-        resp, err := fn(ctx, req, cb)
-        if err != nil {
-            log.Printf("Error after %v", time.Since(start))
-            return nil, err
-        }
-        log.Printf("Success in %v", time.Since(start))
-        return resp, nil
-    }
-}
+// Define token reporter inline
+tokenReporter := ai.MiddlewareFunc(func(ctx context.Context) (*ai.Hooks, error) {
+    return &ai.Hooks{
+        WrapModel: func(ctx context.Context, params *ai.ModelParams, next ai.ModelNext) (*ai.ModelResponse, error) {
+            resp, err := next(ctx, params)
+            if err != nil {
+                return nil, err
+            }
+            if resp.Usage != nil {
+                log.Printf("Tokens: %d input + %d output = %d total",
+                    resp.Usage.InputTokens,
+                    resp.Usage.OutputTokens,
+                    resp.Usage.TotalTokens)
+            }
+            return resp, nil
+        },
+    }, nil
+})
 
 // Use middleware in your generation
 resp, err := genkit.Generate(ctx, g,
     ai.WithPrompt("Explain how to make perfect rice"),
-    ai.WithMiddleware(loggingMiddleware))
+    ai.WithUse(tokenReporter))
 ```
 
-```bash
-# Example of operation
-2025/08/03 13:25:37 Success in 15.355457625s
+Each call prints a line of the form `Tokens: <input> input + <output> output = <total> total` to the server log. (The `CostTracker` example below shows captured output from a real run.)
+
+`resp.Usage` is also available to the caller of `Generate`—what middleware adds is **automatic** observation without the caller having to remember, plus visibility into nested model calls inside a tool loop (where each turn produces its own `resp.Usage`). The closure returns a `*ai.Hooks` bundle, which is what enables a single middleware to hook into Generate, Model, and Tool simultaneously—here we only fill in `WrapModel`.
+
+#### Reusable middleware as a struct: cost tracker
+
+For middleware you want to share across flows—or expose in the Dev UI—define a struct that implements the `Middleware` interface. Below is a `CostTracker` that takes per-million-token rates and reports the dollar cost of every model call:
+
+```go
+// CostTracker logs the dollar cost of every model API call.
+type CostTracker struct {
+    InputUSDPer1M  float64 `json:"inputUsdPer1M,omitempty"`
+    OutputUSDPer1M float64 `json:"outputUsdPer1M,omitempty"`
+}
+
+func (CostTracker) Name() string { return "cost-tracker" }
+
+func (c CostTracker) New(ctx context.Context) (*ai.Hooks, error) {
+    return &ai.Hooks{
+        WrapModel: func(ctx context.Context, params *ai.ModelParams, next ai.ModelNext) (*ai.ModelResponse, error) {
+            resp, err := next(ctx, params)
+            if err != nil {
+                return nil, err
+            }
+            if resp.Usage != nil {
+                inputCost := float64(resp.Usage.InputTokens) / 1_000_000 * c.InputUSDPer1M
+                outputCost := float64(resp.Usage.OutputTokens) / 1_000_000 * c.OutputUSDPer1M
+                log.Printf("Cost: $%.6f (in: $%.6f, out: $%.6f, latency: %.0fms)",
+                    inputCost+outputCost, inputCost, outputCost, resp.LatencyMs)
+            }
+            return resp, nil
+        },
+    }, nil
+}
+
+// Use it the same way as inline middleware
+resp, err := genkit.Generate(ctx, g,
+    ai.WithPrompt("Explain how to make perfect rice"),
+    ai.WithUse(CostTracker{
+        InputUSDPer1M:  0.075, // example rates for Gemini 2.5 Flash
+        OutputUSDPer1M: 0.30,
+    }))
+```
+
+`Name()` returns a stable identifier, and `New(ctx)` is invoked once per `Generate()` call so each invocation gets its own state container if needed (counters, request-scoped caches, and so on). Notice how the middleware reads `resp.LatencyMs`—that field is filled in automatically by Genkit's built-in telemetry, so your own metrics can compose on top of it instead of re-implementing the timer.
+
+#### Built-in middleware: Retry and Fallback
+
+Genkit ships a handful of common middlewares under `github.com/firebase/genkit/go/plugins/middleware`. Two of them earn their keep in production:
+
+- **`Retry`** retries failed model calls with exponential backoff, by default for retryable errors such as `UNAVAILABLE`, `DEADLINE_EXCEEDED`, and `INTERNAL_SERVER_ERROR`.
+- **`Fallback`** forwards the request to a backup model when the primary one fails with a fallback-eligible status.
+
+You can compose them in a single call. The order in `WithUse(...)` is **outer-to-inner**, so `WithUse(Retry, Fallback)` becomes `Retry { Fallback { model } }`:
+
+```go
+import (
+    "github.com/firebase/genkit/go/ai"
+    "github.com/firebase/genkit/go/plugins/googlegenai"
+    "github.com/firebase/genkit/go/plugins/middleware"
+)
+
+resp, err := genkit.Generate(ctx, g,
+    // Primary uses the auto-tracking `flash-latest` alias, which Google
+    // hot-swaps to point at the newest stable Flash model with two weeks'
+    // notice before each rotation.
+    ai.WithModel(googlegenai.ModelRef("googleai/gemini-flash-latest", nil)),
+    ai.WithPrompt("Explain photosynthesis."),
+    ai.WithUse(
+        &middleware.Retry{MaxRetries: 3},
+        &middleware.Fallback{
+            Models: []ai.ModelRef{
+                // Fall back to a pinned, known-good version if the latest
+                // alias fails (e.g. during a rollout or regional outage).
+                googlegenai.ModelRef("googleai/gemini-2.5-flash", nil),
+            },
+        },
+    ),
+)
 ```
 
 Common middleware use cases:
 
 - **Observability**: Log requests, responses, and performance metrics
 - **Security**: Add authentication or filter sensitive data
-- **Resilience**: Implement retry logic or circuit breakers
+- **Resilience**: Use the built-in `Retry` and `Fallback`, or write your own circuit breaker
 - **Cost Control**: Track token usage and enforce limits
+
+> **Migrating from V1 (`ai.WithMiddleware`)**
+>
+> Earlier versions of Genkit used `ai.WithMiddleware(...)` with a `func(ai.ModelFunc) ai.ModelFunc` signature. As of v1.7.0 that API is officially marked `// Deprecated:` in Genkit's source and superseded by `ai.WithUse`. Existing code keeps compiling—the Go toolchain simply surfaces a deprecation warning. To migrate, swap `WithMiddleware` for `WithUse` and rewrite the closure into the `*ai.Hooks{WrapModel: ...}` shape shown above.
 
 ## Multimedia Generation
 
@@ -625,14 +722,13 @@ Example response (abbreviated):
 }
 ```
 
-Notice in the server logs how the middleware tracks execution time:
+Notice in the server logs how the middleware reports the dollar cost of each model call:
 
 ```bash
-2025/08/03 15:30:42 Success in 15.418887708s
-2025/08/03 15:32:42 Success in 24.84293225s
+2026/05/08 17:31:23 Cost: $0.000395 (in: $0.000002, out: $0.000393, latency: 15762ms)
 ```
 
-This demonstrates that our logging middleware is successfully intercepting each request, timing the generation process, and logging the results.
+This demonstrates that our cost tracker is successfully intercepting each request, computing the dollar cost from the token usage and provider rates, and logging the results alongside the latency that Genkit measures automatically. The input cost prints as `$0.000002` rather than zero because the prompt is short—around 25 tokens at $0.075 per million tokens works out to roughly two-millionths of a dollar—so the six-decimal format keeps the breakdown legible even when the absolute amounts are tiny.
 
 ### 4. Test with Developer UI
 
@@ -721,7 +817,7 @@ genkit flow:run dotpromptFlow '"fermentation techniques"'
 
 This chapter covered the practical aspects of AI generation with Genkit Go, from basic text generation to multimedia processing and Dotprompt management.
 
-The middleware pattern demonstrated with our logging example shows how to add cross-cutting concerns without modifying core logic. The same pattern works for authentication, authorization, rate limiting, cost tracking, and retry logic. Provider switching is straightforward, allowing you to change models based on your requirements.
+The middleware pattern demonstrated with our cost tracker shows how to add cross-cutting concerns without modifying core logic. The same pattern works for authentication, authorization, rate limiting, custom logging, and retry logic. Provider switching is straightforward, allowing you to change models based on your requirements.
 
 The Developer UI provides a visual workflow for prompt development with observability. You can test prompt variations locally, track metrics, export configurations, and maintain consistency across your team.
 
