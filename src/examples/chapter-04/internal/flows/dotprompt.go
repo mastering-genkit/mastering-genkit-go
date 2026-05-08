@@ -21,7 +21,7 @@ func NewDotpromptFlow(g *genkit.Genkit) *core.Flow[string, string, struct{}] {
 			ai.WithInput(map[string]any{
 				"topic": userRequest,
 			}),
-			ai.WithMiddleware(LoggingMiddleware),
+			ai.WithUse(CostTracker{InputUSDPer1M: 0.075, OutputUSDPer1M: 0.30}),
 		)
 		if err != nil {
 			return "", fmt.Errorf("error executing prompt: %w", err)

@@ -394,9 +394,9 @@ This context propagation enables powerful patterns:
 
 #### 3. Middleware Pipeline
 
-Actions (including flows and model calls) support middleware for cross-cutting concerns. The middleware system allows you to wrap action execution with pre/post processing, modify inputs and outputs, and add logging, metrics, or authentication.
+Actions (including flows and model calls) support middleware for cross-cutting concerns. The Middleware V2 system introduced in Genkit Go v1.7.0 lets you wrap action execution at three distinct points—`WrapGenerate` (the tool-call loop), `WrapModel` (each model API call), and `WrapTool` (each tool execution)—so a single middleware can handle pre/post processing, input/output transformation, logging, metrics, retries, or authentication wherever it fits best.
 
-> For detailed middleware implementation patterns and examples, see `Chapter 4: Mastering AI Generation`, where we explore logging middleware, retry logic, and other production patterns.
+> For detailed middleware implementation patterns and examples, see `Chapter 4: Mastering AI Generation`, where we build a cost-tracking middleware, walk through the built-in `Retry` and `Fallback` middleware, and cover other production patterns.
 
 ### Observability Integration
 

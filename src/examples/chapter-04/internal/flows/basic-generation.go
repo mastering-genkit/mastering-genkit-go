@@ -14,7 +14,7 @@ func NewBasicGenerationFlow(g *genkit.Genkit) *core.Flow[string, string, struct{
 	return genkit.DefineFlow(g, "basicGenerationFlow", func(ctx context.Context, userRequest string) (string, error) {
 		resp, err := genkit.Generate(ctx, g,
 			ai.WithPrompt(fmt.Sprintf("As a helpful cooking instructor, explain %s in simple terms that a beginner can understand.", userRequest)),
-			ai.WithMiddleware(LoggingMiddleware),
+			ai.WithUse(CostTracker{InputUSDPer1M: 0.075, OutputUSDPer1M: 0.30}),
 		)
 		if err != nil {
 			return "", fmt.Errorf("failed to generate response: %w", err)
