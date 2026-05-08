@@ -27,7 +27,7 @@ This architecture shows the flow from your Genkit Go application through the Ope
 
 Before diving into the examples, ensure you have the following prerequisites set up:
 
-- **Go 1.24+**: Ensure you have Go installed and set up on your machine.
+- **Go 1.26+**: Ensure you have Go installed and set up on your machine.
 - **Genkit Go**: Understand the basics of Genkit Go and how to create AI applications.
 - **OpenTelemetry**: Familiarize yourself with OpenTelemetry concepts and components.
 - **AWS Credentials**: For examples using AWS Bedrock, ensure you have your AWS credentials configured.

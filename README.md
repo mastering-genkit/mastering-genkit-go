@@ -4,7 +4,7 @@
 
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)]()
 [![License](https://img.shields.io/badge/license-CC%20BY--NC--ND%204.0-blue.svg)](LICENSE)
-[![Go](https://img.shields.io/badge/Go-1.24+-00ADD8?logo=go)](https://golang.org)
+[![Go](https://img.shields.io/badge/Go-1.26+-00ADD8?logo=go)](https://golang.org)
 [![Genkit](https://img.shields.io/badge/Genkit-v1.0.0-4285F4?logo=firebase)](https://firebase.google.com/products/genkit)
 [![Star this repo](https://img.shields.io/github/stars/mastering-genkit/mastering-genkit-go?style=social)](https://github.com/mastering-genkit/mastering-genkit-go)
 
@@ -51,7 +51,7 @@ src/
 
 ### Prerequisites
 
-- Go 1.24 or later
+- Go 1.26 or later
 - Git for version control
 
 ### Getting Started
