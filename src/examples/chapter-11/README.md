@@ -59,7 +59,7 @@ The main conversational flow for generating AI responses.
    export ANTHROPIC_API_KEY="your-anthropic-api-key-here"
    ```
 
-2. **Go 1.21+** installed
+2. **Go 1.27+** installed
 
 ### Setup and Execution
 

@@ -1,41 +1,44 @@
 ```mermaid
 sequenceDiagram
     participant User
-    participant CLI as CLI Agent
-    participant History as Conversation History
-    participant Flow as Chat Flow
-    participant Genkit as Genkit Generate
+    participant CLI as CLI
+    participant Agent as Genkit Agent
+    participant Store as In-Memory Session Store
     participant Ollama as Ollama Model
+    participant Tools as Tools
 
-    Note over User, Ollama: Initialization
-    CLI->>History: Initialize empty history
-    CLI->>Flow: Create chat flow
+    Note over User, Tools: Initialization
+    CLI->>Agent: Connect (new session)
     CLI->>User: Display welcome message
 
-    Note over User, Ollama: Conversation Loop
+    Note over User, Tools: Conversation Loop
     loop Each User Message
         User->>CLI: Send message
-        CLI->>History: Get conversation history
-        CLI->>Flow: ChatRequest{message, history}
-        
-        Flow->>Genkit: Generate with context
-        Genkit->>Ollama: Process request
-        Ollama-->>Genkit: AI response
-        Genkit-->>Flow: Generated response
-        
-        Flow-->>CLI: ChatResponse{response, updated_history}
-        CLI->>History: Update conversation history
+        CLI->>Agent: SendText(message)
+        Agent->>Ollama: System prompt + session history + message + tools
+        opt Model calls a tool
+            Ollama-->>Agent: Tool request
+            Agent->>Tools: getCurrentDateTime
+            Tools-->>Agent: Tool result
+            Agent->>Ollama: Tool result
+        end
+        Ollama-->>Agent: Streamed response
+        Agent-->>CLI: Stream chunks
         CLI->>User: Display AI response
+        Agent->>Store: Save snapshot (session state)
+        Agent-->>CLI: TurnEnd (snapshot ID)
     end
 
-    Note over User, Ollama: Special Commands
+    Note over User, Tools: Special Commands
     alt history command
         User->>CLI: "history"
-        CLI->>User: Display conversation history
+        CLI->>Agent: GetSnapshot(snapshot ID)
+        Agent->>Store: Read snapshot
+        CLI->>User: Display session messages
     else clear command
         User->>CLI: "clear"
-        CLI->>History: Reset history
-        CLI->>User: "History cleared"
+        CLI->>Agent: Close connection, Connect new session
+        CLI->>User: "Conversation cleared"
     else quit command
         User->>CLI: "quit"
         CLI->>User: "Goodbye!"

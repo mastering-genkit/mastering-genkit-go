@@ -23,14 +23,14 @@ func NewNonBilledEvaluatorService(g *genkit.Genkit) *NonBilledEvaluatorService {
 
 // NewResponseQualityEvaluator creates a response quality evaluator
 func (es *NonBilledEvaluatorService) NewResponseQualityEvaluator() ai.Evaluator {
-	return genkit.DefineEvaluator(es.genkit,
+	return genkit.DefineEvaluatorAction(es.genkit,
 		"custom-non-billed/response-quality",
 		&ai.EvaluatorOptions{
 			Definition:  "Evaluates the quality of AI responses based on length, relevance, and coherence.",
 			IsBilled:    false,
 			DisplayName: "Response Quality Evaluator",
 		},
-		func(ctx context.Context, req *ai.EvaluatorCallbackRequest) (*ai.EvaluatorCallbackResponse, error) {
+		func(ctx context.Context, req *ai.EvaluatorCallbackRequest, _ any) (*ai.EvaluatorCallbackResponse, error) {
 			// Simple evaluation logic - check if response is meaningful
 			score := 0.0
 			reasoning := "Response is empty or invalid"

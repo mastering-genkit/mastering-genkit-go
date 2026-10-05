@@ -72,33 +72,41 @@ This isn't just a development convenience—it demonstrates how Genkit Go consid
 
 ### Error Handling as a First-Class Concern
 
-Genkit Go's error system provides two distinct error types for different contexts:
+Genkit Go's error system lives in the `github.com/firebase/genkit/go/core/status` package. It defines a single error type, `status.Error`, that pairs a message with a canonical status name (`INVALID_ARGUMENT`, `NOT_FOUND`, `RESOURCE_EXHAUSTED`, ...) and the *sentinel* that classified it:
 
 ```go
-// GenkitError is the base error type for Genkit errors.
-type GenkitError struct {
-    Message  string         `json:"message"` // Exclude from default JSON if embedded elsewhere
-    Status   StatusName     `json:"status"`
-    HTTPCode int            `json:"-"`                // Exclude from default JSON
-    Details  map[string]any `json:"details"`          // Use map for arbitrary details
-    Source   *string        `json:"source,omitempty"` // Pointer for optional
-}
-
-// UserFacingError is the base error type for user facing errors.
-type UserFacingError struct {
-    Message string         `json:"message"` // Exclude from default JSON if embedded elsewhere
-    Status  StatusName     `json:"status"`
-    Details map[string]any `json:"details"` // Use map for arbitrary details
+// Error is the only error type Genkit defines.
+type Error struct {
+    Status  Name           // canonical status, e.g. "NOT_FOUND"
+    Message string         // what failed
+    Public  bool           // whether Message is safe to return to a client
+    Details map[string]any // optional structured information
+    // ... plus the classifying sentinel, the wrapped cause and a stack trace
 }
 ```
 
-This dual-error structure serves multiple purposes:
+You build errors with a sentinel as the first argument, and callers branch with `errors.Is` instead of matching message text:
 
-- **Security**: `UserFacingError` prevents internal details from leaking to clients
-- **Debugging**: `GenkitError` captures stack traces but only exposes them in development mode
-- **Integration**: HTTP status codes map cleanly to REST API responses
+```go
+// Internal error: the message stays server-side
+return status.Errorf(status.ErrNotFound, "model %q not found", name)
 
-The distinction between `GenkitError` (internal) and `UserFacingError` (external) reflects production experience where internal exceptions must never leak to attackers, while developers still need detailed debugging information.
+// Public error: the message is safe to send to the client
+return status.PublicErrorf(status.ErrInvalidArgument, "invalid %q parameter", param)
+
+// Callers check the classification, not the text
+if errors.Is(err, status.ErrNotFound) { /* ... */ }
+```
+
+This design serves multiple purposes:
+
+- **Security**: Only errors created with `status.PublicErrorf` expose their message over the wire; transports replace every other message with a generic one derived from the status, so internal details never leak to clients
+- **Debugging**: Every `status.Error` captures a stack trace and keeps the wrapped cause reachable through `errors.Is`/`errors.As`
+- **Integration**: Status names map cleanly to HTTP status codes for REST API responses (`status.Of(err).HTTPCode()`)
+
+The split between internal and public messages reflects production experience where internal exceptions must never leak to attackers, while developers still need detailed debugging information.
+
+> Earlier Genkit versions exposed `core.GenkitError` and `core.UserFacingError`. They are now deprecated aliases kept for compatibility: `core.GenkitError` *is* `status.Error`, and public errors are created with `status.PublicErrorf`.
 
 ## Plugin System Deep Dive
 

@@ -45,7 +45,7 @@ chapter-06/
 
 ## Prerequisites
 
-- Go 1.25.0 or later
+- Go 1.27 or later
 - Google AI API key (Gemini 2.5 Flash)
 - Genkit CLI
 

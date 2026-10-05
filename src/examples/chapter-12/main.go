@@ -3,54 +3,39 @@ package main
 import (
 	"context"
 	"log"
+	"mastering-genkit-go/example/chapter-12/internal/agent"
 	"mastering-genkit-go/example/chapter-12/internal/cli"
-	"mastering-genkit-go/example/chapter-12/internal/flows"
 
-	"github.com/firebase/genkit/go/plugins/ollama"
-
-	"github.com/firebase/genkit/go/ai"
+	"github.com/firebase/genkit/go/ai/exp/localstore"
 	"github.com/firebase/genkit/go/genkit"
+	"github.com/firebase/genkit/go/plugins/ollama"
 )
 
 func main() {
 	ctx := context.Background()
 
-	// Create the Ollama instance and define the model
+	// Create the Ollama plugin pointing to the local Ollama server
 	ollamaPlugin := &ollama.Ollama{
 		ServerAddress: "http://localhost:11434",
+		Timeout:       300, // local models can take a while to load
 	}
 
-	// Initialize Genkit with Ollama plugin first
+	// Initialize Genkit with the Ollama plugin. Agents are part of Genkit's
+	// experimental API, so we have to opt in with WithExperimental.
 	g := genkit.Init(ctx,
 		genkit.WithPlugins(ollamaPlugin),
+		genkit.WithExperimental(),
 	)
 
-	model := ollamaPlugin.DefineModel(g,
-		ollama.ModelDefinition{
-			Name: "gemma3n:e4b",
-			Type: "chat", // "chat" or "generate"
-		},
-		&ai.ModelOptions{
-			Supports: &ai.ModelSupports{
-				Media:      false,
-				Multiturn:  true,
-				Tools:      true,
-				Context:    true,
-				ToolChoice: true,
-			},
-		},
-	)
+	// Keep session snapshots (the conversation state) in memory
+	store := localstore.NewInMemorySessionStore[any]()
 
-	log.Println("Genkit initialized with Ollama plugin and model:", model.Name())
+	// Define the agent. Ollama resolves any locally installed model by name.
+	assistant := agent.NewAssistantAgent(g, "ollama/gemma4:e4b", store)
+	log.Println("Genkit initialized with agent:", assistant.Name())
 
-	// Create the chat flow with tools (empty for now)
-	chatFlow := flows.NewChatFlow(g, []ai.ToolRef{}, ai.NewModelRef(model.Name(), nil))
-
-	// Create and start the AI agent
-	agent := cli.NewAgent(chatFlow)
-
-	log.Println("Starting AI Agent...")
-	if err := agent.Run(ctx); err != nil {
+	// Start the interactive CLI
+	if err := cli.New(assistant).Run(ctx); err != nil {
 		log.Fatalf("AI agent error: %v", err)
 	}
 }

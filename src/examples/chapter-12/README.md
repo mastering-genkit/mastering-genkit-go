@@ -1,30 +1,31 @@
 # Chapter 12 Example: AI Agent
 
-This example demonstrates how to build an AI agent with conversation history. The tool integrates with Genkit Go to provide an interactive chat experience through the terminal.
+This example demonstrates how to build an AI agent with Genkit Go's built-in **Agents API**. The agent keeps its conversation in a session, calls tools, and streams its responses to an interactive terminal UI.
 
 ## Features
 
+- **Built-in Genkit Agent**: Defined with `genkitx.DefineAgent` and an inline prompt
+- **Conversation Memory**: The session state (messages, tool calls and tool results) is saved as a snapshot after every turn in Genkit's built-in in-memory session store
+- **Tool Calling**: The agent can call a `getCurrentDateTime` tool
+- **Streaming**: Responses and tool calls are streamed through a bidirectional connection (`Connect`)
 - **Interactive CLI Interface**: Chat with the AI agent directly from your terminal
-- **Conversation History**: Maintains context across multiple messages in a session
-- **Command Support**: Built-in commands for managing the conversation
-- **Real-time Responses**: Uses Genkit Generate to process messages and provide responses
-- **Local AI Model**: Uses Ollama with the gemma3n:e4b model for privacy and offline operation
+- **Local AI Model**: Uses Ollama with the `gemma4:e4b` model for privacy and offline operation
 
 ## Prerequisites
 
 Before running this example, ensure you have:
 
-1. **Go 1.26+** installed
+1. **Go 1.27+** installed
 2. **Ollama** installed and running locally
-3. **gemma3n:e4b model** downloaded in Ollama
+3. **gemma4:e4b model** downloaded in Ollama (it supports tool calling)
 
 ### Setting up Ollama
 
-1. Install Ollama from [https://ollama.ai](https://ollama.ai)
+1. Install Ollama from [https://ollama.com](https://ollama.com)
 2. Start Ollama (it typically runs on http://localhost:11434)
 3. Download the required model:
    ```bash
-   ollama pull gemma3n:e4b
+   ollama pull gemma4:e4b
    ```
 4. Verify the model is available:
    ```bash
@@ -48,6 +49,11 @@ Before running this example, ensure you have:
    go run .
    ```
 
+   Or with the Genkit Developer UI, to inspect the traces of every turn:
+   ```bash
+   genkit start -- go run .
+   ```
+
 ## Using the AI Agent
 
 Once the agent starts, you'll see a welcome message and be able to interact with it:
@@ -55,33 +61,36 @@ Once the agent starts, you'll see a welcome message and be able to interact with
 ```
 🤖 AI Agent
 Type your message and press Enter. Type 'quit', 'exit', or 'bye' to exit.
-Type 'clear' to clear conversation history.
+Type 'clear' to start a new conversation.
 Type 'history' to see the conversation history.
 
-You: Hello, how are you?
-🤖 AI: Hello! I'm doing well, thank you for asking. I'm here and ready to help you with any questions or tasks you might have. How are you doing today?
+You: my name is xavi
+🤖 AI: Hello Xavi! It's nice to meet you.
 
-You: What's the weather like?
-🤖 AI: I don't have access to real-time weather information since I'm a local AI model without internet connectivity. To get current weather information, you would need to:
+You: what is my name?
+🤖 AI: Your name is Xavi.
 
-1. Check a weather website like Weather.com or AccuWeather
-2. Use a weather app on your phone
-3. Ask a voice assistant with internet access
-4. Look outside your window for current local conditions
-
-Is there anything else I can help you with that doesn't require real-time data?
+You: What time is it?
+🤖 AI: 
+   🔧 getCurrentDateTime {}
+It is currently Monday, October 5, 2026, at 17:47:30 CEST.
 
 You: history
 📝 Conversation History:
 --------------------------------------------------
-1. You: Hello, how are you?
-2. 🤖 AI: Hello! I'm doing well, thank you for asking...
-3. You: What's the weather like?
-4. 🤖 AI: I don't have access to real-time weather information...
+1. You: my name is xavi
+2. 🤖 AI: Hello Xavi! It's nice to meet you.
+3. You: what is my name?
+4. 🤖 AI: Your name is Xavi.
+5. You: What time is it?
+6. 🔧 Tool call: getCurrentDateTime {}
+7. 🔧 Tool result: getCurrentDateTime "Mon, 05 Oct 2026 17:47:30 CEST"
+8. 🤖 AI: It is currently Monday, October 5, 2026, at 17:47:30 CEST.
 --------------------------------------------------
-
 You: clear
-✅ Conversation history cleared.
+✅ Conversation cleared. Starting a new session.
+You: what is my name?
+🤖 AI: I do not have access to your personal information, so I do not know your name.
 
 You: quit
 Goodbye! 👋
@@ -91,8 +100,8 @@ Goodbye! 👋
 
 - **Regular messages**: Type any message to chat with the AI
 - **`quit`**, **`exit`**, or **`bye`**: Exit the application
-- **`clear`**: Clear the conversation history and start fresh
-- **`history`**: Display the current conversation history
+- **`clear`**: Start a new session with an empty conversation
+- **`history`**: Display the conversation stored in the current session
 - **Empty line**: Continue to next prompt (no action)
 
 ## Architecture
@@ -100,30 +109,29 @@ Goodbye! 👋
 The project is structured as follows:
 
 ```
-├── main.go                    # Entry point - sets up Genkit and starts AI agent
+├── main.go                    # Entry point - sets up Genkit, the session store and the agent
 ├── internal/
-│   ├── cli/
-│   │   └── agent.go          # CLI interface and user interaction logic
-│   └── flows/
-│       └── chat.go           # Genkit flow for processing chat messages
+│   ├── agent/
+│   │   └── assistant.go      # Agent definition and tools
+│   └── cli/
+│       └── cli.go            # CLI interface: connection, streaming and commands
 ├── go.mod                    # Go module definition
 └── README.md                 # This file
 ```
 
 ### Components
 
-1. **`main.go`**: Initializes Genkit with the Ollama plugin and starts the AI agent
-2. **`cli/agent.go`**: Handles user input, manages conversation history, and provides the interactive interface
-3. **`flows/chat.go`**: Defines the Genkit flow that processes messages and maintains conversation context
+1. **`main.go`**: Initializes Genkit with the Ollama plugin and the experimental APIs (`genkit.WithExperimental()`), creates the in-memory session store and starts the CLI
+2. **`agent/assistant.go`**: Defines the `getCurrentDateTime` tool and the `assistant` agent with `genkitx.DefineAgent`
+3. **`cli/cli.go`**: Opens a bidirectional connection to the agent, streams each turn, and reads the conversation history back from the session store
 
 ## How It Works
 
-1. **Initialization**: The application starts by initializing Genkit with the Ollama plugin
-2. **Flow Creation**: A chat flow is created that can process messages with conversation history
-3. **CLI Loop**: The agent enters an interactive loop:
+1. **Initialization**: Genkit is initialized with the Ollama plugin and the experimental APIs enabled
+2. **Agent Definition**: The agent declares its model, system prompt and tools in an `aix.InlinePrompt`, and uses `localstore.NewInMemorySessionStore` as its session store
+3. **CLI Loop**: The CLI calls `agent.Connect` to open a session and then:
    - Reads user input from the terminal
    - Processes special commands (quit, clear, history)
-   - Sends regular messages to the chat flow with conversation history
-   - Displays the AI response
-   - Updates the conversation history
-4. **Context Preservation**: Each message includes the full conversation history, allowing the AI to understand context and provide relevant responses
+   - Sends regular messages with `conn.SendText`
+   - Streams the response and any tool calls with `conn.Receive` until the turn ends
+4. **Context Preservation**: The agent appends every message to its session state and saves a snapshot after each turn, so the model always sees the full conversation. `clear` closes the connection and opens a new session with an empty history.
