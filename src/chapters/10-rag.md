@@ -473,8 +473,8 @@ func main() {
         log.Fatalf("could not initialize localvec: %v", err)
     }
 
-    // Get OpenAI embedder (text-embedding-3-large) using DefineEmbedder
-    embedder := oai.DefineEmbedder("text-embedding-3-large", nil)
+    // Get the OpenAI embedder (text-embedding-3-large) registered by the plugin
+    embedder := genkit.LookupEmbedder(g, "openai/text-embedding-3-large")
     if embedder == nil {
         log.Println("failed to create text-embedding-3-large embedder")
     }

@@ -264,7 +264,7 @@ data: {"type": "done"}
 
 ### Required Software
 
-- **Go 1.22+** - For Genkit Go server development
+- **Go 1.27+** - For Genkit Go server development
 - **Node.js 20+** - For Genkit CLI and client applications
 - **Terraform CLI** - For provisioning Firestore data
 - **Google Cloud CLI** (`gcloud`) - For Cloud Run deployment

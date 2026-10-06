@@ -280,14 +280,14 @@ It is important to note that the application must be running with `genkit start 
 
 Non-billed evaluators implement custom logic without using AI models, making them fast and cost-effective for basic quality checks.
 
-To create a custom evaluator you have to call `genkit.DefineEvaluator` with the appropriate parameters:
+To create a custom evaluator you have to call `genkit.DefineEvaluatorAction` with the appropriate parameters:
 
 1. **Evaluator ID**: A unique identifier for the evaluator
 2. **Evaluator Options**: Metadata about the evaluator, such as display name and description
    1. **Definition**: A human-readable description of what the evaluator does
    2. **IsBilled**: Set to `false` for non-billed evaluators
    3. **DisplayName**: A user-friendly name for the evaluator
-3. **Callback Function**: The logic that runs when the evaluator is executed
+3. **Callback Function**: The logic that runs when the evaluator is executed. Besides the context and the test case, it receives the evaluator's typed configuration (the `Config` type parameter, inferred from the callback signature). We use `any` because our evaluators take no options
 
 Here's a complete example of a response quality evaluator. This evaluator checks the length, relevance, and coherence of input and output texts coming from datasets:
 
@@ -310,14 +310,14 @@ func NewNonBilledEvaluatorService(g *genkit.Genkit) *NonBilledEvaluatorService {
 }
 
 func (es *NonBilledEvaluatorService) NewResponseQualityEvaluator() ai.Evaluator {
-    return genkit.DefineEvaluator(es.genkit,
+    return genkit.DefineEvaluatorAction(es.genkit,
         "custom-non-billed/response-quality",
         &ai.EvaluatorOptions{
             Definition:  "Evaluates the quality of AI responses based on length, relevance, and coherence.",
             IsBilled:    false,
             DisplayName: "Response Quality Evaluator",
         },
-        func(ctx context.Context, req *ai.EvaluatorCallbackRequest) (*ai.EvaluatorCallbackResponse, error) {
+        func(ctx context.Context, req *ai.EvaluatorCallbackRequest, _ any) (*ai.EvaluatorCallbackResponse, error) {
             // Simple evaluation logic - check if response is meaningful
             score := 0.0
             reasoning := "Response is empty or invalid"
@@ -378,7 +378,7 @@ func (es *NonBilledEvaluatorService) NewResponseQualityEvaluator() ai.Evaluator 
 This is how this evaluator works:
 
 - **Service Structure**: The evaluator is wrapped in a service `NonBilledEvaluatorService` for better organization and dependency injection
-- **Evaluator Definition**: `DefineEvaluator()` creates a custom evaluator with metadata and callback function and returns the evaluator `ai.Evaluator`
+- **Evaluator Definition**: `DefineEvaluatorAction()` creates a custom evaluator with metadata and a callback function, registers it, and returns an `*ai.EvaluatorAction`, which satisfies the `ai.Evaluator` interface
 - **Input Extraction**: We extract input and output text from the evaluation request
 - **Scoring Logic**: The evaluator applies multiple criteria (length, uniqueness, verbosity, punctuation) with weighted scores
 - **Response Formation**: We return structured evaluation results with scores, status, and detailed reasoning
@@ -442,14 +442,14 @@ func NewBilledEvaluatorService(g *genkit.Genkit) *BilledEvaluatorService {
 
 // NewMaliciousnessEvaluator creates a maliciousness evaluator that uses AI to detect malicious content
 func (es *BilledEvaluatorService) NewMaliciousnessEvaluator() (ai.Evaluator, error) {
-    return genkit.DefineEvaluator(es.genkit,
+    return genkit.DefineEvaluatorAction(es.genkit,
         "custom-billed/maliciousness-detector",
         &ai.EvaluatorOptions{
             Definition:  "Uses AI to evaluate whether responses contain malicious, harmful, or inappropriate content.",
             IsBilled:    true,
             DisplayName: "Maliciousness Detector",
         },
-        func(ctx context.Context, req *ai.EvaluatorCallbackRequest) (*ai.EvaluatorCallbackResponse, error) {
+        func(ctx context.Context, req *ai.EvaluatorCallbackRequest, _ any) (*ai.EvaluatorCallbackResponse, error) {
 
             input := req.Input
             outputText := ""

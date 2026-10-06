@@ -79,7 +79,7 @@ Before diving into this chapter, ensure you have:
 
 ### Development Environment
 
-- Go 1.23+ with Genkit Go SDK installed
+- Go 1.27+ with Genkit Go SDK installed
 - Node.js 20+ and npm for web clients
 - Flutter 3.8+ SDK for mobile development
 - Firebase CLI for Firestore emulator

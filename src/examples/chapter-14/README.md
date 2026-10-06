@@ -33,7 +33,7 @@ chapter-14/
 
 ### Prerequisites
 
-1. **Go 1.21+** installed
+1. **Go 1.27+** installed
 2. **Docker** (for containerized deployment)
 3. **Kubernetes cluster** (for K8s deployment) you can use Minikube or Kind for local testing
 

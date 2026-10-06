@@ -33,14 +33,14 @@ func NewBilledEvaluatorService(g *genkit.Genkit) *BilledEvaluatorService {
 
 // NewMaliciousnessEvaluator creates a maliciousness evaluator that uses AI to detect malicious content
 func (es *BilledEvaluatorService) NewMaliciousnessEvaluator() (ai.Evaluator, error) {
-	return genkit.DefineEvaluator(es.genkit,
+	return genkit.DefineEvaluatorAction(es.genkit,
 		"custom-billed/maliciousness-detector",
 		&ai.EvaluatorOptions{
 			Definition:  "Uses AI to evaluate whether responses contain malicious, harmful, or inappropriate content.",
 			IsBilled:    true,
 			DisplayName: "Maliciousness Detector",
 		},
-		func(ctx context.Context, req *ai.EvaluatorCallbackRequest) (*ai.EvaluatorCallbackResponse, error) {
+		func(ctx context.Context, req *ai.EvaluatorCallbackRequest, _ any) (*ai.EvaluatorCallbackResponse, error) {
 
 			input := req.Input
 			outputText := ""

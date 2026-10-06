@@ -491,29 +491,30 @@ AI services can fail in various ways - from rate limits to model unavailability 
 Here's how to handle these errors in practice:
 
 ```go
+import "github.com/firebase/genkit/go/core/status"
+
 resp, err := genkit.Generate(ctx, g, ai.WithPrompt(prompt))
 if err != nil {
-    var coreErr *core.GenkitError
-    if errors.As(err, &coreErr) {
-        switch coreErr.Status {
-        case core.INVALID_ARGUMENT:
-            // Bad input - ask user to clarify
-        case core.NOT_FOUND:
-            // Model not found - use fallback
-        case core.RESOURCE_EXHAUSTED:
-            // Rate limited - retry with backoff
-        case core.DEADLINE_EXCEEDED:
-            // Timeout - try simpler approach
-        case core.UNAVAILABLE, core.INTERNAL:
-            // Service issues - alert and fail
-        default:
-            // Unknown error
-        }
+    // status.Of returns the canonical status of the outermost
+    // status.Error in the chain (INTERNAL for unclassified errors).
+    switch status.Of(err) {
+    case status.InvalidArgument:
+        // Bad input - ask user to clarify
+    case status.NotFound:
+        // Model not found - use fallback
+    case status.ResourceExhausted:
+        // Rate limited - retry with backoff
+    case status.DeadlineExceeded:
+        // Timeout - try simpler approach
+    case status.Unavailable, status.Internal:
+        // Service issues - alert and fail
+    default:
+        // Unknown error
     }
 }
 ```
 
-This structured approach helps manage AI failures, allowing your application to handle errors appropriately.
+You can also match a specific classification with `errors.Is`, for example `errors.Is(err, status.ErrResourceExhausted)`, or more specific sentinels such as `ai.ErrMaxTurnsExceeded`. This structured approach helps manage AI failures, allowing your application to handle errors appropriately.
 
 ## Dotprompt: Professional Prompt Management
 
