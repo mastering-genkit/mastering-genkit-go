@@ -1,3 +1,10 @@
+# [1.30.0](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.29.0...v1.30.0) (2026-10-06)
+
+
+### Features
+
+* udpate book to latest versions and switch to Genkit agent in chapter 12 ([#39](https://github.com/mastering-genkit/mastering-genkit-go/issues/39)) ([876ea17](https://github.com/mastering-genkit/mastering-genkit-go/commit/876ea17615b36acfd258210438af485d61a0917a))
+
 # [1.29.0](https://github.com/mastering-genkit/mastering-genkit-go/compare/v1.28.0...v1.29.0) (2026-05-08)
 
 
